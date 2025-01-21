@@ -1,0 +1,54 @@
+{# {% set userId = app.user.id %}
+{% set fetchPart = '/api/services?users=' %}
+{% set fetchUrl = url ~ fetchPart ~ userId %}
+{% set services = fetchUrl|fetch %} #}
+<!-- Menu Items -->
+<div class="menu-container">
+    <!-- Conteneur des icônes et textes -->
+    <div class="menu-items d-flex flex-column">
+        {% set menuItems = [
+            { icon: 'home', text: 'Accueil', link: 'link-Acceuil', color: 'white' },
+            { icon: 'file-alt', text: 'Administratif', link: 'link-Administratif', color: 'white', service: 'Administratif' },
+            { icon: 'calendar-alt', text: 'Agenda', link: 'link-Agenda', color: 'white', service: 'Agenda' },
+            { icon: 'briefcase', text: 'Commercial', link: 'link-Commercial', color: 'white', service: 'Commercial' },
+            { icon: 'laptop-code', text: 'Numérique', link: 'link-Numerique', color: 'white', service: 'Numerique' },
+            { icon: 'phone-alt', text: 'Téléphone', link: 'link-Telephone', color: 'white', service: 'Telephonique' },
+        ] %}
+
+        <div class="menu">
+            {% for item in menuItems %}
+                {# {% if item.service is not defined or item.service in services %}
+                    <div class="d-flex align-items-center mb-1">
+                        <i class="text-{{ item.color }} fas fa-{{ item.icon }} text-center" style="width: 50px; font-size: 1.5rem;"></i>
+                        <button data-fragment={{item.link}} class="change-fragment btn bg-transparent nav-link text-{{ item.color }}" style='max-heigh:123px;'>{{ item.text }}</button>
+                    </div>
+                {% endif %} #}
+            {% endfor %}
+        </div>
+
+        <div>
+            <div class="d-flex align-items-center mb-1">
+                <i class="text-white fas fa-user-circle text-center" style="width: 50px; font-size: 1.5rem;"></i>
+                <button aria-expanded="false" data-bs-toggle="collapse" href="#submenu3" class="menu-toggle nav-link text-white text-start d-none d-md-block" style='max-heigh:123px;'>Espace personnel</button>
+                <button data-fragment='link-espacepersonnel' class="change-fragment btn bg-transparent text-white d-block d-md-none" style='max-heigh:123px;'>Espace personnel</button>
+            </div>
+            <div id="submenu3" class="collapse navbar-collapse">
+                {% set submenuItems = [
+                    { link: 'link-Profile', icon: 'fa-user-circle', label: 'Profil', color: 'warning' },
+                    { link: 'link-Factures', icon: 'fa-file-invoice', label: 'Factures', color: 'warning' },
+                    { link: 'link-Devis', icon: 'fa-file-contract', label: 'Devis', color: 'warning' },
+                    { link: 'link-Repertoire', icon: 'fa-folder', label: 'Répertoire', color: 'warning', service:'Repertoire' },
+                    { link: 'link-parametres', icon: 'fa-cogs', label: 'Paramètres', color: 'warning' }
+                ] %}
+                {% for submenu in submenuItems %}
+                    {# {% if submenu.service is not defined or submenu.service in services %}
+                        <div class="d-flex align-items-center mb-1">
+                            <i class="fas {{ submenu.icon }} text-center text-{{ submenu.color }}" style="width: 50px; font-size: 1.5rem;"></i>
+                            <button data-fragment={{submenu.link}} class="change-fragment btn bg-transparent nav-link text-{{ submenu.color }}">{{ submenu.label }}</a>
+                        </div>
+                    {% endif %} #}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>

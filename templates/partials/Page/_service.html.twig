@@ -1,0 +1,160 @@
+{% if initialisation.fragmentValue == 'part' %}
+    {% set Administratif = [
+        { id: 'Admin1', title: 'Rédaction de courrier', description: 'Saisie et création de documents texte sous Word (relecture, corrections....)' },
+        { id: 'Admin2', title: 'Rédaction et révision de lettres de motivation et CV', description: 'Aide à la rédaction ou l\'amélioration des lettres de motivation et CV pour les candidatures professionnelles.' },
+        { id: 'Admin3', title: 'Gestion des finances personnelles', description: 'Aide à la création de budgets personnels, suivi des dépenses, et conseils en gestion financière.' },
+        { id: 'Admin4', title: 'Aide à la déclaration fiscale', description: 'Assistance pour remplir les déclarations fiscales, optimiser les réductions fiscales et expliquer les démarches.' },
+        { id: 'Admin5', title: 'Assistance pour les démarches administratives', description: 'Aide pour effectuer leurs démarches administratives ou achats en ligne, comme créer des comptes sur des plateformes, remplir des formulaires, etc.' },
+        { id: 'Admin6', title: 'Aide à la rédaction de courrier juridique ou officiel', description: 'Rédaction ou révision des lettres administratives ou juridiques (par exemple : contestation de contravention, demande de remboursement, etc.).' },
+        { id: 'Admin7', title: 'Planification de voyages personnalisés', description: 'Aider à organiser des voyages sur mesure (itinéraires, activités, hébergement) en fonction des préférences.' }                          
+    ] %}
+    {% set numeriques = [   
+        { id: "Numerique1", title: 'Atelier de découverte numérique', description: 'Un atelier destiné à découvrir les bases de l\'informatique et à se familiariser avec les outils numériques essentiels. Nous abordons des notions pratiques comme la navigation sur Internet, l\'utilisation des outils de bureautique, et les bonnes pratiques pour sécuriser vos données.' },
+        { id: "Numerique2", title: 'Sensibilisation à la Cybersécurité', description: 'Un accompagnement pour mieux comprendre les enjeux de la sécurité en ligne : apprendre à protéger vos données personnelles, reconnaître les arnaques en ligne, et utiliser des outils simples pour sécuriser vos activités numériques.' },
+        { id: "Numerique3", title: 'Initiation aux outils bureautiques', description: 'Atelier pratique pour apprendre les bases des outils de bureautique comme Word, Excel et PowerPoint. Idéal pour gagner en autonomie et en productivité dans vos tâches quotidiennes.' },
+        { id: "Numerique4", title: 'Utilisation des Réseaux Sociaux', description: 'Un atelier pour découvrir les fonctionnalités de base des principaux réseaux sociaux comme Facebook, Instagram ou Snapchat, et apprendre à les utiliser en toute sécurité.' },
+        { id: "Numerique5", title: 'Initiation à la création de boite mail', description: 'Un accompagnement pratique pour créer sa propre boite mail.' },
+        { id: "Numerique6", title: 'Introduction à l\'Intelligence Artificielle', description: 'Un atelier pour comprendre les bases de l\'intelligence artificielle, ses applications dans la vie quotidienne, et ses impacts sur le monde professionnel.' },
+        { id: "Numerique7", title: 'Aide à l\'utilisation des Smartphones et Tablettes', description: 'Des conseils pratiques pour configurer vos appareils mobiles, sécuriser vos données, et découvrir des applications utiles pour gagner en efficacité au quotidien.' },
+        { id: "Numerique8", title: 'Découverte des outils de stockage en ligne', description: 'Un atelier pour explorer les fonctionnalités des services de stockage en ligne comme Google Drive, OneDrive ou Dropbox, et apprendre à gérer vos fichiers en toute simplicité.' }
+    ] %}
+{% elseif initialisation.fragmentValue == 'pro' %}
+    {% set Administratif = [
+        { id: 'Admin1', title: 'Gestion de la paie', description: 'Externalisation du traitement des salaires, déclarations sociales et gestion des avantages en nature.' },
+        { id: 'Admin2', title: 'Rédaction de documents officiels', description: 'Création de contrats, lettres de motivation, lettres de résiliation et autres documents administratifs.' },
+        { id: 'Admin3', title: 'Gestion des factures', description: 'Création, envoi, suivi des paiements et relance des clients pour une gestion optimale de la trésorerie.' },
+        { id: 'Admin4', title: 'Gestion des agendas', description: 'Planification des rendez-vous, réunions et événements pour optimiser le temps de vos équipes.' },
+        { id: 'Admin5', title: 'Externalisation de la comptabilité', description: 'Suivi des écritures comptables, gestion des bilans et déclarations fiscales.' },
+        { id: 'Admin6', title: 'Assistance juridique', description: 'Conseils sur des questions légales courantes, aide à la conformité juridique des documents et processus.' },
+        { id: 'Admin7', title: 'Gestion des fournisseurs', description: 'Sélection et gestion des contrats avec les fournisseurs, négociation des tarifs et suivi des livraisons.' },
+        { id: 'Admin8', title: 'Suivi des dépenses', description: 'Élaboration de rapports de dépenses, suivi des budgets et recommandations pour une meilleure gestion financière.' },
+        { id: 'Admin9', title: 'Services de secrétariat', description: 'Réception des appels, gestion du courrier, organisation des archives et prise de messages.' }
+    ] %}
+    {% set numeriques = [
+        { id: "Numerique1", title: "Création de sites web", description: "Conception, développement et maintenance de sites internet vitrine, e-commerce ou institutionnels." },
+        { id: "Numerique2", title: "Développement d'applications mobiles", description: "Création d’applications pour Android et iOS, en fonction des besoins spécifiques de l’entreprise." },
+        { id: "Numerique3", title: "Optimisation SEO", description: "Amélioration de la visibilité des sites internet sur les moteurs de recherche, en optimisant le contenu et la structure." },
+        { id: "Numerique4", title: "Création de contenu digital", description: "Rédaction de contenu web, blogs, articles, et textes marketing adaptés aux exigences du SEO." },
+        { id: "Numerique5", title: "Audit de sécurité numérique", description: "Évaluation de la sécurité des systèmes informatiques et mise en place de solutions pour protéger les données sensibles." },
+        { id: "Numerique6", title: "Automatisation des processus", description: "Développement de solutions d'automatisation des tâches récurrentes pour gagner du temps et améliorer la productivité." },
+        { id: "Numerique7", title: "Développement de logiciels sur mesure", description: "Conception et développement de logiciels spécifiques pour répondre aux besoins uniques de votre entreprise." },
+        { id: "Numerique8", title: "Mise en place d'une stratégie de marketing numérique", description: "Planification et exécution de campagnes publicitaires en ligne (Google Ads, Facebook Ads, etc.)." }
+    ] %}
+    {% set commerciaux = [
+        { id: 'Commercial1', title: 'Prospection commerciale', description: 'Recherche et identification de nouveaux prospects, qualification des leads et génération d’opportunités.' },
+        { id: 'Commercial2', title: 'Rédaction de propositions commerciales', description: 'Création de devis personnalisés, propositions et offres commerciales adaptées aux besoins des clients.' },
+        { id: 'Commercial3', title: 'Gestion de la relation client (CRM)', description: 'Mise en place et gestion de systèmes CRM pour suivre les interactions clients et optimiser la fidélisation.' },
+        { id: 'Commercial4', title: 'Support client', description: 'Mise en place d\'un service client pour répondre aux demandes, résoudre les problèmes et améliorer l’expérience client.' },
+        { id: 'Commercial5', title: 'Stratégie de pricing', description: 'Analyse des prix, étude de la concurrence et mise en place d\'une stratégie tarifaire compétitive.' },
+        { id: 'Commercial6', title: 'Campagnes marketing ciblées', description: 'Élaboration de campagnes de marketing ciblées pour atteindre efficacement des segments de marché spécifiques.' },
+        { id: 'Commercial7', title: 'Animation des réseaux sociaux', description: 'Création de contenu, gestion de l\'engagement et suivi des performances sur les principales plateformes sociales.' },
+        { id: 'Commercial8', title: 'Mise en place de partenariats', description: 'Identification de partenaires stratégiques et gestion de relations commerciales bénéfiques.' },
+        { id: 'Commercial9', title: 'Gestion des retours clients', description: 'Collecte des retours clients, analyse des avis et mise en place d\'actions d\'amélioration continue.' }
+    ] %}
+{% endif %}
+<section class="background-secretariat d-flex flex-column flex-fill min-vh-100">
+    {% include 'partials/Page/_navBar.html.twig' %}
+
+    <section class="hero">
+        <div class="heroContent">
+            <h1>Services</h1>
+            <p>Détails des services proposés</p>
+        </div>
+        <div class="w-100 my-3">
+            <button type="button" class="change-fragment-site btn btn-warning fs-5 border border-secondary" data-fragment={{initialisation.fragmentValue}} data-subFragment="contact" >
+                Contactez-nous
+            </button>
+        </div>
+        <div class="w-100 my-3">
+            <button type="button" class="change-fragment-site btn btn-primary fs-5" data-fragment={{initialisation.fragmentButtonValue}} data-subFragment="acceuil">{{initialisation.buttonValue}}</button>
+        </div>
+    </section>
+    <section class="intro d-flex flex-column justify-content-evenly bg-white flex-fill">
+        <h1 class="services-title">Nos services</h1>
+        <h2 class="services-subtitle">Le meilleur pour tous nos clients</h2>
+        <div id="services" class="service-list d-flex flex-wrap justify-content-center">
+            <div class="container mt-5">
+                <div class="row d-flex flex-wrap justify-content-center">
+                    <!-- Service: Gestion administrative -->
+                    <div class="col-12 col-md-6 mb-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="mb-0">{{initialisation.titleAdministratif}}</h3>
+                            </div>
+                            <div class="card-body">
+                                <ul class="list-group list-unstyled">
+                                {% if Administratif is defined %}
+                                    {% for admin in Administratif %}
+                                        <li class="list-group-flush">
+                                            <button class="btn btn-link d-block w-100 text-left text-decoration-none text-dark d-flex justify-content-between" style="text-align: left;" data-bs-toggle="collapse" data-bs-target="#{{ admin.id }}" aria-expanded="false" aria-controls="{{ admin.id }}">
+                                                {{ admin.title }}
+                                                <i class="fas fa-chevron-down"></i>
+                                            </button>
+                                            <div id="{{ admin.id }}" class="collapse">
+                                                <p class="m-2 text-muted" style="font-style: italic;">{{ admin.description }}</p>
+                                            </div>
+                                        </li>
+                                    {% endfor %}
+                                {% endif %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-6 mb-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="mb-0">{{initialisation.titleNumerique}}</h3>
+                            </div>
+                            <div class="card-body">
+                                <ul class="list-group list-unstyled">
+                                {% if numeriques is defined %}
+                                    {% for numerique in numeriques %}
+                                        <li class="list-group-flush">
+                                            <button class="btn btn-link d-block w-100 text-left text-decoration-none text-dark d-flex justify-content-between" style="text-align: left;" data-bs-toggle="collapse" data-bs-target="#{{ numerique.id }}" aria-expanded="false" aria-controls="{{ numerique.id }}">
+                                                {{ numerique.title }}
+                                                <i class="fas fa-chevron-down"></i>
+                                            </button>
+                                            <div id="{{ numerique.id }}" class="collapse">
+                                                <p class="m-2 text-muted" style="font-style: italic;">{{ numerique.description }}</p>
+                                            </div>
+                                        </li>
+                                    {% endfor %}
+                                {% endif %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    {% if initialisation.fragmentValue == 'pro' %}
+                    <div class="col-12 col-md-6 mb-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="mb-0">Services Commerciaux</h3>
+                            </div>
+                            <div class="card-body">
+                                <ul class="list-group list-unstyled">
+                                {% if commerciaux is defined %}
+                                    {% for commercial in commerciaux %}
+                                        <li class="list-group-flush">
+                                            <button class="btn btn-link d-block w-100 text-left text-decoration-none text-dark d-flex justify-content-between" style="text-align: left;" data-bs-toggle="collapse" data-bs-target="#{{ commercial.id }}" aria-expanded="false" aria-controls="{{ commercial.id }}">
+                                                {{ commercial.title }}
+                                                <i class="fas fa-chevron-down"></i>
+                                            </button>
+                                            <div id="{{ commercial.id }}" class="collapse">
+                                                <p class="m-2 text-muted" style="font-style: italic;">{{ commercial.description }}</p>
+                                            </div>
+                                        </li>
+                                    {% endfor %}
+                                {% endif %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </sectionclass=intro>
+    <p class="p-3 text-center">Cette liste n'est pas exhastive, pour tout autre demande, n'hésitez pas à nous contacter!</p>
+</section>

@@ -1,0 +1,94 @@
+{% if initialisation.fragmentValue == 'part' %}
+    {% set menu_items = [
+        { link: 'service', label: 'Services', route: 'secretariat', fragment: initialisation.fragmentValue },
+        { link: 'tarifs', label: 'Tarifs', route: 'numeriques', fragment: initialisation.fragmentValue },
+        { link: 'job', label: 'Jobs', route: 'jobs', fragment: initialisation.fragmentValue },
+        { link: 'contact', label: 'Contact', route: 'contact', fragment: initialisation.fragmentValue }
+    ] %}
+{% elseif initialisation.fragmentValue == 'pro' %}
+    {% set menu_items = [
+        { link: 'service', label: 'Services', route: 'secretariat', fragment: initialisation.fragmentValue },
+        { link: 'tarifs', label: 'Tarifs', route: 'numeriques', fragment: initialisation.fragmentValue },
+        { link: 'contact', label: 'Contact', route: 'contact', fragment: initialisation.fragmentValue }
+    ] %}
+{% endif %}
+<header class="navbar">
+    <button class="change-fragment-site btn fs-3 text-center text-md-start text-lg-start fw-bold text-primary flex-grow-1" 
+    data-fragment={{initialisation.fragmentValue}} 
+    data-subFragment="acceuil" 
+    style="text-decoration: none;">
+        Secrétaire Pro
+    </button>
+
+    <!-- Menu Grand Écran (visible uniquement sur les grands écrans) -->
+    <div class="d-none justify-content-center  d-md-flex">
+        <ul class="list-unstyled d-flex mb-0">
+        {% if menu_items is defined %}
+            {% for item in menu_items %}
+                <li class="me-4">
+                    <button class="change-fragment-site btn fs-4 {% if app.request.query.get('subFragment') == item.link %} active {% endif %}" 
+                            data-fragment="{{ item.fragment }}" 
+                            data-subFragment="{{ item.link }}" 
+                            style="text-decoration: none;">
+                            {{ item.label }}
+                    </button>
+                </li>
+            {% endfor %}
+        {% endif %}
+
+            <li class="me-4">
+                <a href="{{ path('app_login') }}" class="btn fs-4 {{ app.request.attributes.get('_route') == 'app_login' ? 'text-primary' : 'text-dark' }}" style="text-decoration: none;">
+                    Espace client
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Menu Burger (visible uniquement sur petits écrans) -->
+    <nav class="sidebar d-md-none navbar-expand-md fixed-top" id="navBurger">
+        <div class="container-fluid">
+            <button class="menu-toggle" id="menu-toggle"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#navbarNav"
+                    aria-controls="navbarNav"
+                    aria-expanded="false"
+                    aria-label="Toggle navigation">
+                &#9776;
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <div class="d-flex justify-content-center pt-4">
+                    <button class="change-fragment-site btn fs-1 fw-bold text-warning nav-link" 
+                    data-fragment={{initialisation.fragmentValue}} 
+                    data-subFragment="acceuil" 
+                    style="text-decoration: none;">
+                        Secrétaire Pro
+                    </button>
+                </div>
+                
+                <ul class="mb-3 d-flex flex-column align-items-center" style="padding-top: 1rem !important;">
+                {% if menu_items is defined %}
+                    {% for item in menu_items %}
+                        <li class="text-center mb-2">
+                            <button class="change-fragment-site nav-link fs-5 text-white" 
+                            data-fragment="{{ item.fragment }}" 
+                            data-subFragment="{{ item.link }}">
+                                {{ item.label }}
+                            </button>
+                        </li>
+                    {% endfor %}
+                {% endif %}
+
+                    <li class="text-center mb-2">
+                        <a href="{{ path('app_login') }}" type='button' class='btn nav-link text-white'>
+                            <h5>Espace client</h5>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+        
+</header>

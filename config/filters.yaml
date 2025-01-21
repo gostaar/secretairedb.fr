@@ -1,0 +1,6 @@
+# services:
+#   images.document_filter:
+#     class: App\Filter\DocumentFilter
+#     arguments: []
+#     tags:
+#       - { name: 'api_platform.filter' }

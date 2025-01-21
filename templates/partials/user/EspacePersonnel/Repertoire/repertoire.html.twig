@@ -1,0 +1,74 @@
+
+<div class="custom-bg full-height m-0 p-0 w-100">
+    <div class='flex-grow-1 p-4 d-flex justify-content-between flex-column'>
+        <div class="container card mb-4">
+            <div class="container card-header d-flex justify-content-between align-items-center mb-4">
+                <h4>{{ dossier.name }}</h4>
+            </div>
+            <!-- Main Content -->
+            {% include 'partials/user/models/searchModel.html.twig' with {
+                'formViews': formViews,
+                'fragment': fragment,
+                'dossier' : dossier,
+            } only %}
+            {% if repertoires is not empty %}
+                <div class="row px-4">
+                    {% for repertoire in repertoires %}
+                        <div class="col-md-4 mb-4">
+                            <div class="card shadow rounded border-0" style="width: 100%; transition: transform 0.3s;">
+                                <div class="card-header text-center text-secondary py-4">
+                                    <i class="fas fa-address-book fa-4x"></i>
+                                    <h5 class="card-title mt-2">{{ repertoire.nom }}</h5>
+                                </div>
+
+                                <div class="card-body">
+                                    <ul class="list-group list-group-flush">
+                                        <li class="list-group-item">
+                                            <div class="d-flex flex-column justify-content-center align-items-center">
+                                                <div class="d-flex justify-content-center mb-2 flex-wrap">
+                                                    <a href="mailto:{{ repertoire.email }}" class="p-3 btn btn-outline-secondary btn-sm mx-2 rounded-circle">
+                                                        <i class="fas fa-at fa-2x"></i>
+                                                    </a>
+                                                    <a href="tel:{{ repertoire.telephone }}" class="p-3 btn btn-outline-secondary btn-sm mx-2 rounded-circle">
+                                                        <i class="fas fa-phone-alt fa-2x"></i>
+                                                    </a>
+                                                    <button type="button" class="p-3 btn btn-outline-secondary btn-sm mx-2 rounded-circle" data-bs-toggle="modal" data-bs-target="#contactsModal{{ repertoire.id }}">
+                                                    <i class="fas fa-users fa-2x"></i>
+            
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="list-group-item">
+                                            <strong>Email :</strong> {{ repertoire.email }}<br>
+                                            <strong>Téléphone :</strong>{{ repertoire.telephone }}<br>
+                                        </li>
+                                        <li class="list-group-item">
+                                            <strong>Adresse :</strong> {{ repertoire.adresse }}<br>
+                                            {{ repertoire.codePostal }} {{ repertoire.ville }}<br>
+                                            {{ repertoire.pays }}
+                                        </li>
+                                        <li class="list-group-item"><strong>Mobile :</strong> {{ repertoire.mobile }}</li>
+                                        <li class="list-group-item"><strong>Entreprise :</strong> {{ repertoire.nomEntreprise }} | <strong>Siret:</strong> {{ repertoire.siret }}</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <!-- Modal pour voir les contacts -->
+                            {% include 'partials/user/EspacePersonnel/Repertoire/repertoireModalInfos.html.twig' %}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="text-center" style="font-size: 1.2rem; color: #888;">Aucun répertoire trouvé</p>
+            {% endif %}
+
+            <!-- Bouton Ajouter un contact -->
+            <div class="d-flex justify-content-center m-4">
+                <button type="button" class="btn btn-primary btn-lg rounded-pill shadow-lg d-flex align-items-center justify-content-center px-5" data-bs-toggle="modal" data-bs-target="#addRepertoireModal">
+                    <i class="fas fa-user-plus fa-lg me-2"></i> Ajouter un contact
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% include 'partials/user/EspacePersonnel/Repertoire/repertoireModalCreate.html.twig' %}

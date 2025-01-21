@@ -1,0 +1,22 @@
+<div class="modal fade" id="renameDossierModal" tabindex="-1" role="dialog" aria-labelledby="renameDossierModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="renameDossierModalLabel">Renommer le Dossier</h5>
+      </div>
+      <div class="alert m-0" id="responseMessagediv" role="alert" style='display:none;'>
+          <span id="responseMessage"></span>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="newDossierName" class="col-form-label">Entrez le nouveau nom du dossier :</label>
+          <input type="text" class="form-control" id="newDossierName" placeholder="Nouveau nom du dossier">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+        <button type="button" class="btn btn-primary" id="submitNewDossierName">Renommer</button>
+      </div>
+    </div>
+  </div>
+</div>

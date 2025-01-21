@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Secrétaire{% endblock %}
+
+{% block body %}
+    <div id="fragmentContent" class="d-flex min-vh-100">
+        {% include 'pages/_fragmentContent.html.twig' with {
+            'sections': sections,
+            'currentFragment': currentFragment,
+            'currentSubFragment': currentSubFragment,
+        } %}
+    </div>
+{% endblock %}

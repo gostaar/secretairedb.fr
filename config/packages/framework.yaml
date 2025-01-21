@@ -1,6 +1,13 @@
 # see https://symfony.com/doc/current/reference/configuration/framework.html
 framework:
     secret: '%env(APP_SECRET)%'
+    http_method_override: true
+    http_client:
+        default_options:
+            cafile: '%kernel.project_dir%/certificates/cacert.pem'
+            capath: '%kernel.project_dir%/certificates/cacert.pem'
+            # verify_peer: false
+            # verify_host: false
 
     # Note that the session will be started ONLY if you read or write from it.
     session: true

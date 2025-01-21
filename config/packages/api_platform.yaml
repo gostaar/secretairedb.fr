@@ -1,0 +1,14 @@
+api_platform:
+    title: Hello API Platform
+    version: 1.0.0
+    defaults:
+        stateless: false
+        cache_headers:
+            vary: ['Content-Type', 'Authorization', 'Origin']
+    mapping:
+        paths: ['%kernel.project_dir%/src/Entity']
+    patch_formats:
+        multipart: ['multipart/form-data']
+        jsonld: ['application/ld+json']
+        json: ['application/json']
+    use_symfony_listeners: true

@@ -1,0 +1,145 @@
+/* je voudrais importer ./ login.css qui n'est utile que sur la page /login */
+/* je voudrais importer ./ site.css qui n'est utile que sur la page home_index ou / */
+/* je voudrais importer ./ user .css qui n'est utile que sur les pages commençant par /user */
+
+
+/*   
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+    
+.navbar .logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+
+
+.nav-links {
+  display: flex;
+  gap: 15px;
+  list-style: none;
+}
+
+.navbar .nav-links a {
+  text-decoration: none;
+  font-size: 1rem;
+  transition: color 0.3s;
+}
+
+.navbar .nav-links a:hover {
+  color: rgb(254, 247, 221);
+}
+
+#menu-toggle {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  display: none;
+  z-index: 1100;
+  color:rgb(128, 128, 128);
+}
+
+
+@media (max-width: 768px) {
+  .navBarEspaceClient{
+    color: rgb(0, 195, 255) !important;
+    text-decoration: underline rgb(0, 195, 255) !important;
+  }
+
+  .navbar {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  #menu-toggle {
+    display: block;
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    border-radius: 5px;
+    border: 2px solid transparent;
+    box-shadow: 0 0 5px 4px rgb(218, 215, 215); 
+    background-color: rgba(255,255,255,0.9);
+
+  }
+
+  .nav-links {
+    display: none;
+    flex-direction: column;
+    background-color: rgba(0,0,0,0.9);
+    position: absolute;
+    top: 60px;
+    right: 0;
+    width: 100%;
+    text-align: center;
+    padding: 10px 0;
+    border-radius: 20px;
+  }
+
+  .nav-links.active {
+    display: flex;
+  }
+
+  .nav-links li a {
+    color: white;
+  }
+
+
+
+}
+
+.container-user{
+  display: flex; 
+  flex-wrap: wrap;
+  margin: 0 !important;
+  padding: 0 !important;
+  width: 100%;
+  height: 100%;
+  flex-grow:1;
+}
+
+
+
+.sidebar-toggler {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  z-index: 1050;
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+
+
+
+@media (min-width: 767px) {
+  .sidebar-flex{
+    flex:1;
+  }
+}
+
+@media (max-width: 767px) {
+  .sidebar-toggler {
+    display: block;
+    box-shadow: 0 0 5px 4px rgb(218, 215, 215);
+    color: grey;
+    border-top: none;
+    border-bottom: none;
+    border-radius: 5px;
+    border-right: 2px solid transparent;
+    border-left: 2px solid transparent;
+    font-size: 2rem;
+    background-color: rgba(255,255,255,0.9);
+  }
+
+
+
+}
+ */

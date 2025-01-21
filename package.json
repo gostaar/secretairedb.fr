@@ -1,0 +1,46 @@
+{
+  "scripts": {
+    "dev": "webpack --config webpack.config.js",
+    "dev-server": "webpack-dev-server --config webpack.config.js",
+    "prod": "webpack --config webpack.config.js --mode production"
+  },
+  "devDependencies": {
+    "@hotwired/stimulus": "^3.0.0",
+    "@hotwired/turbo": "^7.1.1 || ^8.0",
+    "@symfony/stimulus-bridge": "^3.2.0",
+    "@symfony/webpack-encore": "^5.0.1",
+    "file-loader": "^6.2.0",
+    "sass": "^1.81.0",
+    "sass-loader": "^16.0.3",
+    "webpack": "^5.97.0",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^5.1.0",
+    "webpack-manifest-plugin": "^5.0.0",
+    "webpack-notifier": "^1.15.0"
+  },
+  "dependencies": {
+    "@fullcalendar/core": "^6.1.15",
+    "@fullcalendar/daygrid": "^6.1.15",
+    "@fullcalendar/google-calendar": "^6.1.15",
+    "@fullcalendar/interaction": "^6.1.15",
+    "@fullcalendar/list": "^6.1.15",
+    "@fullcalendar/timegrid": "^6.1.15",
+    "circular-json": "^0.5.9",
+    "dom-animation": "^1.0.2",
+    "dotenv": "^16.4.5",
+    "flatted": "^3.3.2",
+    "jquery": "^3.7.1",
+    "stimulus": "^3.2.2",
+    "tslib": "^2.8.1"
+  },
+  "name": "secretaire",
+  "version": "1.0.0",
+  "description": "docker exec -it secretaire-database-1 bash\r psql -U app -p 5432",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

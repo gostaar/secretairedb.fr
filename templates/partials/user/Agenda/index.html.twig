@@ -1,0 +1,48 @@
+
+<div class="flex-grow-1 p-4">
+    
+    {% include 'partials/user/Agenda/_agendaTab.html.twig' %}
+    
+        {# <h2 class="text-center mb-2">Créer un événement</h2>
+    
+        <form id="create-event-form">
+            <div class="mb-3">
+                <label for="event-title" class="form-label">Titre :</label>
+                <input type="text" id="event-title" name="title" class="form-control" required>
+            </div>
+    
+            <div class="mb-3">
+                <label for="event-description" class="form-label">Description :</label>
+                <textarea id="event-description" name="description" class="form-control"></textarea>
+            </div>
+
+            <div class="mb-3">
+                <label for="event-location" class="form-label">Lieu :</label>
+                <textarea id="event-location" name="location" class="form-control"></textarea>
+            </div>
+    
+            <div class="mb-3">
+                <label for="event-start-date" class="form-label">Date de début :</label>
+                <input type="datetime-local" id="event-start-date" name="start" class="form-control" required>
+            </div>
+    
+            <div class="mb-3">
+                <label for="event-end-date" class="form-label">Date de fin :</label>
+                <input type="datetime-local" id="event-end-date" name="end" class="form-control" required>
+            </div>
+    
+            <button type="submit" id="create-event-button" class="btn btn-primary w-100 d-none">Créer l'événement</button>
+        </form> #}
+        <!-- Bouton "Authorize" avec logo Google -->
+        {# <button id="authorize_button" class="btn btn-outline-danger w-100 d-flex align-items-center justify-content-center mt-2 d-none">
+            <img src="{{ asset('build/images/google.png') }}" alt="Google logo" style="width: 20px; margin-right: 10px;" >
+            Connexion avec Google
+        </button>
+        #}
+        <!-- Bouton "Sign Out" -->
+
+</div>
+
+<div id="link-newGoogleEvent" style="min-height:100vh;" class='d-none m-0 p-0 '>
+    {% include 'partials/user/Agenda/_agendaGoogleNewEvent.html.twig' %}
+</div> 

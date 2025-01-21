@@ -1,0 +1,67 @@
+<!-- Main Content -->
+{# {% set userId = app.user.id %}
+{% set fetchPart = '/api/dossiers?user=' %}
+{% set fetchUrl = url ~ fetchPart ~ userId %}
+{% set dossiers = fetchUrl|fetch %} #}
+<div class="flex-grow-1 p-4 d-flex flex-column">
+    <div class="container card mb-4">
+        <div class="container card-header d-flex justify-content-between align-items-center">
+            <h4>{{ title }}</h4>
+        </div>
+        <div class="card-body">
+            <!-- Barre de recherche -->
+            {% include 'partials/user/models/searchModel.html.twig' with {
+                'formViews': formViews,
+                'fragment': fragment
+            } only %}
+            {% if dossiers is not empty %}
+                <div class="d-flex flex-wrap">
+                {% for dossier in dossiers %}
+                    <div class="repertoire d-flex flex-column align-items-center p-1" style="position: relative; width: 130px;">
+                        <button 
+                            type="button" 
+                            data-id="{{ dossier.id }}" 
+                            class="btn d-flex flex-column flex-start align-items-center text-decoration-none"
+                            style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: transparent; border: none; z-index: 1; padding: 0;">
+                        </button>
+
+                        <i class="fas fa-folder fa-3x text-center text-warning"></i>
+                        <p class='text-black text-center'>{{ dossier.name }}</p>
+                    </div>
+                {% endfor %}
+                </div>
+            {% else %}
+                <!-- Aucun document -->
+                <div class="text-center">
+                    <div style="position: relative; display: inline-block;">
+                        <i class="fas fa-file-alt fa-5x text-center m-5"></i>
+                        <div style="position: absolute; 
+                                top: 0; left: 0; 
+                                right: 0; bottom: 0; 
+                                background-color: rgba(255, 255, 255, 0.7); 
+                                z-index: 1;">
+                        </div>
+                    </div>
+                    <h1 style="color: grey;">Aucun dossiers</h1>
+                    <p class="text-muted">À cet endroit, vous pourrez consulter vos dossiers.</p>
+                </div>
+            {% endif %}
+            
+            <div class="d-flex justify-content-center mt-4">
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#dossierModal">
+                    Créer un nouveau dossier
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% include 'partials/user/Dossiers/_create.html.twig' %}
+
+{% include 'partials/user/Dossiers/_rename.html.twig' %}
+ 
+<div id="contextMenu" class="dropdown-menu d-none" style="position: absolute;">
+    <button class="btn dropdown-item change-fragment" id="openDossier">Ouvrir le dossier</button>
+    <a class="dropdown-item" href="javascript:void(0)" id="renameDossier">Renommer le dossier</a>
+    <a class="dropdown-item" href="javascript:void(0)" id="deleteDossier">Supprimer le dossier</a>
+</div>

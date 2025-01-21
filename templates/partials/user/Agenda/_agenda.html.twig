@@ -1,0 +1,22 @@
+
+<div class="flex-grow-1 p-4 d-flex justify-content-center align-items-center h-100">
+    <div id="btnGoogleSecretaire-container" class="row mb-4 text-center">
+        <div id="btnGoogleSecretaire" class="col-12 col-md-8">
+            <div class="d-flex flex-column flex-md-row justify-content-evenly align-items-center gap-4">
+                <!-- Google Button -->
+                <button id="authorize_button" class="btn btn-lg btn-google text-white">
+                    <h2>J'ai un compte Google</h2>
+                </button>
+                <!-- Main Agenda Button -->
+                <button id="btnMainAgenda" href='{{ path('user', {fragment: 'link-MainAgenda'}) }}' class="btn btn-lg btn-main-agenda text-white">
+                    <h2>Je n'ai pas de compte Google</h2>
+                </button>
+            </div>
+        </div>
+        <div class="text-center mt-3">
+            <a href="https://accounts.google.com/signup" target="_blank" class="link-google-account">
+                Créez un compte Google ici
+            </a>
+        </div>
+    </div>
+</div>

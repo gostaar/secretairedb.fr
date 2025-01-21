@@ -1,0 +1,43 @@
+
+    <div class="d-flex justify-content-center w-100">
+        <div class="w-100 p-4" style="max-width: 600px;">
+            <div class="container bg-white border rounded mb-5 p-4">
+                <form id="create-event-form" style="max-width: 600px;">
+                    <!-- Section du titre de l'événement -->
+                    <div class="mb-4">
+                        <label for="event-title" class="form-label">Titre :</label>
+                        <input type="text" id="event-title" name="title" class="form-control" required>
+                    </div>
+
+                    <!-- Section de la description de l'événement -->
+                    <div class="mb-4">
+                        <label for="event-description" class="form-label">Description :</label>
+                        <textarea id="event-description" name="description" class="form-control" rows="4"></textarea>
+                    </div>
+
+                    <!-- Section du lieu de l'événement -->
+                    <div class="mb-4">
+                        <label for="event-location" class="form-label">Lieu :</label>
+                        <textarea id="event-location" name="location" class="form-control" rows="3"></textarea>
+                    </div>
+
+                    <!-- Section de la date de début -->
+                    <div class="mb-4">
+                        <label for="event-start-date" class="form-label">Date de début :</label>
+                        <input type="datetime-local" id="event-start-date" name="start" class="form-control" required>
+                    </div>
+
+                    <!-- Section de la date de fin -->
+                    <div class="mb-4">
+                        <label for="event-end-date" class="form-label">Date de fin :</label>
+                        <input type="datetime-local" id="event-end-date" name="end" class="form-control" required>
+                    </div>
+
+                    <!-- Bouton de soumission -->
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-primary w-100">Créer l'événement</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>

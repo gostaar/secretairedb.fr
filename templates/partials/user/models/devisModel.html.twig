@@ -1,0 +1,88 @@
+{# id="devisId2" id="devisDate_devis" id="devisMontant" id="devisDateLimite" #}
+
+<div class="modal-body m-3 p-0 d-none" style="flex-direction: column;" id="devishtml2print">
+    <headerPrint id='headerPrint'>
+        <!-- Informations de la société (statique) -->
+        <div style="float: left; width: 45%; padding-right: 10px;">
+            <p class='m-0 p-0'><strong>SecretairePro</strong></p>
+            <p class='m-0 p-0'>Madame Delphine Bauwens</p>
+            <p class='m-0 p-0'>Lieu-dit Pianellu</p>
+            <p class='m-0 p-0'>20272 Pianellucciu</p>
+            <p class='m-0 p-0'>Siret: à venir</p>
+            <p class='m-0 p-0'>Téléphone: 0781373785</p>
+            <p class='m-0 p-0'>Email: dbsecretaire@gmail.com</p>
+            <h2 class='mt-5'>
+                Devis n° <label id="devisId2" class="border-0 bg-transparent text-black"></label>
+            </h2>
+        </div>
+
+        <!-- Informations de l'utilisateur alignées à droite dans un cadre -->
+        <div style="float: right; width: 50%;">
+            <table class="table">
+            <thead>
+                <tr>
+                    <th class="text-center border-1" style="background-color: #f0f0f0;">N° client</th>
+                    <th class="text-center border-1" style="background-color: #f0f0f0;">TVA</th>
+                    <th class="text-center border-1" style="background-color: #f0f0f0;">Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="text-center border-1">{{user.id}}</td>
+                    <td class="text-center border-1">{% if user.siret %}{{user.siret}}{% else %}N/A{% endif %}</td>
+                    <td class="text-center border-1">
+                        <label id="devisDate_devis" class="border-0 bg-transparent text-black"></label>
+                    </td>
+                </tr>
+            </tbody>
+            </table>
+            <div style='border: 1px solid black; padding: 10px; margin-top: 50px;'>
+                <p class='m-0 p-0'>{{ user.nomEntreprise }}</p>
+                <p class='m-0 p-0'>{{ user.nom }}</p>
+                <p class='m-0 p-0'>{{ user.adresse }}</p>
+                <p class='m-0 p-0'>{{ user.codePostal }} {{ user.ville }}</p>
+            </div>
+        </div>
+    </headerPrint>
+
+    <!-- Tableau des articles de la devis -->
+    <div style="flex-grow: 1; overflow-y: auto; margin-top: 50px;">
+        <table class="table table-bordered" style="width: 100%; table-layout: fixed; height: 500px">
+            <thead>
+                <tr>
+                    <th class="text-start border-1" style="background-color: #f0f0f0; width: 50%;">Désignation</th>
+                    <th class="text-center border-1" style="background-color: #f0f0f0;">Qté</th>
+                    <th class="text-center border-1" style="background-color: #f0f0f0;">PU</th>
+                    <th class="text-center border-1" style="background-color: #f0f0f0;">HTVA</th>
+                </tr>
+            </thead>
+            <tbody id='devisContentTable2'></tbody>
+        </table>
+    </div>
+
+    <table style="width: 100%; table-layout: fixed;">
+        <tbody>
+        <tr>
+            <th class="text-end" style="width: 75%;">Total TTC</th>
+            <th class="text-end" style=" width: 25%;">
+                <label id="devisMontant" class="border-0 bg-transparent text-black"></label>
+            </th>
+        </tr>
+        <tr>
+            <th class="text-end">Échéance</th>
+            <td class="text-end">
+                <label id="devisDateLimite" class="border-0 bg-transparent text-black"></label>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <footerPrint id='footerPrint'>
+        <!-- Conditions de paiement -->
+        <div style="margin-top: 20px;">
+            <p><strong>Conditions de validité:</strong></p>
+            <p>La validité du devis est d'un mois à partir de la date de création.</p>
+        </div>
+    </footerPrint>
+</div>
+      

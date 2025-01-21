@@ -1,0 +1,422 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    background-color: #f9f9f9;
+    color: #333;
+    width: 100vw;
+    height: 100vh;
+}
+
+/* ===== index ===== */
+.custom-bg{
+    background-image: url('../img/main9.jpg');
+    background-size: cover;  
+    background-position: center;
+    background-attachment: fixed;
+}
+
+/* ===== mainContent ===== */
+.c-access{
+    display: flex;
+    gap: 20px;
+    flex-flow: row wrap;
+  }
+  
+  .access{
+    background-color: grey;
+    border-radius: 1rem;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    padding: 0.5rem;
+    text-decoration: none;
+    color: white;  
+}
+  
+.access p{
+    text-align: center;
+}
+
+@media (max-width: 767px) {
+    .c-access{
+        gap:2px;
+    }
+    
+    .access p{
+        font-size: 0.70rem;
+    }
+
+    .card-header h5 {
+        font-size: 1rem;
+      }
+}
+
+/* ===== header et navigation ===== */
+
+.body-user{
+    min-width: 100vw;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-flow: column wrap;
+}
+
+.bg-rgba{
+    background-color: rgba(0,0,0,0.8);
+}
+
+.deconnexion{
+    color: red !important;
+}
+
+.icon-size {
+    max-width: 2rem;
+    max-height: 2rem;
+    object-fit: contain; 
+}
+
+.sidebar ul, .sidebar-nav {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+  
+.sidebar a {
+    color: black;
+    text-decoration: none;
+}
+
+body .sidebar.d-none.d-md-block {
+    background-color: grey;
+    height: 100%;
+}
+  
+.d-md-none .sidebar {
+    background-color: #343a40;
+    position: fixed;
+    width: 100%;
+    transition: all 0.3s ease-in-out;
+}
+
+.sidebar ul{
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    padding-top:5rem;
+    padding-bottom: 1rem;
+}
+
+.sidebar a {
+    color: black;
+    text-decoration: none;
+}
+
+body .sidebar.d-none.d-md-block {
+    background-color: rgba(0, 0, 0, 0.1);
+    height: 100%;
+}
+
+.d-md-none .sidebar {
+    background-color: #343a40;
+    position: fixed;
+    width: 100%;
+    transition: all 0.3s ease-in-out;
+}
+
+#navBurger {
+    display: block;
+    background-color: rgba(0, 0, 0, 0.9);
+    border-radius: 20px;
+}
+
+#menu-toggle {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    display: none;
+    z-index: 1100;
+    color:rgb(128, 128, 128);
+}
+
+@media (max-width: 767px) {
+    .sidebar {
+        display: none;
+    }
+
+    .navBarEspaceClient{
+        color: rgb(0, 195, 255) !important;
+        text-decoration: underline rgb(0, 195, 255) !important;
+    }
+
+    #menu-toggle {
+        display: block;
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        border-radius: 5px;
+        border: 2px solid transparent;
+        box-shadow: 0 0 5px 4px rgb(218, 215, 215); 
+        background-color: rgba(255,255,255,0.9);
+    
+    }
+
+    /* .sidebar.active {
+        display: block;
+    } */
+}
+
+#navBurger {
+    display: block;
+    background-color: rgba(0, 0, 0, 0.9);
+    border-radius: 20px;
+}
+  
+#navBurger div ul {
+    padding-top:5rem;
+    padding-bottom: 1rem;
+}
+  
+#navBurger div ul li a {
+    color: white;
+}
+  
+#navBurger div ul li a img {
+    color: white;
+    filter: invert(1);
+}
+
+@media (max-width: 767px) {
+    .sidebar {
+        display: none;
+    }
+
+    .sidebar.active {
+        display: block;
+    }
+/*   
+    .sidebar.active + .sidebar-toggler {
+      box-shadow: none;
+    } */
+}
+/* ===== Facture ===== */
+
+.facture-ligne {
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+button.remove-ligne {
+    color: white;
+    background-color: red;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.error-message {
+    font-size: 0.9rem;
+    margin-top: 5px;
+}
+
+/* ===== Agenda ===== */
+#calendar {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.btn-google {
+    background: linear-gradient(145deg, #4285F4, #357AE8); 
+    border: none;
+    color: white;
+    font-size: 18px;
+    font-weight: 600;
+    padding: 15px 30px;
+    border-radius: 30px;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.1);
+    min-height: 80px; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.btn-google h2 {
+    font-size: 1.2rem;
+    line-height: 1.3;
+    margin-bottom: 0;
+}
+  
+.btn-google:hover {
+    background: linear-gradient(145deg, #357AE8, #4285F4);
+    transform: scale(1.05); 
+    box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.15); 
+}
+
+.btn-main-agenda {
+    background: linear-gradient(145deg, #6c757d, #5a6268);
+    border: none;
+    color: white;
+    font-size: 18px;
+    font-weight: 600;
+    padding: 15px 30px;
+    border-radius: 30px;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.1);
+    min-height: 80px; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.btn-main-agenda h2 {
+    font-size: 1.2rem;
+    line-height: 1.3;
+    margin-bottom: 0;
+}
+  
+.btn-main-agenda:hover {
+    background: linear-gradient(145deg, #5a6268, #6c757d); 
+    transform: scale(1.05);
+    box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.15);
+}
+
+#btnGoogleSecretaire-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.link-google-account {
+    color: #4285F4;
+    font-size: 1rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: color 0.3s ease;
+    display: block;
+    margin-top: 20px;
+}
+  
+.link-google-account:hover {
+    color: #357AE8;
+    text-decoration: underline;
+}
+
+@media (max-width: 992px) {
+    .btn-google, .btn-main-agenda {
+        width: 100%; /* Les boutons prennent toute la largeur sur les petits écrans */
+    }
+}
+  
+@media (max-width: 768px) {
+    #btnGoogleSecretaire-container {
+        flex-direction: column;
+        align-items: center;
+    }
+  
+    .btn-google, .btn-main-agenda {
+        width: 80%; /* Réduit la largeur des boutons sur les petits écrans */
+        margin-bottom: 10px;
+    }
+}
+
+/* @media (max-width: 767px) {
+    #syncButtonsEvent {
+        justify-content: center;
+    }
+}
+@media (min-width: 768px) {
+    #syncButtonsEvent {
+        justify-content: space-between;
+    }
+} */
+
+#eventList li:hover {
+    background-color: #f0f0f0ad;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+/* ===== styles globaux ===== */
+
+@media (max-width: 767px) {
+    .card-header h5 {
+      font-size: 1rem; 
+    }
+    .table th, .table td {
+        font-size: 0.70rem; 
+    }
+    .btn {
+        font-size: 0.70rem;
+    }
+}
+
+/* ==== spinner temps de chargement ===== */
+
+#loadingIndicator {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    display: none;
+}
+
+.spinner {
+    display: flex;
+    justify-content: space-between;
+    width: 50px;
+}
+
+.spinner > div {
+    width: 12px;
+    height: 12px;
+    background-color: #333;
+    border-radius: 50%;
+    animation: bounce 1.2s infinite ease-in-out;
+}
+
+.spinner .bounce1 {
+    animation-delay: 0s;
+}
+
+.spinner .bounce2 {
+    animation-delay: 0.2s;
+}
+
+.spinner .bounce3 {
+    animation-delay: 0.4s;
+}
+
+@keyframes bounce {
+    0%, 100% { transform: scale(0); }
+    50% { transform: scale(1); }
+}
+
+/* ==== formulaire image ==== */
+/* Applique un style commun à tous les éléments de formulaire */
+.form-element-image {
+    display: flex;
+    flex-grow: 1;
+    gap: 10px;
+}
+
+.form-element-image div {
+    width: 35%;
+    margin-bottom: 0 !important;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}

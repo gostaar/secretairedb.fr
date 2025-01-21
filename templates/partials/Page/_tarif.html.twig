@@ -1,0 +1,47 @@
+<section class="background-tarifs d-flex flex-column flex-fill min-vh-100">
+    {% include 'partials/Page/_navBar.html.twig' %}
+
+    <section class="hero">
+        <div class="heroContent">
+            <h1>Tarifs</h1>
+            <p>Détails des tarifs</p>
+        </div>
+       <div class="w-100 my-3">
+            <button type="button" class="change-fragment-site btn btn-warning fs-5 border border-secondary" data-fragment={{initialisation.fragmentValue}} data-subFragment="contact" >
+                Contactez-nous
+            </button>
+        </div>
+        <div class="w-100 my-3">
+            <button type="button" class="change-fragment-site btn btn-primary fs-5" data-fragment={{initialisation.fragmentValue}} data-subFragment="acceuil">{{initialisation.buttonValue}}</button>
+        </div>
+    </section>
+    <section class='intro d-flex flex-column justify-content-evenly bg-white flex-fill'>
+        <h1 class="services-title">Nos tarifs</h1>
+        <h2 class="services-subtitle">Le meilleur pour tous nos clients</h2>
+        <div id="services" class="service-list d-flex flex-wrap justify-content-center">
+            <div class="container mt-5">
+                <div class="row">
+                    <div class="col-12 d-flex justify-content-center flex-wrap">
+                        {% set sections = [
+                            { "title": "Devis", "items": ["Gratuit"] },
+                            { "title": "Tarifs horaires", "items": ["35€/h en présentiel (+ frais de déplacement)", "30€/h en télésecrétariat"] },
+                            { "title": "Tarifs à la carte", "items": ["Disponible sur demande"] },
+                            { "title": "Forfaits", "items": ["Forfait hebdomadaire", "Forfait mensuel", "Tarifs dégressifs"] }
+                        ] %}
+
+                        {% for section in sections %}
+                            <div class="service-item p-4 m-2 border rounded" style="background-color:white;">
+                                <h3>{{ section.title }}</h3>
+                                <ul class="list-unstyled">
+                                    {% for item in section.items %}
+                                        <li>{{ item }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</section>

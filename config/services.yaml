@@ -4,8 +4,17 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
-
+    clientId: '%env(GOOGLE_CLIENT_ID)%'
+    clientSecret: '%env(GOOGLE_CLIENT_SECRET)%'
+    googleOauthScope: '%env(GOOGLE_OAUTH_SCOPE)%'
+    redirectUri: '%env(REDIRECT_URI)%'
+    kernel.logs_dir: '%kernel.project_dir%/var/log'
+    redis_url: '%env(REDIS_URL)%'
+    uploads_dir: '%kernel.project_dir%/public/uploads/documents'
+    url: '%env(URL)%'
+   
 services:
+
     # default configuration for services in *this* file
     _defaults:
         autowire: true      # Automatically injects dependencies in your services.
@@ -19,6 +28,74 @@ services:
             - '../src/DependencyInjection/'
             - '../src/Entity/'
             - '../src/Kernel.php'
+
+    App\Service\GoogleAuthService:
+        arguments:
+            $clientId: '%clientId%'
+            $clientSecret: '%clientSecret%'
+            $googleOauthScope: '%googleOauthScope%'
+            $redirectUri: '%redirectUri%'
+
+    App\Service\GoogleCalendarApiService:
+        arguments:
+            $clientId: '%clientId%'
+            $clientSecret: '%clientSecret%'
+            $redirectUri: '%redirectUri%'
+
+    App\Service\RedisService:
+        public: true
+        arguments:
+            $redisUrl: '%env(REDIS_URL)%'
+
+    App\EventListener\LogoutListener:
+        tags:
+            - { name: 'kernel.event_subscriber' }
+    
+    App\Security\CachedUserProvider:
+        arguments:
+            $registry: '@doctrine' 
+            $userClass: 'App\Entity\User'                    
+        tags:
+            - { name: security.user_provider }
+    
+    App\Security\UserChecker:
+        tags: ['security.user_checker']
+
+    App\EventListener\MethodOverrideListener:
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, priority: 10 }
+
+    images.document_filter:
+        class: App\Filter\DocumentFilter
+        arguments: []
+        tags:
+        - { name: 'api_platform.filter' }
+
+    App\Service\ImageService:
+        arguments:
+            $client: '@http_client'
+            $params: '%url%'
+    
+    App\Twig\FetchExtension:
+        tags: ['twig.extension']
+    
+    Symfony\Contracts\HttpClient\HttpClientInterface:
+        alias: 'http_client'
+
+    # api_platform.listener.request.deserialize:
+    #     class: ApiPlatform\Symfony\EventListener\DeserializeListener
+    #     arguments:
+    #         $provider: '@api_platform.state_provider'
+    #         $resourceMetadataFactory: '@?api_platform.metadata.resource.metadata_collection_factory'
+    
+    # App\EventListener\DeserializeListener:
+    #     tags:
+    #         - {name: 'kernel.event_listener', event: 'kernel.request', method: "onKernelRequest", priority: 2}
+    #     autoconfigure: false
+    #     decorates: 'api_platform.listener.request.deserialize'
+    #     arguments:
+    #         $decorated: '@App\EventListener\DeserializeListener.inner'
+
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

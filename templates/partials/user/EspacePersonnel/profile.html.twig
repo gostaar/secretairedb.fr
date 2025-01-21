@@ -1,0 +1,92 @@
+
+
+    <!-- Main Content -->
+    <div class="flex-grow-1 p-4 d-flex flex-column">
+        <div class="container card mb-4">
+            <div class="container card-header d-flex justify-content-between align-items-center">
+                <h4>Informations personnelles</h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    {% set personal_info = [
+                        {'id': 'civilite', 'label': 'Civilité', 'placeholder': 'Civilité', 'value': user.id},
+                        {'id': 'nom', 'label': 'Nom', 'placeholder': 'Nom', 'value': user.nom},
+                        {'id': 'adresse', 'label': 'Adresse', 'placeholder': 'Adresse', 'value': user.adresse},
+                        {'id': 'code-postal', 'label': 'Code Postal', 'placeholder': 'Code Postal', 'value': user.codePostal},
+                        {'id': 'ville', 'label': 'Ville', 'placeholder': 'Ville', 'value': user.ville},
+                        {'id': 'Pays', 'label': 'Pays', 'placeholder': 'Pays', 'value': user.pays},
+                        {'id': 'telephone', 'label': 'Téléphone', 'placeholder': 'Téléphone', 'value': user.telephone},
+                        {'id': 'mobile', 'label': 'Mobile', 'placeholder': 'Mobile', 'value': user.mobile},
+                        {'id': 'email', 'label': 'Adresse e-mail', 'placeholder': '', 'value': user.email, 'readonly': true}
+                    ] %}
+                    {% for field in personal_info %}
+                        <div class="col-md-4 mb-3">
+                            <label for="{{ field.id }}">{{ field.label }}</label>
+                            <input 
+                                id="{{ field.id }}" 
+                                class="form-control" 
+                                placeholder="{{ field.placeholder }}" 
+                                value="{{ field.value }}" 
+                                {% if field.readonly is defined and field.readonly %}readonly{% endif %}
+                            >
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <div class="container card mb-4">
+            <div class="container card-header d-flex justify-content-between align-items-center">
+                <h4>Facturation</h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    {% set entreprise_info = [
+                        {'id': 'siret', 'label': 'Siret', 'placeholder': 'Numéro de Siret', 'value': user.siret},
+                        {'id': 'nomEntreprise', 'label': 'Nom de l\'entreprise', 'placeholder': 'Nom de l\'entreprise', 'value': user.nomEntreprise ? user.nomEntreprise : 'N/A'},
+                    ] %}
+                    {% for field in entreprise_info %}
+                        <div class="col-md-4 mb-3">
+                            <label for="{{ field.id }}">{{ field.label }}</label>
+                            <input id="{{ field.id }}" class="form-control" placeholder="{{ field.placeholder }}" value="{{ field.value }}" >
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <p class="text-danger border-top pt-3">Services choisis:</p>
+                <ul>
+                    {% for s in services %}
+                        <li>{{ s }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+        {# <div class="container card mb-4">
+            <div class="container card-header d-flex justify-content-between align-items-center">
+                <h4>Vos identifiants</h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    {% set user_fields = [
+                        {'id': 'login', 'label': 'Login', 'type': 'text', 'value': user.email, 'readonly': true},
+                        {'id': 'password', 'label': 'Mot de passe', 'type': 'password', 'value': user.password, 'readonly': true, 'action': 'Modifier le mot de passe'}
+                    ] %}
+
+                    {% for field in user_fields %}
+                        <div class="mb-3">
+                            <label for="{{ field.id }}">{{ field.label }}</label>
+                            <input id="{{ field.id }}" 
+                                type="{{ field.type }}" 
+                                class="form-control" 
+                                value="{{ field.value }}" 
+                                {% if field.readonly %}readonly{% endif %}>
+                            {% if field.action is defined %}
+                                <a href="#" class="text-danger mt-2 d-block">{{ field.action }}</a>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div> #}
+    </div>

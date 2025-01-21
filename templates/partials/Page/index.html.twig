@@ -1,0 +1,10 @@
+<div class="d-flex flex-fill flex-column justify-content-between fade-in">
+    <div class="d-flex flex-column flex-fill">
+        <div id="subFragmentContent" class='d-flex flex-column flex-fill'>
+            {% if currentSubFragment is defined %}
+                {% include currentSubFragment %}
+            {% endif %}
+        </div>
+    </div>
+    {% include 'partials/Page/footer.html.twig' %}
+</div>

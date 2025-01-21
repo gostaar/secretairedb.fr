@@ -1,0 +1,81 @@
+<div class="background-jobs d-flex flex-column flex-fill min-vh-100">
+    {% include 'partials/Page/_navBar.html.twig' %}
+    <section class="hero">
+        <div class="heroContent">
+            <h1>Rejoignez notre équipe</h1>
+            <p>Découvrez nos offres de jobs dans le domaine administratif et numérique.</p>
+        </div>
+         <div class="w-100 my-3">
+            <button type="button" class="change-fragment-site btn btn-warning fs-5 border border-secondary" data-fragment={{initialisation.fragmentValue}} data-subFragment="contact" >
+                Contactez-nous
+            </button>
+        </div>
+        <div class="w-100 my-3">
+            <button type="button" class="change-fragment-site btn btn-primary fs-5" data-fragment={{initialisation.fragmentButtonValue}} data-subFragment="acceuil">{{initialisation.buttonValue}}</button>
+        </div>
+    </section>
+    <section class="intro d-flex flex-column justify-content-evenly bg-white flex-fill">
+        <h1 class="services-title">Nos offres d'emploi</h1>
+        <h2 class="services-subtitle">Postes disponibles</h2>
+        <div id="services" class="service-list d-flex flex-wrap justify-content-center">
+            <div class="service-item d-flex flex-column align-items-center">
+                {#{% set job_offers = [
+                    { "title": "Assistant(e) Administratif(ve)", "description": "Rejoignez notre équipe pour gérer diverses tâches administratives pour nos clients." },
+                    { "title": "Développeur Web", "description": "Nous cherchons un développeur pour créer des sites internet modernes et fonctionnels." },
+                    { "title": "Support Technique", "description": "Fournissez un support technique pour nos services numériques et bureautiques." } 
+                ] %}#}
+
+                {% if job_offers is not defined %}
+                    Pas d'offre d'emploi actuellement
+                {% else %}
+                    {% for job in job_offers %}
+                        <div class="service-item d-flex flex-column align-items-center">
+                            <h3>{{ job.title }}</h3>
+                            <p>{{ job.description }}</p>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+        </div>
+    </section>
+</div>
+
+<!-- Contact Section -->
+<section id="contact" class="contact" style="background-color: #fef7dd;">
+    <div class="container pb-4 pt-4">
+        <h2 class="text-center mb-4 ">Postulez dès maintenant!</h2>
+        <p class="text-center mb-5">Envoyez votre candidature via le formulaire ci-dessous</p>
+
+        <!-- Formulaire de Candidature -->
+       <form action="{{ path('jobs_handler') }}" method="post" class="p-4">
+            <div class="d-flex flex-wrap mb-3">
+                <div class="flex-fill me-3">
+                    <label for="name" class="form-label">Nom :</label>
+                    <input type="text" id="name" name="name" class="form-control" required>
+                </div>
+
+                <div class="flex-fill me-3">
+                    <label for="email" class="form-label">Email :</label>
+                    <input type="email" id="email" name="email" class="form-control" required>
+                </div>
+
+                <div class="flex-fill me-3">
+                    <label for="job" class="form-label">Poste souhaité :</label>
+                    <select id="job" name="job" class="form-select" required>
+                        <option value="" disabled selected>Choisissez un poste</option>
+                        <option value="Autre">Autre (écrivez votre intitulé)</option>
+                    </select>
+                    <input type="text" id="customJob" name="customJob" class="form-control mt-2 d-none" placeholder="Si 'Autre', précisez votre intitulé">
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label for="cv" class="form-label">CV (en PDF) :</label>
+                <input type="file" id="cv" name="cv" class="form-control" accept=".pdf" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100">Envoyer ma candidature</button>
+        </form>
+    </div>
+</section>
+

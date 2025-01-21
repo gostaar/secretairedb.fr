@@ -1,0 +1,53 @@
+<div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-rgba d-none d-md-block" style="width: 250px;">
+    <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100">
+        <a href="{{ path('app_logout') }}" class="d-flex align-items-center py-3 mb-md-0 mx-md-auto text-warning text-decoration-none">
+            <span class="fs-5 d-none d-sm-inline">Secrétaire Pro</span>
+        </a>
+        <hr>
+        <div class="d-flex justify-content-center mx-md-auto">
+            <a href="#" class="d-flex align-items-center text-decoration-none" id="dropdownUser1">
+                <img src="{{ asset('build/images/avatar.png') }}" alt="hugenerd" width="30" height="30" class="rounded-circle">
+            </a>
+            <ul class="list-unstyled ms-3 my-auto">
+                <li><span class="d-flex flex-wrap text-white text-break d-none d-sm-inline">{{ app.user.email }}</span></li>
+                <li><a class="deconnexion d-none d-sm-inline" href="{{ path('app_logout') }}">Déconnexion</a></li>
+            </ul>
+        </div>
+        <hr>
+        <ul class="nav nav-pills flex-column mb-sm-auto mb-0 ps-3 align-items-center align-items-sm-start" id="menu">
+            {% include 'userPage/_headerMenu.html.twig' %}
+        </ul>           
+    </div>
+</div>
+<!-- Menu Burger (Petits Écrans) -->
+<nav class="sidebar d-md-none navbar-expand-md fixed-top" id="navBurger">
+    <div class="container-fluid">
+        <button class="menu-toggle" id="menu-toggle"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarNav"
+            aria-controls="navbarNav"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+        >&#9776;</button> 
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <div class="text-center pb-4 pt-4">
+                <h2><a href="{{ path('app_logout') }}" class="text-warning" >Secrétaire Pro</a></h2>
+            </div>
+            <div class="user-avatar d-flex mb-4 justify-content-center align-items-center gap-3">
+                <a href="{{ path('user', {fragment: 'link-Profile'}) }}" class="d-flex justify-content-center align-items-center">
+                    <img src="{{ asset('build/images/avatar.png') }}" alt="Avatar" class="icon-size"/>
+                </a>
+                <div class="d-flex flex-column">
+                    <a href="{{ path('user', {fragment: 'link-Profile'}) }}" class="list-unstyled text-white">{{ app.user.email }}</a>
+                    <div class="list-unstyled">
+                        <a href="{{ path('app_logout') }}" class="bt w-100 deconnexion">Déconnexion</a>
+                    </div>
+                </div>
+            </div>
+            <div class="nav nav-pills flex-column mb-sm-auto pt-2 pb-5 ps-3 align-items-center" id="menu">
+                {% include 'userPage/_headerMenu.html.twig' %}
+            </div>
+        </div>
+    </div>
+</nav>

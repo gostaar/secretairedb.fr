@@ -1,0 +1,49 @@
+{% if initialisation.fragmentValue == 'part' %}
+    {% set experts = [
+        { "icon": "fas fa-users fa-3x text-danger", "title": "Rencontre Experts", "description": "Recevez la visite d'un expert qui fera de vos projets des réalités!" },
+        { "icon": "fas fa-circle-notch fa-3x text-danger", "title": "Service 360°", "description": "Nous vous accompagnons du début à la fin pour vos projets" },
+        { "icon": "fas fa-wrench fa-3x text-danger", "title": "Support Technique", "description": "Qui mieux que notre équipe pour répondre à vos questions?" }
+    ] %}            
+{% elseif initialisation.fragmentValue == 'pro' %}
+    {% set experts = [
+        { "icon": "fas fa-users fa-3x text-danger", "title": "Rencontre Experts", "description": "Recevez la visite d'un expert qui établira la meilleure solution pour votre entreprise !" },
+        { "icon": "fas fa-circle-notch fa-3x text-danger", "title": "Service 360°", "description": "Permettez à votre entreprise de bénéficier d'un service professionnel en secrétariat." },
+        { "icon": "fas fa-wrench fa-3x text-danger", "title": "Support Technique", "description": "Qui mieux que notre équipe pour répondre à vos questions ?" }
+    ] %}
+{% endif %}
+<section class='background-index d-flex flex-column flex-fill min-vh-100'>
+
+    {% include 'partials/Page/_navBar.html.twig' %}
+
+    <section class="hero">
+        <div class="heroContent">
+            <h1>Votre Secrétaire Indépendante</h1>
+            <p>Des services de secrétariat professionnels pour tous.</p>
+        </div>
+        <div class="w-100 my-3">
+            <button type="button" class="change-fragment-site btn btn-warning fs-5 border border-secondary" data-fragment={{initialisation.fragmentValue}} data-subFragment="contact" >
+                Contactez-nous
+            </button>
+        </div>
+        <div class="w-100 my-3">
+          <button type="button" class="change-fragment-site btn btn-primary fs-5" data-fragment={{initialisation.fragmentButtonValue}} data-subFragment="acceuil">{{initialisation.buttonValue}}</button>
+        </div>
+    </section>
+
+    <section class='intro d-flex flex-column justify-content-evenly bg-white flex-fill'>
+        <h1 class="expert-title">Libérez-vous des tâches administratives et concentrez-vous sur l’essentiel.</h1>
+        <div id="experts" class="experts">
+
+        {% if experts is defined %}
+            {% for expert in experts %}
+                <div class="expert-item">
+                    <i class="{{ expert.icon }}" style="height:60px;"></i>
+                    <h2>{{ expert.title }}</h2>
+                    <p>{{ expert.description }}</p>
+                </div>
+            {% endfor %}
+        {% endif %}
+        </div>
+    </section>
+
+</section>

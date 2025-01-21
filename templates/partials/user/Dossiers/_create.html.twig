@@ -1,0 +1,24 @@
+<div class="modal fade" id="dossierModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Créer un nouveau Dossier</h5>
+      </div>
+      <div class="modal-body">
+        <form id="modalFormContainer" action="/api/dossiers/" ~ service method="POST" data-service={{ service }}>
+          {{ form_start(formViews.addDossier, {'action': '/api/dossiers/' ~ service, 'method': 'POST'}) }}
+          <div class="form-group">
+            {{ form_row(formViews.addDossier.name) }}
+          </div>
+          {# {{ form_widget(addDossier.submit, {'attr': {'class': 'btn btn-primary'}}) }} #}
+          <div class='d-flex justify-content-center gap-3'>
+            <button type="button" class="btn btn-secondary mb-3" data-dismiss="modal">Annuler</button>
+            {{ form_row(formViews.addDossier.submit) }}
+          </div>
+          {{ form_end(formViews.addDossier) }}
+        </form>
+      </div> 
+    </div>
+  </div>
+</div>
+

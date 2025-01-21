@@ -1,0 +1,11 @@
+twig:
+    file_name_pattern: '*.twig'
+    debug: '%kernel.debug%'
+    form_themes: ['bootstrap_5_layout.html.twig']
+    cache: '%kernel.cache_dir%/twig'
+    globals:
+        url: '%env(URL)%'
+
+when@test:
+    twig:
+        strict_variables: true
