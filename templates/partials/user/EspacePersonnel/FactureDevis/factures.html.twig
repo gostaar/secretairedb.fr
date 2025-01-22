@@ -20,34 +20,11 @@
                 </thead>
                 <tbody>
                     {% for facture in factures %}
-                        {# Les écrans normaux et grands écrans #}
-                        <tr class="d-none d-sm-table-row">
-                            <td>{{ facture.id }}</td>
-                            <td>{{ facture.status }}</td>
-                            <td>{{ facture.commentaire }}</td>
-                            {# <td>{{ facture.is_active }}</td> #}
-                            <td>{{ facture.montant | format_currency('EUR') }}</td>
-                            <td> 
-                                <button 
-                                    type="button" 
-                                    class="facture btn text-primary text-decoration-underline" 
-                                    data-toggle="modal" 
-                                    data-target="#factureDetailsModal" 
-                                    data-id="{{ facture.id }}">
-                                    Détails
-                                </button>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                    {% for facture in factures %}
-                        {# Les petits écrans #}
-                        <tr class="table-row d-sm-none">
-                            <td class="facture text-break" data-toggle="modal" data-target="#factureDetailsModal" data-id="{{ facture.id }}">{{ facture.id }}</td>
-                            <td class="facture text-break" data-toggle="modal" data-target="#factureDetailsModal" data-id="{{ facture.id }}">{{ facture.status }}</td>
-                            <td class="facture text-break" data-toggle="modal" data-target="#factureDetailsModal" data-id="{{ facture.id }}">{{ facture.commentaire }}</td>
-                            {# <td class="facture text-break" data-toggle="modal" data-target="#factureDetailsModal" data-id="{{ facture.id }}">{{ facture.is_active }}</td> #}
-                            <td class="facture text-break" data-toggle="modal" data-target="#factureDetailsModal" data-id="{{ facture.id }}">{{ facture.montant | format_currency('EUR') }}</td>
-                        </tr>
+                        {% include 'partials/user/models/searchFactureModel.html.twig' with {
+                            'formViews': formViews,
+                            'fragment': fragment,
+                            'facture': facture 
+                        } only %}
                     {% endfor %}
                 </tbody>
             </table>
@@ -79,3 +56,12 @@
 
 <!-- Modal pour afficher les informations de la facture -->
 {% include 'partials/user/EspacePersonnel/FactureDevis/_factureModalInfos.html.twig' %}
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        {% if ligneFacture is not empty %}
+            const modal = new bootstrap.Modal(document.getElementById('factureDetailsModal'));
+            modal.show();
+        {% endif %}
+    });
+</script>

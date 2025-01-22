@@ -7,6 +7,7 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use App\Model\SearchData;
 
+
 /**
  * @extends ServiceEntityRepository<DocumentsUtilisateur>
  */
@@ -23,7 +24,7 @@ class DocumentsUtilisateurRepository extends ServiceEntityRepository
     public function findByDossierId(int $dossierId)
     {
         return $this->createQueryBuilder('r')
-            ->innerJoin('r.dossier', 'd')  // Assurez-vous que 'dossier' est bien la relation dans l'entité DocumentsUtilisateurs
+            ->innerJoin('r.dossier', 'd')
             ->andWhere('d.id = :dossierId')
             ->setParameter('dossierId', $dossierId)
             ->getQuery()
@@ -35,6 +36,7 @@ class DocumentsUtilisateurRepository extends ServiceEntityRepository
         // Création du query builder
         $qb = $this->createQueryBuilder('r')
             ->innerJoin('r.dossier', 'd') 
+            ->leftJoin('r.images', 'i') 
             ->where('d.id = :dossierId')  // Filtrer par dossier
             ->andWhere('r.user = :user_id')  // Filtrer par utilisateur
             ->setParameter('user_id', $user->getId())
@@ -42,11 +44,24 @@ class DocumentsUtilisateurRepository extends ServiceEntityRepository
 
         // Si un critère de recherche est fourni
         if (!empty($searchData->q)) {
-            $qb->andWhere('r.name LIKE :q')
+            $qb->andWhere('r.name LIKE :q OR i.slug LIKE :q')
                 ->setParameter('q', "%" . $searchData->q . "%");
         }
 
         return $qb->getQuery()->getResult();
+    }
+
+    public function getUserDossierDocument($userId, int $dossierId)
+    {
+        return $this->createQueryBuilder('r')
+            ->innerJoin('r.dossier', 'd')
+            ->andWhere('d.id = :dossierId')
+            ->setParameter('dossierId', $dossierId)
+            ->innerJoin('r.user', 'u')
+            ->andWhere('u.id = :userId')
+            ->setParameter('userId', $userId)
+            ->getQuery()
+            ->getResult();    
     }
 
     //    /**

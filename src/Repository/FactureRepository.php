@@ -25,6 +25,15 @@ class FactureRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    public function getUserFactures($userId)
+    {
+        return $this->createQueryBuilder('f')
+            ->andWhere('f.client = :client')
+            ->setParameter('client', $userId)
+            ->getQuery()
+            ->getResult();   
+    }
+
     //    /**
     //     * @return Facture[] Returns an array of Facture objects
     //     */

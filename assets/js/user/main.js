@@ -12,7 +12,7 @@ export async function changeFragmentUser() {
         if (loadingIndicator.style.display='flex'){loadingIndicator.style.display='none'}
     })
 
-    async function loadFragment(fragment, dossierId = null) {
+    async function loadFragment(fragment, dossierId) {
         loadingIndicator.style.display = 'flex'; 
         let url = `/changefragment?fragment=${fragment}`;
         if (dossierId) { url += `&dossier=${dossierId}`;}
@@ -47,10 +47,10 @@ export async function changeFragmentUser() {
     function updateFragmentContent(fragment) {
         switch (fragment) {
             case 'link-Factures':
-                facture();
+                facture(urlParams.get('facture'));
                 break;
             case 'link-Devis':
-                devis();
+                devis(urlParams.get('devis'));
                 break;
             case 'link-Administratif':
             case 'link-Commercial':
@@ -71,6 +71,7 @@ export async function changeFragmentUser() {
             default:
                 break;
         }
+        handleFormActions();
     }
 
     UserContent.addEventListener('click', async function(event) {
@@ -79,9 +80,10 @@ export async function changeFragmentUser() {
         if (button.classList.contains('change-fragment')) {
             event.preventDefault();  
             const fragment = button.getAttribute('data-fragment');
-            const dossier = button.getAttribute('data-dossier');
-            dossier ? await loadFragment(fragment, dossier) : await loadFragment(fragment); 
-        } 
+            const dossier = button.getAttribute('data-dossier') || null;
+
+            await loadFragment(fragment, dossier); 
+        }
     });
 
     handleFormActions();
@@ -105,31 +107,56 @@ export async function changeFragmentUser() {
 
     function handleFormActions() {
         const searchForm = document.getElementById('searchForm');
-        if (searchForm) {
-            searchForm.addEventListener('submit', function(event) {
-                event.preventDefault();  // Empêcher la soumission standard du formulaire
-            
-                // Récupération du fragment
-                const fragmentElement = document.getElementById('fragment');
-                const fragment = fragmentElement ? fragmentElement.getAttribute('data-fragment') : '';
+        const searchFormFacture = document.getElementById('searchFormFacture');
+        const fragmentElement = document.getElementById('fragment');
+        const fragmentFacture = document.getElementById('fragmentFacture');
+    
+        let fragment = "";
+        let dossierId = "";
+        let facture = "";
+        let devis = "";
 
-                // Récupération de l'élément dossier (si il est défini dans le DOM)
-                const dossierElement = document.getElementById('fragment');
-                const dossierId = dossierElement && dossierElement.hasAttribute('data-dossier') ? dossierElement.getAttribute('data-dossier') : null;
+        if(fragmentElement){
+            fragment = fragmentElement?.getAttribute('data-fragment') || '';
+            dossierId = fragmentElement?.getAttribute('data-dossier') || '';
+            facture = fragmentElement?.getAttribute('data-facture') || '';
+            devis = fragmentElement?.getAttribute('data-devis') || '';
+        }
 
-                // Création de l'objet FormData et ajout du fragment aux paramètres
-                const formData = new FormData(this);
-                const searchParams = new URLSearchParams(formData);
-                searchParams.set('fragment', fragment); 
-
-                if (dossierId) {
-                    searchParams.set('dossier', dossierId);
-                }
-            
-                // Construction de l'URL et redirection
-                const url = `/user?${searchParams.toString()}`;
-                window.location.href = url;  // Rediriger vers l'URL
+        if(fragmentFacture){
+            fragment = fragmentFacture?.getAttribute('data-fragment') || '';
+            dossierId = fragmentFacture?.getAttribute('data-dossier') || '';
+            facture = fragmentFacture?.getAttribute('data-facture') || '';
+            devis = fragmentFacture?.getAttribute('data-devis') || '';
+        }        
+    
+        const handleFormSubmit = (event, additionalParams = {}) => {
+            event.preventDefault();
+    
+            const formData = new FormData(event.target);
+            const searchParams = new URLSearchParams(formData);
+    
+            if(fragment){searchParams.set('fragment', fragment)};
+            if (dossierId) searchParams.set('dossier', dossierId);
+    
+            Object.entries(additionalParams).forEach(([key, value]) => {
+                if (value) searchParams.set(key, value);
             });
+    
+            const url = `/user?${searchParams.toString()}`;
+            window.location.href = url;
+        };
+    
+        if (searchForm) {
+            searchForm.addEventListener('submit', (event) =>
+                handleFormSubmit(event)
+            );
+        }
+    
+        if (searchFormFacture) {
+            searchFormFacture.addEventListener('submit', (event) =>
+                handleFormSubmit(event, { facture, devis })
+            );
         }
     }
 }

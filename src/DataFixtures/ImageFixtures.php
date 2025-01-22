@@ -36,6 +36,7 @@ class ImageFixtures extends Fixture implements DependentFixtureInterface
             $image->setUpdatedAt((new \DateTimeImmutable())->modify("-" . (3 - $i) . " days"));
             $image->setCreatedAt((new \DateTimeImmutable())->modify("-" . (3 - $i) . " days"));
             // $image->setFilePath('/uploads/documents/' . $image->getImageName());
+            $image->setSlug($faker->word());
             $image->setDocument($faker->randomElement($documents));
 
             $manager->persist($image);

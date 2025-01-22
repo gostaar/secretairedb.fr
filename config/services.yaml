@@ -29,20 +29,20 @@ services:
             - '../src/Entity/'
             - '../src/Kernel.php'
 
-    App\Service\GoogleAuthService:
+    App\Service\GoogleServices\GoogleAuthService:
         arguments:
             $clientId: '%clientId%'
             $clientSecret: '%clientSecret%'
             $googleOauthScope: '%googleOauthScope%'
             $redirectUri: '%redirectUri%'
 
-    App\Service\GoogleCalendarApiService:
+    App\Service\GoogleServices\GoogleCalendarApiService:
         arguments:
             $clientId: '%clientId%'
             $clientSecret: '%clientSecret%'
             $redirectUri: '%redirectUri%'
 
-    App\Service\RedisService:
+    App\Service\ControllerServices\RedisService:
         public: true
         arguments:
             $redisUrl: '%env(REDIS_URL)%'
@@ -65,11 +65,11 @@ services:
         tags:
             - { name: kernel.event_listener, event: kernel.request, priority: 10 }
 
-    images.document_filter:
-        class: App\Filter\DocumentFilter
-        arguments: []
-        tags:
-        - { name: 'api_platform.filter' }
+    # images.document_filter:
+    #     class: App\Filter\DocumentFilter
+    #     arguments: []
+    #     tags:
+    #     - { name: 'api_platform.filter' }
 
     App\Service\ImageService:
         arguments:

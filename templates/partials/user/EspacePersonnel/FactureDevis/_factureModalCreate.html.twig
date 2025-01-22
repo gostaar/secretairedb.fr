@@ -5,7 +5,7 @@
         <h5 class="modal-title" id="exampleModalLabel">Créer une nouvelle Facture</h5>
       </div>
       <div class="modal-body">
-        {{ form_start(formViews.addFacture, {'action': path('add_facture'), 'method': 'POST'}) }}
+        {{ form_start(formViews.addFacture) }}
         
         <div class="d-flex">
             {{ form_row(formViews.addFacture.montant) }}

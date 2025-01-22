@@ -1,7 +1,7 @@
-<div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-rgba d-none d-md-block" style="width: 250px;">
-    <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100">
-        <a href="{{ path('app_logout') }}" class="d-flex align-items-center py-3 mb-md-0 mx-md-auto text-warning text-decoration-none">
-            <span class="fs-5 d-none d-sm-inline">Secrétaire Pro</span>
+<div class="bg-white shadow-md">
+    <div class="container py-3 d-flex justify-content-between align-items-center">
+        <a href="{{ path('app_logout') }}" class="text-black">
+            <h1 class='h4 mb-0'>Secrétaire Pro</h1>
         </a>
         <hr>
         <div class="d-flex justify-content-center mx-md-auto">
@@ -9,7 +9,7 @@
                 <img src="{{ asset('build/images/avatar.png') }}" alt="hugenerd" width="30" height="30" class="rounded-circle">
             </a>
             <ul class="list-unstyled ms-3 my-auto">
-                <li><span class="d-flex flex-wrap text-white text-break d-none d-sm-inline">{{ app.user.email }}</span></li>
+                <li><span class="d-flex flex-wrap text-black text-break d-none d-sm-inline">{{ app.user.email }}</span></li>
                 <li><a class="deconnexion d-none d-sm-inline" href="{{ path('app_logout') }}">Déconnexion</a></li>
             </ul>
         </div>

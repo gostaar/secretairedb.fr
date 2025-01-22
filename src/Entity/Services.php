@@ -55,6 +55,13 @@ class Services implements OwnedEntityInterfaceMTM
         return $this->name; 
     }
 
+    public function initializeRelations():void
+    {
+        $this->getUsers()->toArray();
+        $this->getEvents()->toArray();
+        $this->getDossiers()->toArray();
+    }
+
     public const AVAILABLE_SERVICES = [
         'Administratif',
         'Commercial',

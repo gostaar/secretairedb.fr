@@ -25,6 +25,15 @@ class DevisRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    public function getUserDevis($client)
+    {
+        return $this->createQueryBuilder('d')
+            ->andWhere('d.client = :client')
+            ->setParameter('client', $client)
+            ->getQuery()
+            ->getResult();
+    }
+
     //    /**
     //     * @return Devis[] Returns an array of Devis objects
     //     */

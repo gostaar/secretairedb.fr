@@ -1,5 +1,5 @@
 <?php
-namespace App\Service;
+namespace App\Service\ControllerServices;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -18,7 +18,6 @@ class RouteDataService
         $this->entityManager = $entityManager;
     }
 
-    // public function getFormData($user, string $fragment, ?int $dossierId = null, Request $request,): array
     public function getFormData(string $fragment): array
     {
         // Récupération de la configuration de la route
@@ -28,11 +27,7 @@ class RouteDataService
         // Mapping des templates
         $templateMapping = $this->getTemplateMapping();
         $fragmentTemplate = $templateMapping[$fragment] ?? 'userPage/_mainContent.html.twig';
-        
-        //Filtre par service
-        // $serviceName = $config['service'];
-        // $this->filterByService($config, $user, $serviceName, $fragment, $dossierId, $request); 
-        
+                
         // Ajout des sections et du template
         $config['fragment'] = $fragment;
         $config['fragmentTemplate'] = $fragmentTemplate;
@@ -137,160 +132,35 @@ class RouteDataService
         ];
     }
 
-    // public function filterByService(array &$config, $user, $serviceName, $fragment, ?int $dossierId = null, $request)
-    // {
-    //     if($dossierId) {
-    //         $servicen = $this->entityManager->getRepository(\App\Entity\Dossier::class)->findServiceByDossierId($dossierId);
-    //         $serviceName = $servicen['name'];
-    //         $config['service'] = $serviceName;
-    //     }
-                
-    //     $service = $this->getServiceByName($user, $serviceName);
-    //     if (!$service) {
-    //         return;
-    //     }
-
-    //     switch ($serviceName) {
-    //         case 'Agenda':
-    //             $config = $this->handleAgenda($service);
-    //             break;
-        
-    //         case 'Administratif':
-    //         case 'Commercial':
-    //         case 'Numerique':
-    //         case 'Telephonique':
-    //             $config = $this->handleDossiers($service, $user, $dossierId);
-    //             break;
-        
-    //         case 'Repertoire':
-    //             $config = $this->handleRepertoire($service, $user, $dossierId);
-    //             break;
-        
-    //         default:
-    //             $config = [];
-    //             break;
-    //     }       
-    // }
-
-    // private function handleDossiers($service, $user, $dossierId)
-    // {
-    //     $config['title'] = 'Gestion ' . $service->getName(); // Dynamique
-    //     $config['service'] = $service->getName();
-    //     $dossiers = $service->getDossiers()->filter(fn($dossier) => $dossier->getUser() === $user);
-        
-    //     $config['dossiers'] = $dossiers;
-        
-
-    //     if ($dossierId) {
-    //         $config['dossier'] = $service->getDossiers()->filter(fn($dossier) => $dossier->getId() === $dossierId)->first();
-
-    //         if (!$config['dossier'] || $config['dossier']->getUser() !== $user) {
-    //             throw new \Exception("Dossier introuvable ou vous n'avez pas l'autorisation d'y accéder.");
-    //         }
-
-    //         $documents = $this->entityManager
-    //             ->getRepository(\App\Entity\DocumentsUtilisateur::class)
-    //             ->findByDossierId($dossierId);
-
-    //         $config['documents'] = $documents;
-    //     }
-
-    //     $config['typeDocuments'] = $user->getTypeDocuments();
-    //     return $config;
-    // }
-
-    // private function handleRepertoire($service, $user, $dossierId)
-    // {
-    //     $config = $this->handleDossiers($service, $user, $dossierId); // Réutilise la logique
-    //     $config['contacts'] = $user->getContacts();
-    //     $config['factures'] = $this->handleFacture($user);
-    //     $config['devis'] = $this->handleDevis($user);
-
-    //     if ($dossierId) {
-    //         $repertoires = $this->entityManager
-    //             ->getRepository(\App\Entity\Repertoire::class)
-    //             ->findByDossierId($dossierId, $user);
-
-    //         $config['repertoires'] = $repertoires;   
-    //     }       
-
-    //     return $config;
-    // }
-
-    // private function handleAgenda($service)
-    // {
-    //     return [
-    //         'events' => $service->getEvents(),
-    //     ];
-    // }
-
-    // private function handleFacture($user)
-    // {
-    //     $factures = $this->mapEntitiesToArray($user->getFactures());
-        
-    //     foreach ($factures as &$facture) {
-    //         $factureId = $facture['id'];
-    //         $factureLignes = $this->entityManager->getRepository(\App\Entity\FactureLigne::class)->findByFacture($factureId, $user);
-    //         $montantTotal = 0;
-    //         foreach ($factureLignes as $factureLigne) {
-    //             $montantTotal += $factureLigne['totalMontant'];
-    //         }
-
-    //         $facture['montant'] = $montantTotal; 
-    //     }
-        
-    //     return $factures;
-    // }
-
-    // private function handleDevis($user)
-    // {
-    //     $devis = $this->mapEntitiesToArray($user->getDevis());
-        
-    //     foreach ($devis as &$devi) {
-    //         $devisId = $devi['id'];
-    //         $devisLignes = $this->entityManager->getRepository(\App\Entity\DevisLigne::class)->findByDevis($devisId, $user);
-    //         $montantTotal = 0;
-    //         foreach ($devisLignes as $devisLigne) {
-    //             $montantTotal += $devisLigne['totalMontant'];
-    //         }
-
-    //         $devi['montant'] = $montantTotal; 
-    //     }
-        
-    //     return $devis;
-    // }
-
-    // private function searchData($elements, $searchQuery) {
-    //     $elements = $elements->toArray();
-    //     $elements = array_filter($elements, function ($e) use ($searchQuery) {
-    //         return stripos($e->getName(), $searchQuery) !== false;
-    //     });
-
-    //     return $elements;
-    // }
-
-    // private function getServiceByName($user, $serviceName)
-    // {
-    //     return $user->getServices()->filter(fn($s) => $s->getName() === $serviceName)->first();
-    // }
-
-    // private function mapEntitiesToArray($entities): array
-    // {
-    //     return array_map(fn($entity) => $entity->toArray(), $entities->toArray());
-    // }
+    public function getFragmentMapping(string $key) : string
+    {
+        $fragmentMappging = [
+            // 'link-newDocument' => '',
+            // 'link-PageDossier' => '',
+            // 'link-PageDocument' => '',
+            'link-Acceuil' => 'Repertoire',
+            'link-Agenda' => 'Agenda',
+            'link-MainAgenda' => 'Agenda',
+            'link-PageAgenda' => 'Agenda',
+            'link-Profile' => 'Repertoire',
+            'link-espacepersonnel' => 'Repertoire',
+            'link-Factures' => 'Repertoire',
+            'link-PageFacture' => 'Repertoire',
+            'link-parametres' => 'Repertoire',
+            'link-Administratif' => 'Administratif',
+            'link-Commercial' => 'Commercial',
+            'link-Numerique' => 'Numerique',
+            'link-Repertoire' => 'Repertoire',
+            'link-Telephone' => 'Telephonique',
+            'link-PageRepertoire' => 'Repertoire',
+            'link-Devis' => 'Repertoire',
+        ];
+        return $fragmentMappging[$key] ?? 'Repertoire';
+    }
     
     public function createServiceConfig(string $service): array
     {
         return ['service' => $service];
     }
-
-    // private function getLastServiceName($user): ?string
-    // {
-    //     // Logique pour récupérer le dernier service enregistré pour l'utilisateur
-    //     // Par exemple, cela pourrait être basé sur la dernière entrée dans une liste de services
-    //     $services = $user->getServices(); // Assurez-vous que cette méthode existe et renvoie les services
-    //     $lastService = $services->last(); // Récupère le dernier service de la collection
-    //     return $lastService ? $lastService->getName() : null;
-    // }
 
 }

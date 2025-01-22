@@ -6,8 +6,8 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface;
-use App\Service\RouteDataService;
-use App\Service\RedisService;
+use App\Service\ControllerServices\RouteDataService;
+use App\Service\ControllerServices\RedisService;
 
 class LoginSuccessHandler implements AuthenticationSuccessHandlerInterface
 {   

@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\Cache\ItemInterface;
-use App\Service\RedisService;
+use App\Service\ControllerServices\RedisService;
 use Symfony\Component\Routing\Annotation\Route;
 
 class PageController extends AbstractController

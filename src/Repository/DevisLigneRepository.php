@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\DevisLigne;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use App\Model\SearchData;
 
 /**
  * @extends ServiceEntityRepository<DevisLigne>
@@ -25,6 +26,23 @@ class DevisLigneRepository extends ServiceEntityRepository
             ->select('l.quantite * l.prix_unitaire AS totalMontant')  // Calculer le montant total
             ->getQuery()
             ->getResult();
+    }
+
+    public function findBySearch(SearchData $searchData, $user, $devisId): array
+    {
+        $qb = $this->createQueryBuilder('l')
+            ->innerJoin('l.devis', 'd')
+            ->where('d.id = :devisId')
+            ->andWhere('d.client = :user_id')
+            ->setParameter('user_id', $user->getId())
+            ->setParameter('devisId', $devisId);
+
+        if (!empty($searchData->q)) {
+            $qb->andWhere('d.id = :q') 
+                ->setParameter('q', $searchData->q );
+        }
+
+        return $qb->getQuery()->getResult();
     }
 
     //    /**

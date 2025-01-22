@@ -21,31 +21,45 @@ class DossierRepository extends ServiceEntityRepository
     public function findServiceByDossierId(int $dossierId)
     {
         return $this->createQueryBuilder('d')
-            ->innerJoin('d.services', 's')  // Joindre la table Service
-            ->andWhere('d.id = :dossierId')  // Filtrer par l'id du dossier
+            ->innerJoin('d.services', 's')
+            ->andWhere('d.id = :dossierId')
             ->setParameter('dossierId', $dossierId)
-            ->select('s.name')  // Sélectionner uniquement le nom du service
+            ->select('s.name')
             ->getQuery()
-            ->getSingleResult();  // Retourner un seul résultat (le nom du service)
+            ->getSingleResult(); 
     }
 
     public function findBySearch(SearchData $searchData, $user, $dossiers): array
     {
-        // Créer le query builder pour l'entité Dossier
-        $qb = $this->createQueryBuilder('d')
-            ->where('d IN (:dossiers)')  // Filtrer par les dossiers spécifiés
-            ->andWhere('d.user = :user_id')
+        $qb = $this->createQueryBuilder('r')
+            ->where('r IN (:dossiers)')
+            ->leftJoin('r.documents', 'd') 
+            ->leftJoin('d.images', 'i')
+            ->leftJoin('r.repertoires', 's')
+            ->leftJoin('s.contacts', 'c')
+            ->andWhere('r.user = :user_id')
             ->setParameter('dossiers', $dossiers->toArray())
             ->setParameter('user_id', $user->getId());
             
-        // Ajouter un critère de recherche sur le nom si une requête est définie
         if (!empty($searchData->q)) {
-            $qb->andWhere('d.name LIKE :q')
+            $qb->andWhere('r.name LIKE :q OR d.name LIKE :q OR i.slug LIKE :q OR s.nom LIKE :q OR c.nom LIKE :q')
                 ->setParameter('q', "%{$searchData->q}%");
         }
 
-        // Exécuter la requête et retourner les résultats sous forme de tableau
         return $qb->getQuery()->getResult();
+    }
+
+    public function getUserDossiers(int $userId, string $serviceName)
+    {
+        return $this->createQueryBuilder('d')
+            ->join('d.user', 'u')
+            ->andWhere('u.id = :userId')  
+            ->setParameter('userId', $userId)
+            ->join('d.services', 's')
+            ->andWhere('s.name = :serviceName')
+            ->setParameter('serviceName', $serviceName)  
+            ->getQuery()
+            ->getResult(); 
     }
 
     //    /**

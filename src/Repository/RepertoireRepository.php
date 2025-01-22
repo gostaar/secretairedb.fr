@@ -52,6 +52,19 @@ class RepertoireRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
     }
 
+    public function getUserDossierRepertoires(int $userId, int $dossierId)
+    {
+        return $this->createQueryBuilder('r')
+            ->join('r.user', 'u')
+            ->andWhere('u.id = :userId')  
+            ->setParameter('userId', $userId)
+            ->join('r.dossier', 'd')
+            ->andWhere('d.id = :dossierId')
+            ->setParameter('dossierId', $dossierId)  
+            ->getQuery()
+            ->getResult(); 
+    }
+
     //    /**
     //     * @return Repertoire[] Returns an array of Repertoire objects
     //     */

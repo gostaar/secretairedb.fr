@@ -1,7 +1,3 @@
-{# {% set userId = app.user.id %}
-{% set fetchPart = '/api/services?users=' %}
-{% set fetchUrl = url ~ fetchPart ~ userId %}
-{% set services = fetchUrl|fetch %} #}
     <div class="flex-grow-1 p-4 d-flex justify-content-between flex-column h-100">
 
         <div>
@@ -20,7 +16,7 @@
                         { id: 'btnNumerique', href: 'link-Numerique', icon: 'fa-laptop-code', title: 'Documents numériques', service: 'Numerique' }
                     ] %}
                     {% for item in items %}
-                        {# {% if item.service is not defined or item.service in services %}
+                        {% if item.service is not defined or item.service in services %}
                             <div class="d-flex flex-column align-items-center p-1" style="position: relative; width: 130px;">
                                 <button 
                                     type="button" 
@@ -39,7 +35,7 @@
                                 <h6 class="d-block d-md-none text-center text-black" style="pointer-events: none; word-wrap: break-word; white-space: normal;">{{ item.title }}</h6>
                                 <h5 class="d-none d-md-block text-center text-black" style="pointer-events: none; word-wrap: break-word; white-space: normal;">{{ item.title }}</h5>
                             </div>
-                        {% endif %} #}
+                        {% endif %}
                     {% endfor %}
                 </div>
             </div>

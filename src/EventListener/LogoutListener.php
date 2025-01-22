@@ -5,7 +5,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Http\Event\LogoutEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use App\Service\RedisService;
+use App\Service\ControllerServices\RedisService;
 
 class LogoutListener implements EventSubscriberInterface
 {

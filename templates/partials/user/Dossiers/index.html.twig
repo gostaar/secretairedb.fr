@@ -1,12 +1,8 @@
 <!-- Main Content -->
-{# {% set userId = app.user.id %}
-{% set fetchPart = '/api/dossiers?user=' %}
-{% set fetchUrl = url ~ fetchPart ~ userId %}
-{% set dossiers = fetchUrl|fetch %} #}
 <div class="flex-grow-1 p-4 d-flex flex-column">
     <div class="container card mb-4">
         <div class="container card-header d-flex justify-content-between align-items-center">
-            <h4>{{ title }}</h4>
+            <h4>{{ service }}</h4>
         </div>
         <div class="card-body">
             <!-- Barre de recherche -->

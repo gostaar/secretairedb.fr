@@ -5,7 +5,7 @@
         <h5 class="modal-title" id="exampleModalLabel">Créer un nouveau Devis</h5>
       </div>
       <div class="modal-body">
-        {{ form_start(formViews.addDevis, {'action': path('add_devis'), 'method': 'POST'}) }}
+        {{ form_start(formViews.addDevis) }}
         
         <div class="d-flex">
             {{ form_row(formViews.addDevis.montant) }}

@@ -5,7 +5,7 @@ use Symfony\Bridge\Doctrine\Security\User\EntityUserProvider;
 use Symfony\Component\Cache\Adapter\AdapterInterface;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\UserInterface;
-use App\Service\RedisService;
+use App\Service\ControllerServices\RedisService;
 use Doctrine\Persistence\ManagerRegistry;
 
 class CachedUserProvider extends EntityUserProvider

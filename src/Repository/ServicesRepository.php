@@ -16,6 +16,29 @@ class ServicesRepository extends ServiceEntityRepository
         parent::__construct($registry, Services::class);
     }
 
+    public function getUserServices(int $userId)
+    {
+        return $this->createQueryBuilder('s')
+            ->join('s.users', 'u')
+            ->andWhere('u.id = :userId')
+            ->setParameter('userId', $userId)
+            ->getQuery()
+            ->getResult(); 
+    }
+
+    public function getServiceByName(string $serviceName): ?\App\Entity\Services
+    {
+        // Création de la requête pour récupérer le service par son nom
+        $service = $this->createQueryBuilder('s')
+            ->select('s')  // Sélectionner tous les champs du service
+            ->where('s.name = :serviceName')  // Filtrer par le nom du service
+            ->setParameter('serviceName', $serviceName)  // Fixer le paramètre pour la requête
+            ->getQuery()
+            ->getOneOrNullResult();  // Récupérer un seul résultat ou null si aucun service trouvé
+
+        return $service;  // Retourner l'objet Service ou null si non trouvé
+    }
+
     //    /**
     //     * @return Services[] Returns an array of Services objects
     //     */

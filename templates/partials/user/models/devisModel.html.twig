@@ -12,7 +12,7 @@
             <p class='m-0 p-0'>Téléphone: 0781373785</p>
             <p class='m-0 p-0'>Email: dbsecretaire@gmail.com</p>
             <h2 class='mt-5'>
-                Devis n° <label id="devisId2" class="border-0 bg-transparent text-black"></label>
+                Devis n° {% for ligne in ligneDevis %}{% if loop.first %}{{ ligne.devis.id }}{% endif %}{% endfor %}
             </h2>
         </div>
 
@@ -31,7 +31,9 @@
                     <td class="text-center border-1">{{user.id}}</td>
                     <td class="text-center border-1">{% if user.siret %}{{user.siret}}{% else %}N/A{% endif %}</td>
                     <td class="text-center border-1">
-                        <label id="devisDate_devis" class="border-0 bg-transparent text-black"></label>
+                        <label id="devisDate_devis" class="border-0 bg-transparent text-black">
+                            {% for ligne in ligneDevis %}{% if loop.first %}{{ ligne.devis.dateDevis |date('d/m/Y') }}{% endif %}{% endfor %}
+                        </label>
                     </td>
                 </tr>
             </tbody>
@@ -46,8 +48,8 @@
     </headerPrint>
 
     <!-- Tableau des articles de la devis -->
-    <div style="flex-grow: 1; overflow-y: auto; margin-top: 50px;">
-        <table class="table table-bordered" style="width: 100%; table-layout: fixed; height: 500px">
+    <div style="flex-grow: 1; margin-top: 50px; margin-bottom: 20px; height: 500px; border: 1px grey solid;" class='bg-white'>
+        <table class="table devisContentTable" style="width: 100%; table-layout: fixed;">
             <thead>
                 <tr>
                     <th class="text-start border-1" style="background-color: #f0f0f0; width: 50%;">Désignation</th>
@@ -56,7 +58,19 @@
                     <th class="text-center border-1" style="background-color: #f0f0f0;">HTVA</th>
                 </tr>
             </thead>
-            <tbody id='devisContentTable2'></tbody>
+            <tbody id='devisContentTable2'>
+            {% set total = 0 %}
+                {% for ligne in ligneDevis %}
+                  {% set total = total + (ligne.prixUnitaire * ligne.quantite) %}
+
+                  <tr>
+                    <td class="text-start" style='font-size: 14px;'>{{ligne.designation}}</td>
+                    <td class="text-end" style='font-size: 14px;'>{{ligne.quantite}}</td>
+                    <td class="text-end" style='font-size: 14px;'>{{ligne.prixUnitaire | format_currency('EUR')}}</td>
+                    <td class="text-end" style='font-size: 14px;'>{{(ligne.prixUnitaire * ligne.quantite) | format_currency('EUR')}}</td>
+                  </tr>
+                {% endfor %}
+            </tbody>
         </table>
     </div>
 
@@ -65,13 +79,15 @@
         <tr>
             <th class="text-end" style="width: 75%;">Total TTC</th>
             <th class="text-end" style=" width: 25%;">
-                <label id="devisMontant" class="border-0 bg-transparent text-black"></label>
+                <label id="devisMontant" class="border-0 bg-transparent text-black">{{ total | format_currency('EUR') }}</label>
             </th>
         </tr>
         <tr>
             <th class="text-end">Échéance</th>
             <td class="text-end">
-                <label id="devisDateLimite" class="border-0 bg-transparent text-black"></label>
+                <label id="devisDateLimite" class="border-0 bg-transparent text-black">
+                    {% for ligne in ligneDevis %}{% if loop.first %}{{ ligne.devis.dateDevis|date_modify('+1 month')|date('d/m/Y') }}{% endif %}{% endfor %}
+                </label>
             </td>
         </tr>
         </tbody>

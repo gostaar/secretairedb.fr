@@ -27,4 +27,5 @@ enum FactureStatus: string
             self::EN_ATTENTE => "en attente de paiement",
         };
     }
+
 }

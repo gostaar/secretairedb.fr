@@ -1,7 +1,8 @@
 // import { changeFragmentUser } from "./main";
 
 export function menuContextuel(data_fragment){
-    document.addEventListener('contextmenu', (e) => { // Écouteur pour le clic droit
+    document.addEventListener('contextmenu', (e) => {
+        
         if (e.target && e.target.getAttribute('data-id')) {
             e.preventDefault();
             e.stopPropagation();
@@ -11,8 +12,7 @@ export function menuContextuel(data_fragment){
         }
     });
 
-    // Écouteur pour le double-clic sur les éléments avec la classe `repertoire`
-    document.addEventListener('dblclick', (e) => {
+    document.addEventListener('click', (e) => {
         if (e.target && e.target.getAttribute('data-id')) {
             const dossierId = e.target.getAttribute('data-id');
 
@@ -39,8 +39,8 @@ export function menuContextuel(data_fragment){
 
 
     const form = document.querySelector('#modalFormContainer');
-    const service = form.getAttribute('data-service');
     if (form) {
+        const service = form.getAttribute('data-service');
         form.addEventListener('submit', function (event) {
         event.preventDefault(); // Empêche l'envoi du formulaire pour éviter un rechargement de la page
 

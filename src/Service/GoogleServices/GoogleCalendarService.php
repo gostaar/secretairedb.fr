@@ -1,5 +1,5 @@
 <?php
-namespace App\Service;
+namespace App\Service\GoogleServices;
 
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Psr\Log\LoggerInterface;
