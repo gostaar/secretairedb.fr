@@ -12,11 +12,12 @@ export async function changeFragmentUser() {
         if (loadingIndicator.style.display='flex'){loadingIndicator.style.display='none'}
     })
 
-    async function loadFragment(fragment, dossierId) {
+    async function loadFragment(fragment, dossierId, documentId) {
         loadingIndicator.style.display = 'flex'; 
         let url = `/changefragment?fragment=${fragment}`;
         if (dossierId) { url += `&dossier=${dossierId}`;}
-        history.pushState(null, '', `?fragment=${fragment}${dossierId ? '&dossier=' + dossierId : ''}`);
+        if (documentId) { url += `&document=${documentId}`}
+        history.pushState(null, '', `?fragment=${fragment}${dossierId ? '&dossier=' + dossierId : ''}${documentId ? '&document=' + documentId : ''}`);
 
         if (locationReload === false) {
             location.reload();
@@ -81,8 +82,9 @@ export async function changeFragmentUser() {
             event.preventDefault();  
             const fragment = button.getAttribute('data-fragment');
             const dossier = button.getAttribute('data-dossier') || null;
+            const document = button.getAttribute('data-document') ||null;
 
-            await loadFragment(fragment, dossier); 
+            await loadFragment(fragment, dossier, document); 
         }
     });
 
@@ -99,9 +101,14 @@ export async function changeFragmentUser() {
         const urlParams = new URLSearchParams(window.location.search);
         const fragmentFromUrl = urlParams.get('fragment');
         const dossierIdFromUrl = urlParams.get('dossier');
+        const documentIdFromUrl = urlParams.get('document');
     
         if (fragmentFromUrl) {
-            dossierIdFromUrl ? await loadFragment(fragmentFromUrl, dossierIdFromUrl) : await loadFragment(fragmentFromUrl);
+            if(dossierIdFromUrl){
+                documentIdFromUrl ? await loadFragment(fragmentFromUrl, dossierIdFromUrl, documentIdFromUrl) : await loadFragment(fragmentFromUrl, dossierIdFromUrl);
+            } else {
+                documentIdFromUrl ? await loadFragment(fragmentFromUrl, documentIdFromUrl) : await loadFragment(fragmentFromUrl);
+            }
         }
     });
 

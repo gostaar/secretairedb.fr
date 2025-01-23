@@ -60,13 +60,12 @@ class RouteDataService
     public function getStaticData($user, $fragment)
     {
         return $staticData = [
-            // 'services' => $user->getServices(),
-            'sections' => $fragment,
             'addContact' => \App\Form\ContactType::class,
             'addDevis' => \App\Form\DevisType::class,
             'addDevisLigne' => \App\Form\DevisLigneType::class,
             'addDevisVersion' => \App\Form\DevisVersionType::class,
             'addDocument' => \App\Form\DocumentsUtilisateurType::class,
+            'addImage' => \App\Form\ImageType::class,
             'addDossier' => \App\Form\DossierType::class,
             'addEvents' => \App\Form\EventsType::class,
             'addFactureLigne' => \App\Form\FactureLigneType::class,
@@ -87,6 +86,7 @@ class RouteDataService
             'addDevisLigne' => \App\Entity\DevisLigne::class,
             'addDevisVersion' => \App\Entity\DevisVersion::class,
             'addDocument' => \App\Entity\DocumentsUtilisateur::class,
+            'addImage' => \App\Entity\Image::class,
             'addDossier' => \App\Entity\Dossier::class,
             'addEvents' => \App\Entity\Events::class,
             'addFactureLigne' => \App\Entity\FactureLigne::class,
@@ -120,6 +120,7 @@ class RouteDataService
             'link-PageFacture' => 'partials/user/Profile/facture.html.twig',
             'link-parametres' => 'partials/user/EspacePersonnel/parametres.html.twig',
             'link-PageDossier' => 'partials/user/dossier.html.twig',
+            'link-DocumentEdit' => 'partials/user/_documentEdit.html.twig',
             
             'link-Administratif' => 'partials/user/Dossiers/index.html.twig',
             'link-Commercial' => 'partials/user/Dossiers/index.html.twig',

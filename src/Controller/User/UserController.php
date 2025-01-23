@@ -24,10 +24,11 @@ class UserController extends AbstractController
     {
         $user = $this->getUser();  
         $fragment = $request->query->get('fragment', 'link-Acceuil');
-        $dossierId = $request->query->get('dossier');      
+        $dossierId = $request->query->get('dossier');
+        $documentId = $request->query->get('document');   
 
-        $formFragment = $this->fragmentDataService->getFragmentData($request, $fragment, $dossierId, $user);
-        $formViews = $this->formService->createFormViews($request, $formFragment, $user, $dossierId, $fragment); 
+        $formFragment = $this->fragmentDataService->getFragmentData($request, $fragment, $dossierId, $user, $documentId);
+        $formViews = $this->formService->createFormViews($request, $formFragment, $user, $dossierId, $fragment, $documentId); 
         
         $formData = array_merge($formFragment, $formViews);
 

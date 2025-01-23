@@ -29,7 +29,7 @@ class FormService
         $this->cache = $cache;
     }
 
-    public function createFormViews(Request $request, array $staticData, User $user, ?int $dossierId, ?string $fragment): array
+    public function createFormViews(Request $request, array $staticData, User $user, ?int $dossierId, ?string $fragment, $documentId): array
     {
         $factureId = $request->query->get('facture');
         $devisId = $request->query->get('devis');
@@ -57,7 +57,7 @@ class FormService
                     if($entityClass === \App\Entity\DocumentsUtilisateur::class){
                         $form = $this->formFactory->create($formClass, $entity, [
                             'user' => $user,
-                            'dossierId' => $dossierId ?? null,
+                            'documentId' => $documentId ?? null,
                         ]); 
                     } else {
                         $form = $this->formFactory->create($formClass, $entity);

@@ -9,21 +9,31 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Vich\UploaderBundle\Form\Type\VichImageType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+
 
 class ImageType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('imageName', null, [
+            ->add('slug', null, [
                 'label' => 'Nom',
                 'required' => false,
             ])
-            ->add('imageSize', null, [
+            ->add('imageSize', TextType::class, [
                 'label' => 'Taille',
                 'required' => false,
             ])
-            ->add('imageFile', VichImageType::class)
+            ->add('imageName', null, [
+                'label' => 'Nom de l\'Image',
+                'required' => false,
+            ])
+            ->add('imageFile', VichImageType::class, [
+                'label' => 'Fichier',
+                'download_label' => 'Télécharger l\'image / document',
+                'imagine_pattern' => 'my_thumb_filter',
+            ])
             // ->add('updatedAt', null, [
             //     'widget' => 'single_text',
             //     'label' => false,
@@ -37,6 +47,7 @@ class ImageType extends AbstractType
             // ->add('document', EntityType::class, [
             //     'class' => DocumentsUtilisateur::class,
             //     'choice_label' => 'id',
+
             // ])
         ;
     }

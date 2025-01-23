@@ -38,7 +38,7 @@ export function menuContextuel(data_fragment){
     });
 
 
-    const form = document.querySelector('#modalFormContainer');
+    const form = document.querySelector('#modalFormContainerbis');
     if (form) {
         const service = form.getAttribute('data-service');
         form.addEventListener('submit', function (event) {

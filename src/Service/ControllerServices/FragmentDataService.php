@@ -44,7 +44,7 @@ class FragmentDataService
         $this->devisRepository = $devisRepository;
     }
 
-    public function getFragmentData(Request $request, string $fragment, ?int $dossierId, $user): array
+    public function getFragmentData(Request $request, string $fragment, ?int $dossierId, $user, $documentId): array
     {
         $this->updateNavigationSession($request, $fragment, $dossierId);
 
@@ -57,6 +57,7 @@ class FragmentDataService
         $dossiers = $this->dossierRepository->getUserDossiers($user->getId(), $fragmentMapping);
         $repertoires = $dossierId === null ? null : $this->repertoireRepository->getUserDossierRepertoires($user->getId(), $dossierId);
         $documents = $dossierId === null ? null : $this->documentsRepository->getUserDossierDocument($user->getId(), $dossierId);
+        $document = $documentId === null ? null : $this->documentsRepository->find($documentId);
         $dossier = $dossierId === null ? null : $this->dossierRepository->find($dossierId);
         $facturesRepo = $this->factureRepository->getUserFactures($user->getId());
         $factures = array_map(fn($facture) => $facture->toArray(), $facturesRepo);
@@ -68,6 +69,7 @@ class FragmentDataService
             'dossiers' => $dossiers,
             'dossier' => $dossier,
             'documents' => $documents,
+            'document' => $document,
             'repertoires' => $repertoires,
             'user' => $user,
             'factures' => $factures,

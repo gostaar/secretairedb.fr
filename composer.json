@@ -18,6 +18,7 @@
         "doctrine/orm": "^3.3",
         "easycorp/easyadmin-bundle": "*",
         "knplabs/knp-paginator-bundle": "*",
+        "liip/imagine-bundle": "*",
         "nelmio/cors-bundle": "^2.5",
         "phpdocumentor/reflection-docblock": "^5.6",
         "phpstan/phpdoc-parser": "^2.0",

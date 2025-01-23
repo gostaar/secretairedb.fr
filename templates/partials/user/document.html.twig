@@ -14,34 +14,30 @@
                 <tr>
                     <th scope="col">Nom</th>
                     <th scope="col">Date</th>
-                    <th scope="col">Expéditeur</th>
-                    <th scope="col">Destinataire</th>
-                    <th scope="col">Actif</th>
-                    <th scope="col">Détails</th>
-                    <th scope="col">Type</th>
+                    <th scope="col">De</th>
+                    <th scope="col">A</th>
                     <th scope="col">Action</th>
                 </tr>
             </thead>
             <tbody>
                 {% for document in documents %}
                     <tr>
-                        <td>{{ document.id }}</td>
+                        <td>{{ document.name }}</td>
                         <td>{{ document.dateDocument ? document.dateDocument|date('d/m/Y') : 'N/A' }}</td> 
                         <td>{{ document.expediteur ? document.expediteur : 'Non spécifié' }}</td>
                         <td>{{ document.destinataire ? document.destinataire : 'Non spécifié' }}</td>
+                       
                         <td>
-                            {% if document.isActive %}
-                                <span class="badge bg-success">Oui</span>
-                            {% else %}
-                                <span class="badge bg-danger">Non</span>
-                            {% endif %}
-                        </td>
-                        <td>{{ document.details ? document.details : 'N/A' }}</td>
-                        <td>{{ document.typeDocument ? document.typeDocument.name : 'Non spécifié' }}</td>
-                        <td>
-                            <div class='d-flex'>
-                                <button type="button" class="btn btn-secondary" style='border-radius: 50%;' data-bs-toggle="modal" data-bs-target="#documentModal" data-action="edit" data-id="{{ document.id }}">
-                                    <i class="fas fa-pen"></i>
+                            <div class='d-flex flex-wrap'>
+                                <button 
+                                    type="button" 
+                                    class="btn btn-secondary change-fragment" 
+                                    style='border-radius: 50%;' 
+                                    data-fragment='link-DocumentEdit' 
+                                    data-document="{{ document.id }}" 
+                                    data-action="edit" 
+                                    data-id="{{ document.id }}">
+                                        <i class="fas fa-pen"></i>
                                 </button>
                                 <form action="/api/documents/{{ document.id }}" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce document ?');">
                                     <input type="hidden" name="_method" value="DELETE">
@@ -64,61 +60,8 @@
     </div>
 </div>
 
-<div class="modal fade" id="documentModal" tabindex="-1" role="dialog" aria-labelledby="documentModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="documentModalLabel"></h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form id="modalFormContainer" action="/api/documents" method="POST">
-                    {{ form_start(formViews.addDocument) }}
-                        <div class="row">
-                            <div class='col-6'>
-                                {{ form_row(formViews.addDocument.date_document) }}
-                            </div>
-                            <div class='col-6'>
-                                {{ form_row(formViews.addDocument.name) }}
-                            </div>   
-                        </div>
-                        <div class="row">
-                            <div class='col-6'>
-                                {{ form_row(formViews.addDocument.expediteur) }}
-                            </div>
-                            <div class='col-6'>
-                                {{ form_row(formViews.addDocument.destinataire) }}
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class='col-10'>    
-                                {{ form_row(formViews.addDocument.details) }}
-                            </div>
-                            <div class='col-2 d-flex flex-column align-items-center justify-content-center'>
-                                {{ form_row(formViews.addDocument.isActive) }}
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class='col-6'>
-                                {{ form_row(formViews.addDocument.dossier) }}
-                            </div>
-                            <div class='col-6'>    
-                                {{ form_row(formViews.addDocument.typeDocument) }}
-                            </div>
-                        </div>
-                        <h5>Images</h5>
-                        <span id='formImages'>
-                        </span>
-                    {{ form_end(formViews.addDocument) }}
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
 
-<script>
+{# <script>
 document.addEventListener('DOMContentLoaded', () => {
     const modal = document.getElementById('documentModal');
     const modalTitle = document.getElementById('documentModalLabel');
@@ -362,4 +305,4 @@ console.log(stringifiedInitialImages, currentImages);
         loadingIndicator.style.display = 'none';
     });
 });
-</script>
+</script> #}

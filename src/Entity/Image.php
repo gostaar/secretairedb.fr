@@ -192,8 +192,16 @@ class Image
         return $this->imageSize;
     }
 
-    public function setImageSize(?int $imageSize): static
+    public function setImageSize(mixed $imageSize): static
     {
+        if (is_string($imageSize)) {
+            $imageSize = (int) trim($imageSize);
+        }
+
+        if (!is_int($imageSize) && $imageSize !== null) {
+            throw new \InvalidArgumentException('La taille de l\'image doit être un entier ou null.');
+        }
+
         $this->imageSize = $imageSize;
 
         return $this;

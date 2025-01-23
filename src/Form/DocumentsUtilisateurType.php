@@ -17,6 +17,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
 
 class DocumentsUtilisateurType extends AbstractType
@@ -31,8 +32,9 @@ class DocumentsUtilisateurType extends AbstractType
     {
         $userId = $options['user']->getId();
         $user = $this->entityManager->find(User::class, $userId);
-        $dossierId = $options['dossierId'];
-        $dossier = $dossierId && is_numeric($dossierId) ? $this->entityManager->find(\App\Entity\Dossier::class, $dossierId) : null;
+        $documentId = $options['documentId'];
+        $document = $documentId && is_numeric($documentId) ? $this->entityManager->find(\App\Entity\DocumentsUtilisateur::class, $documentId) : null;
+        $dossier = $document ? $document->getDossier() : null;
 
         $serviceId = 0;
         
@@ -56,13 +58,17 @@ class DocumentsUtilisateurType extends AbstractType
             ])
             ->add('expediteur')
             ->add('destinataire')
-            ->add('isActive', CheckboxType::class, [
-                'label' => 'Actif',
-                'required' => true,
-                'data' => false,
-                'mapped' => true,
+            // ->add('isActive', CheckboxType::class, [
+            //     'label' => 'Actif',
+            //     'required' => true,
+            //     'data' => false,
+            //     'mapped' => true,
+            // ])
+            ->add('details', TextareaType::class, [
+                'attr' => [
+                    'rows' => 5, // Nombre de lignes
+                ],
             ])
-            ->add('details')
             ->add('user', EntityType::class, [
                 'class' => \App\Entity\User::class,
                 'data' => $user,
@@ -88,10 +94,7 @@ class DocumentsUtilisateurType extends AbstractType
                 'allow_delete' => true,
                 'by_reference' => false,
                 'mapped' => false,
-                'entry_options' => [
-                    'label' => false,
-                    'attr' => ['class' => 'd-flex form-element-image']
-                ],
+               
                 'attr' => [
                     'data-controller' => 'image-collection',
                 ]
@@ -108,6 +111,6 @@ class DocumentsUtilisateurType extends AbstractType
             'data_class' => DocumentsUtilisateur::class,
         ]);
         $resolver->setDefined(['user']);
-        $resolver->setDefined(['dossierId']);
+        $resolver->setDefined(['documentId']);
     }
 }

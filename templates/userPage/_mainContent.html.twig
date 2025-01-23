@@ -1,50 +1,71 @@
-    <div class="flex-grow-1 p-4 d-flex justify-content-between flex-column h-100">
-
-        <div>
-
-            <div class="container card mb-4">
-                <div class="container card-header d-flex justify-content-between align-items-center">
-                    <h4>Accès rapide</h4>
+<!-- Main Content -->
+<div class="row g-4">
+    
+    <div class="col-md-12">
+        <div class="card shadow-sm">
+            <div class="card-body text-center">
+                <h3 class='m-3'>Bienvenue {{app.user.nom}} !</h3>
+                <p class='m-3'>Dans cette interface, vous pourrez naviguer entre les différents services proposés</p>
+                <p class='m-3'>Vous accèderez également à vos informations personnelles ici: </p>
+   
+                <h3 class='mt-5'>Espace Personnel</h3>
+                <div class='d-flex flex-wrap justify-content-center'> 
+                    {% set submenuItems = [
+                        { href: 'link-Profile', icon: 'fa-user-circle', title: 'Profil', color: 'white' },
+                        { href: 'link-Factures', icon: 'fa-file-invoice', title: 'Factures', color: 'white' },
+                        { href: 'link-Devis', icon: 'fa-file-contract', title: 'Devis', color: 'white' },
+                        { href: 'link-parametres', icon: 'fa-cogs', title: 'Paramètres', color: 'white' }
+                    ] %}
+                    {% for submenu in submenuItems %}
+                        {% if submenu.service is not defined or submenu.service in services %}
+                        <div class="d-flex flex-column align-items-center p-1" style="position: relative; width: 130px;">
+                            <button type='button' data-fragment="{{ submenu.href }}" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: transparent; border: none; z-index: 1; padding: 0;" class="change-fragment mb-4 btn card-link d-flex flex-column justify-content-start align-items-center text-center p-3">
+                            </button>
+                            <i class="fas {{ submenu.icon }} fa-3x text-success mb-2"></i>
+                            <p class="text-dark">{{ submenu.title }}</p>
+                        </div>
+                        {% endif %}
+                    {% endfor %}
                 </div>
-                <div class="card-body p-2 p-md-5 m-md-4 c-access d-flex justify-content-around flex-wrap">
+            </div>
+        </div>
+    </div>
+ <!-- Card 1 -->   
+    <div class="col-md-12">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h2 class="m-3">Accès rapide</h2>
+                <div class='d-flex flex-wrap justify-content-center gap-2'>   
                     {% set items = [
-                        { id: 'btnEspacePersonnel', href: 'link-espacepersonnel', icon: 'fa-user-circle', title: 'Espace Personnel' },
-                        { id: 'btnAgenda', href: 'link-Agenda', icon: 'fa-calendar-alt', title: 'Agenda', service: 'Agenda' },
-                        { id: 'btnTelephone', href: 'link-Telephone', icon: 'fa-phone-alt', title: 'Gestion Téléphonique', service: 'Telephonique' },
-                        { id: 'btnAdministratif', href: 'link-Administratif', icon: 'fa-file-alt', title: 'Documents Administratifs', service: 'Administratif' },
-                        { id: 'btnCommercial', href: 'link-Commercial', icon: 'fa-briefcase', title: 'Documents commerciaux', service: 'Commercial' },
-                        { id: 'btnNumerique', href: 'link-Numerique', icon: 'fa-laptop-code', title: 'Documents numériques', service: 'Numerique' }
+                        { id: 'btnEspacePersonnel', href: 'link-espacepersonnel', icon: 'fa-user-circle', title: 'Espace Personnel', description:'Gérez votre espace personnel' },
+                        { id: 'btnAgenda', href: 'link-Agenda', icon: 'fa-calendar-alt', title: 'Agenda', service: 'Agenda', description:'Gérez votre agenda'  },
+                        { id: 'btnTelephone', href: 'link-Telephone', icon: 'fa-phone-alt', title: 'Gestion Téléphonique', service: 'Telephonique', description:'Gérez vos appels téléphoniques'  },
+                        { id: 'btnAdministratif', href: 'link-Administratif', icon: 'fa-file-alt', title: 'Documents Administratifs', service: 'Administratif', description:'Gérez votre service administratif'  },
+                        { id: 'btnCommercial', href: 'link-Commercial', icon: 'fa-briefcase', title: 'Documents commerciaux', service: 'Commercial', description:'Gérez vos documents commerciaux'  },
+                        { id: 'btnNumerique', href: 'link-Numerique', icon: 'fa-laptop-code', title: 'Documents numériques', service: 'Numerique', description:'Gérez vos documents numériques'  }
                     ] %}
                     {% for item in items %}
                         {% if item.service is not defined or item.service in services %}
-                            <div class="d-flex flex-column align-items-center p-1" style="position: relative; width: 130px;">
-                                <button 
-                                    type="button" 
-                                    id="{{ item.id }}" 
-                                    data-fragment="{{ item.href }}"
-                                    data-user="{{ app.user.email }}"
-                                    class="change-fragment btn d-flex flex-column flex-start align-items-center text-decoration-none"
-                                    style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: transparent; border: none; z-index: 1; padding: 0;">
+                            <div class="d-flex flex-column align-items-center p-4 text-center" style="position: relative; max-width:200px;">
+                                <button type='button' id="{{ item.id }}" data-fragment="{{ item.href }}" data-user="{{ app.user.email }}" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: transparent; border: none; z-index: 1; padding: 0;" class="change-fragment border mb-4 btn card-link d-flex flex-column justify-content-between align-items-center text-center p-3">
                                 </button>
-
-                                <!-- Affichage de l'icône en version mobile et desktop -->
-                                <i class="fas {{ item.icon }} fa-2x d-sm-none text-black" style="pointer-events: none;"></i>
-                                <i class="fas {{ item.icon }} fa-3x d-none d-sm-inline d-md-inline text-black" style="pointer-events: none;"></i>
-
-                                <!-- Affichage du titre en version mobile et desktop -->
-                                <h6 class="d-block d-md-none text-center text-black" style="pointer-events: none; word-wrap: break-word; white-space: normal;">{{ item.title }}</h6>
-                                <h5 class="d-none d-md-block text-center text-black" style="pointer-events: none; word-wrap: break-word; white-space: normal;">{{ item.title }}</h5>
+                                <i class="fas {{ item.icon }} fa-3x text-secondary mb-2"></i>
+                                <h5 class="text-dark">{{ item.title }}</h5>
+                                <p class="text-muted small">{{ item.description }}</p>
                             </div>
                         {% endif %}
                     {% endfor %}
                 </div>
             </div>
-
-            <div class="container card mb-4">
-                <div class="container card-header d-flex justify-content-between align-items-center">
-                    <h4>Actualités</h4>
-                </div>
-                <div class="card-body p-0 m-md-4 c-access d-flex justify-content-around flex-wrap">
+        </div>
+    </div>
+<!-- Card 2 -->
+    {# <div class="col-md-6">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h2 class="m-3">Actualités</h2>
+            
+                <div class='d-flex flex-wrap justify-content-center'>
                     {% set actualite = [
                         { id: 'news1', href: '/actualites/article1', icon: 'fa-newspaper', title: 'Nouvelle fonctionnalité ajoutée',
                         description: 'Découvrez notre dernière mise à jour qui améliore l’expérience utilisateur.'},
@@ -55,7 +76,7 @@
                     ] %}
                     {% for item in actualite %}
                         <a id="{{ item.id }}" href="{{ item.href }}" style="max-width:200px;" class="mb-4 btn card-link d-flex flex-column justify-content-start align-items-center text-center p-3">
-                            <i class="fas {{ item.icon }} fa-3x text-primary mb-2"></i>
+                            <i class="fas {{ item.icon }} fa-3x text-success mb-2"></i>
                             <h5 class="text-dark">{{ item.title }}</h5>
                             <p class="text-muted small">{{ item.description }}</p>
                         </a>
@@ -63,29 +84,29 @@
                 </div>
             </div>
         </div>
+    </div> #}
 
-        <!-- Section Accès Direct en dessous des autres éléments -->
-        <div class="container card mb-4 bg-transparent border-0">
-            <div class="card-body bg-transparent">
-                <div class="card-header bg-transparent border-0">
-                    <h5>Accès direct</h5>
-                </div>
-                {% set access_items = [
-                    {path: 'home_index', icon: 'fa-tag', alt: 'Nos offres', text: 'Nos offres', color: 'white'},
-                    {path: 'home_index', icon: 'fa-question-circle', alt: "J'ai une question", text: "J'ai une question", color: 'white'},
-                    {path: 'home_index', icon: 'fa-user-shield', alt: 'Données personnelles', text: 'Données personnelles', color: 'white'},
-                    {path: 'home_index', icon: 'fa-handshake', alt: 'Offres partenaires', text: 'Offres partenaires', color: 'white'},
-                ] %}
-
-                <div class="c-access d-flex justify-content-start flex-wrap">
+<!-- Card 3 -->
+    <div class="col-md-12">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h2 class="m-3">Accès direct</h5>
+                <div class='d-flex flex-wrap justify-content-center'>
+                    {% set access_items = [
+                        {href: 'home_index', icon: 'fa-tag', id: 'Nos offres', text: 'Nos offres', description:"Plus d'informations"},
+                        {href: 'home_index', icon: 'fa-question-circle', id: "J'ai une question", text: "J'ai une question", description:"Contactez-nous ici"},
+                        {href: 'home_index', icon: 'fa-user-shield', id: 'Données personnelles', text: 'Données personnelles', description:"Comment mes données personnelles sont-elles gérées?"},
+                        {href: 'home_index', icon: 'fa-handshake', id: 'Offres partenaires', text: 'Offres partenaires', description:"Découvrez les offres de nos partenaires"},
+                    ] %}
                     {% for item in access_items %}
-                        <a href="{{ path(item.path) }}" class="access">
-                            <i class="fas {{ item.icon }} fa-3x mt-3 text-primary mb-2 text-{{ item.color }}"></i>
-                            <p>{{ item.text }}</p>
-                        </a>
+                        <button type='button' id="{{ item.id }}" data-fragment="{{ item.href }}" data-user="{{ app.user.email }}" style="max-width:200px;" class="change-fragment border mb-4 btn card-link d-flex flex-column justify-content-between align-items-center text-center p-3">
+                            <i class="fas {{ item.icon }} fa-3x text-dark mb-2"></i>
+                            <h5 class="text-dark">{{ item.text }}</h5>
+                            <p class="text-muted small">{{ item.description }}</p>
+                        </button>
                     {% endfor %}
                 </div>
             </div>
         </div>
     </div>
-
+</div>

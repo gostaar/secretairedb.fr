@@ -3,12 +3,14 @@
 {% block title %}Dashboard utilisateur{% endblock %}
 
 {% block body %}
-    <div id="userContent" class="d-flex flex-column min-vh-100">
+    <div id="userContent" class="custom-bg d-flex flex-column min-vh-100">
         {% include 'userPage/_header.html.twig' %}
         
-        <div id="fragmentContent" class="custom-bg full-height m-0 p-0 w-100">
+        <main id="fragmentContent" class="container d-flex justify-content-center flex-grow-1 py-4">
             {% include 'partials/flash.html.twig' %}
             {% include 'userPage/_fragmentContent.html.twig' %}
-        </div>
+        </main>
+
+        {% include 'userPage/_footer.html.twig' %}
     </div>
 {% endblock %}
