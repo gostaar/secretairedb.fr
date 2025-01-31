@@ -23,7 +23,6 @@ class DevisLigneRepository extends ServiceEntityRepository
             ->innerJoin('l.devis', 'd') 
             ->where('d.id = :devisId')  // Filtrer par Devis
             ->setParameter('devisId', $devisId)
-            ->select('l.quantite * l.prix_unitaire AS totalMontant')  // Calculer le montant total
             ->getQuery()
             ->getResult();
     }

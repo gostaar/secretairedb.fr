@@ -65,11 +65,10 @@ services:
         tags:
             - { name: kernel.event_listener, event: kernel.request, priority: 10 }
 
-    # images.document_filter:
-    #     class: App\Filter\DocumentFilter
-    #     arguments: []
-    #     tags:
-    #     - { name: 'api_platform.filter' }
+    App\Service\ControllerServices\FormService:
+        arguments:
+            $entityManager: '@doctrine.orm.entity_manager'
+            $logger: '@logger'
 
     App\Service\ImageService:
         arguments:

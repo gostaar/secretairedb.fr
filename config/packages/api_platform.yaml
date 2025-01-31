@@ -11,4 +11,5 @@ api_platform:
         multipart: ['multipart/form-data']
         jsonld: ['application/ld+json']
         json: ['application/json']
+        jsonM: ['application/merge-patch+json']
     use_symfony_listeners: true

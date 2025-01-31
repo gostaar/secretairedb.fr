@@ -8,6 +8,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 class UserType extends AbstractType
 {
@@ -15,11 +16,6 @@ class UserType extends AbstractType
     {
         $builder
             ->add('email')
-            ->add('roles')
-            ->add('password')
-            ->add('lastActivity', null, [
-                'widget' => 'single_text',
-            ])
             ->add('nom')
             ->add('adresse')
             ->add('codePostal')
@@ -29,11 +25,6 @@ class UserType extends AbstractType
             ->add('mobile')
             ->add('siret')
             ->add('nomEntreprise')
-            // ->add('services', EntityType::class, [
-            //     'class' => Services::class,
-            //     'choice_label' => 'id',
-            //     'multiple' => true,
-            // ])
         ;
     }
 

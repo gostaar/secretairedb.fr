@@ -1,64 +1,110 @@
 
 
     <!-- Main Content -->
-    <div class="flex-grow-1 p-4 d-flex flex-column">
-        <div class="container card mb-4">
-            <div class="container card-header d-flex justify-content-between align-items-center">
-                <h4>Informations personnelles</h4>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    {% set personal_info = [
-                        {'id': 'civilite', 'label': 'Civilité', 'placeholder': 'Civilité', 'value': user.id},
-                        {'id': 'nom', 'label': 'Nom', 'placeholder': 'Nom', 'value': user.nom},
-                        {'id': 'adresse', 'label': 'Adresse', 'placeholder': 'Adresse', 'value': user.adresse},
-                        {'id': 'code-postal', 'label': 'Code Postal', 'placeholder': 'Code Postal', 'value': user.codePostal},
-                        {'id': 'ville', 'label': 'Ville', 'placeholder': 'Ville', 'value': user.ville},
-                        {'id': 'Pays', 'label': 'Pays', 'placeholder': 'Pays', 'value': user.pays},
-                        {'id': 'telephone', 'label': 'Téléphone', 'placeholder': 'Téléphone', 'value': user.telephone},
-                        {'id': 'mobile', 'label': 'Mobile', 'placeholder': 'Mobile', 'value': user.mobile},
-                        {'id': 'email', 'label': 'Adresse e-mail', 'placeholder': '', 'value': user.email, 'readonly': true}
-                    ] %}
-                    {% for field in personal_info %}
-                        <div class="col-md-4 mb-3">
-                            <label for="{{ field.id }}">{{ field.label }}</label>
-                            <input 
-                                id="{{ field.id }}" 
-                                class="form-control" 
-                                placeholder="{{ field.placeholder }}" 
-                                value="{{ field.value }}" 
-                                {% if field.readonly is defined and field.readonly %}readonly{% endif %}
-                            >
+    <div class="row g-4">
+        <div class="col-md-12">
+            <div class="card shadow-sm">
+                <div class="card-header mb-2">
+                    <h2>Informations personnelles</h2>
+                </div>
+                <div class="card-body"> 
+                {{ form_start(formViews.addUserForm) }}
+                    <div class="row d-flex">
+                        {% set personal_info = [
+                            {'id': 'nom',},
+                            {'id': 'adresse'},
+                            {'id': 'codePostal'},
+                            {'id': 'ville'},
+                            {'id': 'pays'},
+                            {'id': 'telephone'},
+                            {'id': 'mobile'},
+                            {'id': 'email'}
+                        ] %}
+                        {% for field in personal_info %}
+                            <div class="col-md-4 mb-3">
+                                {{ form_row(attribute(formViews.addUserForm, field.id)) }}
+                            </div>
+                        {% endfor %}
+                        <div class='d-flex justify-content-center'>
+                            <button type="submit" class="btn btn-primary">Enregistrer</button>
                         </div>
-                    {% endfor %}
+                    </div>
                 </div>
             </div>
         </div>
 
-        <div class="container card mb-4">
-            <div class="container card-header d-flex justify-content-between align-items-center">
-                <h4>Facturation</h4>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    {% set entreprise_info = [
-                        {'id': 'siret', 'label': 'Siret', 'placeholder': 'Numéro de Siret', 'value': user.siret},
-                        {'id': 'nomEntreprise', 'label': 'Nom de l\'entreprise', 'placeholder': 'Nom de l\'entreprise', 'value': user.nomEntreprise ? user.nomEntreprise : 'N/A'},
-                    ] %}
-                    {% for field in entreprise_info %}
-                        <div class="col-md-4 mb-3">
-                            <label for="{{ field.id }}">{{ field.label }}</label>
-                            <input id="{{ field.id }}" class="form-control" placeholder="{{ field.placeholder }}" value="{{ field.value }}" >
-                        </div>
-                    {% endfor %}
+        <div class="col-md-12">
+            <div class="card shadow-sm">
+                <div class="card-header mb-2">
+                    <h2>Facturation</h2>
                 </div>
+                <div class="card-body">
+                    <div class="row">
+                        {% set entreprise_info = [
+                            {'id': 'siret',},
+                            {'id': 'nomEntreprise'},
+                        ] %}
+                        {% for field in entreprise_info %}
+                            <div class="col-md-4 mb-3">
+                                {{ form_row(attribute(formViews.addUserForm, field.id)) }}
+                            </div>
+                        {% endfor %}
+                        <div class='d-flex justify-content-center mb-3'>
+                            <button type="submit" class="btn btn-primary">Enregistrer</button>
+                        </div>
+                        {{ form_end(formViews.addUserForm) }}
+                    </div>
 
-                <p class="text-danger border-top pt-3">Services choisis:</p>
-                <ul>
-                    {% for s in services %}
-                        <li>{{ s }}</li>
-                    {% endfor %}
-                </ul>
+                    <p class="text-danger border-top pt-3">Services choisis:</p>
+                    <ul>
+                        {% for s in services %}
+                            <li>{{ s }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+       <div class="col-md-12">
+            <div class="card shadow-sm">
+                <div class="card-header mb-2 d-flex justify-content-between align-items-center">
+                    <h2>Identifiants et mots de passe</h2>
+                    <a href="/export-identifiants" class="btn btn-primary">Exporter</a>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Site</th>
+                                    <th>Identifiant</th>
+                                    <th>Mot de passe</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            
+                            {% if identifiants is empty %}
+                                <tr>
+                                    <td colspan="3" class="text-center">Pas d'identifiants actuellement</td>
+                                </tr>
+                            {% else %}
+                                {% for identifiant in identifiants %}
+                                <tr>
+                                    <td>{{ identifiant.site }}</td>
+                                    <td>{{ identifiant.identifiant }}</td>
+                                    <td>{{ identifiant.password }}</td>
+                                </tr>    
+                                {% endfor %}
+                            {% endif %}
+                            </tbody>
+                        </table>
+                        <div class="d-flex justify-content-center">
+                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#identifiantModal">
+                                Ajouter un identifiant
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -90,3 +136,27 @@
             </div>
         </div> #}
     </div>
+
+<div class="modal fade" id="identifiantModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Créer un nouvel identifiant</h5>
+      </div>
+      <div class="modal-body">
+          <div class="form-group">
+          {{ form_start(formViews.addIdentifiants) }}
+            {{ form_row(formViews.addIdentifiants.site) }}
+            {{ form_row(formViews.addIdentifiants.identifiant) }}
+            {{ form_row(formViews.addIdentifiants.password) }}
+          </div>
+          <div class='d-flex justify-content-center gap-3'>
+            <button type="button" class="btn btn-secondary mb-3" >Annuler</button>
+            <button type="submit" class="btn btn-primary mb-3" >Enregistrer</button>
+          {{ form_end(formViews.addIdentifiants) }}
+          </div>
+
+      </div> 
+    </div>
+  </div>
+</div>

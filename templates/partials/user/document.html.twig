@@ -1,308 +1,123 @@
 <!-- Main Content -->
-<div class="flex-grow-1 p-4 d-flex flex-column">
-    <div class="container">
-         <div class="container card-header d-flex justify-content-between align-items-center mb-4">
-            <h4>{{ dossier.name }}</h4>
+<div class="col-md-12">
+    <div class="card shadow-sm">
+         <div class="card-header mb-2">
+            <h4 class="m-3">{{ dossier.name }}</h4>
         </div>
-        {% include 'partials/user/models/searchModel.html.twig' with {
-                'formViews': formViews,
-                'fragment': fragment,
-                'dossier' : dossier,
-            } only %}
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th scope="col">Nom</th>
-                    <th scope="col">Date</th>
-                    <th scope="col">De</th>
-                    <th scope="col">A</th>
-                    <th scope="col">Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for document in documents %}
-                    <tr>
-                        <td>{{ document.name }}</td>
-                        <td>{{ document.dateDocument ? document.dateDocument|date('d/m/Y') : 'N/A' }}</td> 
-                        <td>{{ document.expediteur ? document.expediteur : 'Non spécifié' }}</td>
-                        <td>{{ document.destinataire ? document.destinataire : 'Non spécifié' }}</td>
-                       
-                        <td>
-                            <div class='d-flex flex-wrap'>
-                                <button 
-                                    type="button" 
-                                    class="btn btn-secondary change-fragment" 
-                                    style='border-radius: 50%;' 
-                                    data-fragment='link-DocumentEdit' 
-                                    data-document="{{ document.id }}" 
-                                    data-action="edit" 
-                                    data-id="{{ document.id }}">
-                                        <i class="fas fa-pen"></i>
-                                </button>
-                                <form action="/api/documents/{{ document.id }}" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce document ?');">
-                                    <input type="hidden" name="_method" value="DELETE">
-                                    <button type="submit" class="btn btn-danger" style='border-radius: 50%;'><i class="fas fa-times"></i></button>
-                                </form>
-                            </div>
-                        </td>
-                    </tr>
-                {% else %}
-                <tr>
-                    <td colspan="8" class="text-center">Aucun fichier trouvé</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+        <div class="card-body d-flex align-items-center flex-column">
+           <div class="col-md-12">
+                {% include 'partials/user/models/searchModel.html.twig' with {
+                    'formViews': formViews,
+                    'fragment': fragment,
+                    'dossier' : dossier,
+                } only %}
+            </div>
 
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#documentModal" data-action="add">
-            Ajouter un fichier
-        </button>
+                <div class="col-12 d-flex justify-content-start" id="document-container">
+                {% for document in documents %}
+                        <div class="document d-flex flex-column align-items-center p-1" style="position: relative; width: 130px;">
+                            <button 
+                                type="button" 
+                                data-id="{{ document.id }}"
+                                data-document="{{ document.id }}" 
+                                data-fragment='link-DocumentEdit' 
+                                data-action="edit" 
+                                class="btn btn-secondary change-fragment"
+                                style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: transparent; border: none; z-index: 1; padding: 0;">
+                            </button>
+
+                            {% if document.name ends with '.pdf' %}
+                                <i class="far fa-file-pdf text-danger fa-3x"></i>
+                            {% elseif document.name ends with '.jpg' or document.name ends with '.png' %}
+                                <i class="far fa-file-image text-primary fa-3x"></i>
+                            {% elseif document.name ends with '.txt' %}
+                                <i class="far fa-file text-muted fa-3x" ></i>
+                            {% elseif document.name ends with '.xls' or document.name ends with '.xlsx' %}
+                                <i class="far fa-file-excel text-success fa-3x"></i>
+                            {% elseif document.name ends with '.doc' or document.name ends with '.docx' %}
+                                <i class="far fa-file-word text-info fa-3x"></i>
+                            {% else %}
+                                <i class="far fa-file text-dark fa-3x"></i>
+                            {% endif %}
+                            <p class='text-black text-center'>{{ document.name }}</p>
+                        </div>
+                       
+                    {% else %}
+                    <div class="col-12 d-flex justify-content-center">
+                        <div class="text-center">
+                            <div style="position: relative; display: inline-block;">
+                                <i class="fas fa-file-alt fa-5x text-center m-5"></i>
+                                <div style="position: absolute; 
+                                        top: 0; left: 0; 
+                                        right: 0; bottom: 0; 
+                                        background-color: rgba(255, 255, 255, 0.7); 
+                                        z-index: 1;">
+                                </div>
+                            </div>
+                            <h1 style="color: grey;">Aucun Documents</h1>
+                            <p class="text-muted">À cet endroit, vous pourrez consulter vos documents.</p>
+                        </div>
+                    </div>
+                   
+                    {% endfor %}</div>
+
+            </div>
+            <div class='d-flex justify-content-center mb-3'>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#documentModal" data-action="add">
+                    Ajouter un fichier
+                </button>
+            </div>
+        </div>
     </div>
 </div>
 
+<div id="contextMenu" class="dropdown-menu d-none" style="position: absolute;">
+    <button class="btn dropdown-item change-fragment" id="opendDocument">Ouvrir le document</button>
+    <a class="dropdown-item" href="javascript:void(0)" id="renameDocument">Renommer le document</a>
+    <a class="dropdown-item" href="javascript:void(0)" id="deleteDocument">Supprimer le document</a>
+</div>
 
-{# <script>
-document.addEventListener('DOMContentLoaded', () => {
-    const modal = document.getElementById('documentModal');
-    const modalTitle = document.getElementById('documentModalLabel');
-    const modalFormContainer = document.getElementById('modalFormContainer');
-    const collectionField = document.querySelector('#documents_utilisateur_images');
-    const initialImages = new Map();
-    let initialValues = {};
-    let documentId = null;
+<div class="modal fade" id="documentModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Créer un nouveau Document</h5>
+      </div>
+      <div class="modal-body">
+          {{ form_start(formViews.addAddDocument) }}
+          <div class="form-group">
+            {{ form_row(formViews.addAddDocument.name) }}
+          </div>
+          <div class='d-flex justify-content-center gap-3'>
+            <button type="button" class="btn btn-secondary mb-3" data-dismiss="modal">Annuler</button>
+            {# <button type="submit" class="btn btn-primary mb-3">Enregistrer</button> #}
+            {{ form_row(formViews.addAddDocument.submit) }}
+          </div>
+          {{ form_end(formViews.addAddDocument) }}
+      </div> 
+    </div>
+  </div>
+</div>
 
-    modal.addEventListener('show.bs.modal', (event) => {
-        const button = event.relatedTarget;
-        const action = button.getAttribute('data-action');
-        documentId = button.getAttribute('data-id');
-
-        if (action === 'add') {
-            modalTitle.textContent = 'Créer un nouveau document';
-            document.querySelector('#modalFormContainer').reset();
-            initialImages.clear();
-        } else if (action === 'edit') {
-            modalTitle.textContent = `Modifier le document #${documentId}`;
-            fetch(`/api/documents/${documentId}`)
-                .then(response => response.json())
-                .then(data => {
-                    const form = document.querySelector('#modalFormContainer');
-                    initialValues = data;
-                    Object.keys(data).forEach(key => {
-                        const field = form.querySelector(`[name="documents_utilisateur[${key}]"]`) || form.querySelector(`[name="documents_utilisateur[isActive]"]`);
-                        if (field) {
-                            if (field.type === 'date') {
-                                field.value = data[key].split('T')[0];
-                            } else if (field.type === 'checkbox') {
-                                field.checked = data[key];
-                            } else if (field.type === 'select-one') {
-                                const valueToCompare = data[key].split('/').pop();
-                                const option = field.querySelector(`option[value="${valueToCompare}"]`);
-                                option ? option.selected = true : console.warn(`Option avec la valeur ${valueToCompare} non trouvée dans le select.`);
-                            } else {
-                                field.value = data[key];
-                            }
-                        }
-                    });
-                })
-                .catch(error => console.error('Erreur lors du chargement des données du document:', error));
-
-            fetch(`/api/images?document=${documentId}`)
-                .then(response => response.json())
-                .then(images => {
-                    initialImages.clear();
-                    images.member.forEach((image, index) => {
-                        initialImages.set(index, { ...image }); 
-                    });
-                    console.log(images.member);
-                    displayImages(images.member);
-                })
-                .catch(error => console.error('Erreur lors du chargement des images:', error));
-        }
-    });
-
-   function displayImages(images) {
-        const formImagesSpan = document.getElementById('formImages');
-        formImagesSpan.innerHTML = `
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Nom</th>
-                        <th>Taille</th>
-                        <th>Fichier</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody id="imagesTableBody"></tbody>
-            </table>
-        `;
-
-        const tableBody = document.getElementById('imagesTableBody');
-
-        images.forEach(image => {
-            const row = document.createElement('tr');
-            row.classList.add('rowImage');
-            row.innerHTML = `
-                <input type="hidden" name="imageId" value="${image.id}" />
-                <td><input type="text" name="imageName" value="${image.imageName || ''}" class="form-control" placeholder="Nom de l'image" /></td>
-                <td><input type="text" name="imageSize" value="${image.imageSize || ''}" class="form-control" placeholder="Taille (en Ko)" /></td>
-                <td><input type="file" name="imageFile" class="form-control" /></td>
-                <td class="d-flex gap-2">
-                    <button type="button" class="btn btn-success move-down" aria-label="Téléchargement">
-                        <i class="fas fa-arrow-down"></i>
-                    </button>
-                    <button type="button" class="btn btn-danger delete-image" aria-label="Supprimer l'image">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </td>
-            `;
-
-            // Ajouter des écouteurs d'événements
-            row.querySelector('.delete-image').addEventListener('click', () => {
-                row.remove(); // Supprime la ligne correspondante
-            });
-
-            row.querySelector('.move-down').addEventListener('click', () => {
-                const nextSibling = row.nextElementSibling;
-                if (nextSibling) {
-                    tableBody.insertBefore(nextSibling, row); // Déplace la ligne vers le bas
-                }
-            });
-
-            tableBody.appendChild(row);
-        });
-    }
-
-    modal.addEventListener('submit', (event) => {
-        event.preventDefault();
-        console.log('submit');
-        const form = modalFormContainer;
-        const loadingIndicator = document.getElementById('loadingIndicator');
-        loadingIndicator.style.display = 'flex';
-
-        const isNewDocument = modalTitle.textContent.includes('nouveau');
-        const currentImages = new Map();
-        form.querySelectorAll('.rowImage').forEach((row, index) => {
-            const id = row.querySelector('[name="imageId"]').value || null;
-            const name = row.querySelector('[name="imageName"]').value;
-            const size = row.querySelector('[name="imageSize"]').value;
-            const file = row.querySelector('[name="imageFile"]').files ? row.querySelector('[name="imageFile"]').files[0] : null;
-
-            currentImages.set(index, {
-                'id': id,
-                'imageName': name,
-                'imageSize': size,
-                'imageFile': file,
-                'document': `/api/documents/${documentId}`
-            });        
-        });
-
-        const stringifiedInitialImages = new Map(
-            Array.from(initialImages.entries()).map(([key, value]) => {
-                // Transformer chaque propriété de l'objet en chaîne de caractères
-                const stringifiedValue = Object.fromEntries(
-                    Object.entries(value).map(([propKey, propValue]) => [
-                        propKey, String(propValue) // Transformer chaque valeur en chaîne de caractères
-                    ])
-                );
-                return [key, stringifiedValue];
-            })
-        );
-console.log(stringifiedInitialImages, currentImages);
-        const addedImages = [...currentImages.values()].filter(image => !image.id);
-        const removedImages = [...stringifiedInitialImages.keys()].filter(id => !currentImages.has(id));
-        const modifiedImages = [...currentImages.values()].filter(image => {
-            if (image.id && stringifiedInitialImages.has(image.id)) {
-                const initial = stringifiedInitialImages.get(image.id);
-                return image.name !== initial.imageName || image.size !== initial.imageSize || image.file;
-            }
-            return false;
-        });
-
-        addedImages.forEach(image => {
-            console.log('addImage');
-            //const formData = new FormData();
-            //formData.append('file', image.file);
-            //formData.append('imageName', image.name);
-            //formData.append('imageSize', image.size);
-
-            //fetch('/api/images', {
-            //    method: 'POST',
-            //    body: formData,
-            //});
-        });
-
-        // Gérer les suppressions
-        removedImages.forEach(id => {
-        console.log('remove')
-            //fetch(`/api/images/${id}`, {
-            //    method: 'DELETE',
-            //});
-        });
-
-         modifiedImages.forEach(image => {
-            console.log('modified');
-            const formData = new FormData();
-            if (image.file) formData.append('file', image.file);
-            formData.append('imageName', image.name);
-            formData.append('imageSize', image.size);
-
-            fetch(`/api/images/${image.id}`, {
-                method: 'PATCH',
-                body: formData,
-            });
-        });
-
-        const formData = new FormData(form);
-        let modifiedFields = {};
-
-        Object.keys(initialValues).forEach(key => {
-            const field = form.querySelector(`[name="documents_utilisateur[${key}]"]`);
-            if (field) modifiedFields[key] = field.value || '';
-        });
-
-        const differences = Object.keys(initialValues).reduce((acc, key) => {
-            const initialValue = String(initialValues[key] ?? '');
-            let modifiedValue = String(modifiedFields[key] ?? '');
-
-            if (key === 'active') {
-                modifiedValue = form.querySelector(`[name="documents_utilisateur[isActive]"]`).value;
-                modifiedValue = modifiedValue === '1' ? true : false;
-            }
-
-            if (initialValue !== modifiedValue) {
-                if (key === 'date_document') {
-                    acc[key] = new Date(modifiedValue).toISOString().split('T')[0];
-                } else if (key === 'active') {
-                    acc['is_active'] = (modifiedValue === 'true' || modifiedValue === true) ? true : false;
-                } else if (key === 'dossier') {
-                    acc[key] = `api/dossiers/${parseInt(modifiedValue)}`;
-                } else if(key === 'user'){
-                    acc[key] = `api/users/${parseInt(modifiedValue)}`;
-                } else if(key === 'typeDocument'){
-                    acc[key] = `api/type_documents/${parseInt(modifiedValue)}`;
-                } else if (modifiedValue !== ''){
-                    acc[key] = modifiedValue;
-                }
-            }
-            return acc;
-        }, {});
-
-        if (Object.keys(differences).length > 0) {
-            fetch(isNewDocument ? '/api/documents' : `/api/documents/${documentId}`, {
-                method: isNewDocument ? 'POST' : 'PATCH',
-                headers: { 'Content-Type': 'application/json' },
-                body: isNewDocument ? formData : JSON.stringify(differences),
-            })
-            .then(response => response.text())
-            .then(html => {
-                modalFormContainer.innerHTML = `
-                    <div class="alert alert-success m-0" id="responseMessagediv" role="alert">
-                        <span id="responseMessage">${isNewDocument ? 'Enregistrement effectué avec succès' : 'Enregistrement modifié avec succès'}</span>
-                    </div>`;
-            })
-        }
-
-        loadingIndicator.style.display = 'none';
-    });
-});
-</script> #}
+<div class="modal fade" id="renameDocumentsModal" tabindex="-1" role="dialog" aria-labelledby="renameDocumentModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="renameDocumentModalLabel">Renommer le Document</h5>
+      </div>
+      <div class="alert m-0" id="responseMessagediv" role="alert" style='display:none;'>
+          <span id="responseMessage"></span>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="newDocumentName" class="col-form-label">Entrez le nouveau nom du Document :</label>
+          <input type="text" class="form-control" id="newDocumentsName" placeholder="Nouveau nom du Document">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+        <button type="submit" class="btn btn-primary" id="submitNewDocumentsName">Renommer</button>
+      </div>
+    </div>
+  </div>
+</div>

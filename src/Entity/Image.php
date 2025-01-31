@@ -63,13 +63,8 @@ class Image
     #[Groups(['image:read'])]
     private ?int $imageSize = null;
     
-    #[ORM\Column]
-    private ?\DateTimeImmutable $updatedAt = null;
-    
-    #[ORM\Column]
-    private ?\DateTimeImmutable $createdAt = null;
-    
     #[ORM\ManyToOne(inversedBy: 'images')]
+    #[ORM\JoinColumn(nullable: false)]
     #[Groups(['image:write', 'image:read'])]
     #[ApiFilter(SearchFilter::class, strategy: 'exact')]
     private ?DocumentsUtilisateur $document = null;
@@ -78,19 +73,8 @@ class Image
     #[Groups(['image:write', 'image:read'])]
     private ?string $imageDescription = null;
 
-
-    public function __construct(){
-        $this->updatedAt = new \DateTimeImmutable();
-        $this->createdAt = new \DateTimeImmutable();
-    }
-
     public function __toString(){
         return $this->imageName;
-    }
-
-    public function preUpdate()
-    {
-        $this->updatedAt = new \DateTimeImmutable();
     }
 
     public function getId(): ?int
@@ -106,10 +90,7 @@ class Image
     public function setImageFile(?File $image = null)
     {
         $this->imageFile = $image;
-        if ($image) {
-            // Vérifiez si le fichier existe dans le répertoire temporaire
-            $this->updatedAt = new \DateTimeImmutable();
-        }
+
         return $this;
     }
 
@@ -130,35 +111,10 @@ class Image
     {
         return $this->slug;
     }
-
+    
     public function setSlug(string $slug): static
     {
         $this->slug = $slug;
-
-        return $this;
-    }
-
-
-    public function getUpdatedAt(): ?\DateTimeImmutable
-    {
-        return $this->updatedAt;
-    }
-
-    public function setUpdatedAt(\DateTimeImmutable $updatedAt): static
-    {
-        $this->updatedAt = $updatedAt;
-
-        return $this;
-    }
-
-    public function getCreatedAt(): ?\DateTimeImmutable
-    {
-        return $this->createdAt;
-    }
-
-    public function setCreatedAt(\DateTimeImmutable $createdAt): static
-    {
-        $this->createdAt = $createdAt;
 
         return $this;
     }

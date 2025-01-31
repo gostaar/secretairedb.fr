@@ -1,176 +1,199 @@
-// import { changeFragmentUser } from "./main";
+export function menuContextuel(data_fragment) {
+    document.removeEventListener('contextmenu', (e) => handleContextMenu(e, data_fragment)); 
+    document.addEventListener('contextmenu', (e) => handleContextMenu(e, data_fragment)); 
 
-export function menuContextuel(data_fragment){
-    document.addEventListener('contextmenu', (e) => {
+    document.addEventListener('click', (e) => closeContextMenu(e), true);
+}
+
+// function closeContextMenu(e) {
+//     const contextMenus = document.querySelectorAll('.context-menu');
+//     console.log(`ContextMenus: ${contextMenus}`);
+//     contextMenus.forEach((menu) => {
+//         console.log(menu);
+//         const isClickInsideMenu = menu.contains(e.target);
+//         const isClickInsideTrigger = e.target.closest('.repertoire, .document'); // Vous devez avoir des classes "repertoire" et "document"
+//         console.log(isClickInsideMenu, isClickInsideTrigger);
+//         if (!isClickInsideMenu && !isClickInsideTrigger) {
+//             menu.classList.replace('d-block', 'd-none');
+//         }
+//     });
+// }
+
+function closeContextMenu(e) {
+    const contextMenus = document.getElementById('contextMenuDossier');
+    const contextMenusDocument = document.getElementById('contextMenu');
+    if(contextMenus && !contextMenus.contains(e.target)){
+        contextMenus.classList.replace('d-block', 'd-none');
+    }
+
+    if(contextMenusDocument && !contextMenusDocument.contains(e.target)){
+        contextMenusDocument.classList.replace('d-block', 'd-none');
+    }
+}
+
+function handleContextMenu(e, data_fragment) {
+    const target = e.target;
+    if (target && target.getAttribute('data-id')) {
+        e.preventDefault();
+        e.stopPropagation();
+        const dossierId = target.getAttribute('data-id');
         
-        if (e.target && e.target.getAttribute('data-id')) {
-            e.preventDefault();
-            e.stopPropagation();
+        const ContextMenu = document.getElementById('contextMenu');
+        const ContextMenuDossier = document.getElementById('contextMenuDossier');
+        const openDocumentBtn = document.querySelector('#opendDocument');
+        const openDossierBtn = document.querySelector('#openDossier');
 
-            const dossierId = e.target.getAttribute('data-id');
-            showContextMenu(e, dossierId, data_fragment);
+        if (ContextMenu && openDocumentBtn) {
+            showContextMenu(e, dossierId, ContextMenu);
+            openDocumentBtn.setAttribute('type', 'button');
+            openDocumentBtn.setAttribute('data-id', dossierId);
+            openDocumentBtn.setAttribute('data-document', dossierId);
+            openDocumentBtn.setAttribute('data-fragment', data_fragment);
+            openDocumentBtn.addEventListener('click', () => {
+                ContextMenu.classList.replace('d-block', 'd-none');
+            });
         }
-    });
+        
+        if (ContextMenuDossier && openDossierBtn) {
+            showContextMenu(e, dossierId, ContextMenuDossier);
+            openDossierBtn.setAttribute('type', 'button');
+            openDossierBtn.setAttribute('data-id', dossierId);
+            openDossierBtn.setAttribute('data-dossier', dossierId);
+            openDossierBtn.setAttribute('data-fragment', data_fragment);
+            openDossierBtn.addEventListener('click', () => {
+                ContextMenuDossier.classList.replace('d-block', 'd-none');
+            });
+        }
+    }
+}
 
-    document.addEventListener('click', (e) => {
-        if (e.target && e.target.getAttribute('data-id')) {
-            const dossierId = e.target.getAttribute('data-id');
+function showContextMenu(e, dossierId, menu) {
+    menu.classList.replace('d-none', 'd-block');
+    menu.style.left = `${e.pageX}px`;
+    menu.style.top = `${e.pageY}px`;
+    setupContextMenuActions(dossierId, menu);
+}
 
-            // Ouvrir le dossier
-            const openDossierBtn = document.getElementById('openDossier');
-            if (openDossierBtn) {
-                openDossierBtn.setAttribute('data-dossier', dossierId);
-                openDossierBtn.setAttribute('data-fragment', data_fragment);
+function setupContextMenuActions(dossierId, menu) {
+    // Actions génériques : ouverture, renommage, suppression
+    setupRenameAction('#renameDossier', dossierId, 'dossiers', 'Nom du dossier mis à jour avec succès !', menu);
+    setupRenameAction('#renameDocument', dossierId, 'documents', 'Nom du document mis à jour avec succès !', menu);
+    setupDeleteAction('#deleteDossier', dossierId, 'dossiers', menu);
+    setupDeleteAction('#deleteDocument', dossierId, 'documents', menu);
+}
 
-                // Simuler un clic ou appeler une fonction pour ouvrir le dossier
-                openDossierBtn.click();
+function setupRenameAction(selector, dossierId, type, successMessage, menu) {
+    const button = document.querySelector(selector);
+    if (button) {
+        button.addEventListener('click', () => {
+            const myModal = new bootstrap.Modal(document.getElementById(`rename${capitalize(type)}Modal`));
+            if (myModal) {
+                myModal.show();
             }
-        }
-    });
+           menu.classList.replace('d-block', 'd-none');
+        });
+    }
 
-    // Cacher le menu contextuel si on clique ailleurs
-    document.addEventListener('click', (e) => {
-        const contextMenu = document.getElementById('contextMenu');
-        if (contextMenu && !contextMenu.contains(e.target) && !e.target.classList.contains('repertoire')) {
-            contextMenu.classList.remove('d-block');
-            contextMenu.classList.add('d-none');
-        }
-    });
+    const submitButton = document.getElementById(`submitNew${capitalize(type)}Name`);
+    if (submitButton) {
+        submitButton.addEventListener('click', () => {
+            const newName = document.getElementById(`new${capitalize(type)}Name`).value;
+            if (newName) {
+                console.log(`/api/${type}/${dossierId}`);
+                fetch(`/api/${type}/${dossierId}`, {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name: newName }),
+                })
+                .then(response => response.json(
+                    console.log(response)
+                ))
+                .then(data => {
+                    if (data.id && data.name) {
+                        updateUI(dossierId, newName);
+                        showSuccess(successMessage);
+                        const modal = document.getElementById(`rename${capitalize(type)}Modal`);
+                        if (modal) {
+                            modal.classList.remove('show');
+                        }
 
-
-    const form = document.querySelector('#modalFormContainerbis');
-    if (form) {
-        const service = form.getAttribute('data-service');
-        form.addEventListener('submit', function (event) {
-        event.preventDefault(); // Empêche l'envoi du formulaire pour éviter un rechargement de la page
-
-        const formData = new FormData(form);
-
-        fetch(`/api/dossiers/${service}`, {
-            method: 'POST',
-            body: formData,
-        })
-        .then(response => response.text())
-        .then(html => {
-            form.innerHTML = html; // Remplace le contenu du container modal avec la nouvelle réponse
-        })
-        .catch(error => console.error('Erreur lors du chargement du formulaire:', error));
+                        location.reload(); 
+                    } else {
+                        showError('Échec de la mise à jour.');
+                    }
+                })
+                .catch(() => showError('Erreur lors de la mise à jour.'));
+            }
         });
     }
 }
 
-// Afficher le menu contextuel
-function showContextMenu(e, dossierId, data_fragment) {
-    const menu = document.getElementById('contextMenu');
-    menu.classList.remove('d-none');
-    menu.classList.add('d-block');
-    menu.style.left = `${e.pageX}px`;
-    menu.style.top = `${e.pageY}px`;
-
-    setupContextMenuActions(dossierId, data_fragment);
+function setupDeleteAction(selector, dossierId, type, menu) {
+    const button = document.querySelector(selector);
+    if (button) {
+        button.addEventListener('click', () => {
+            if (confirm(`Êtes-vous sûr de vouloir supprimer ce ${type.slice(0, -1)} ?`)) {
+                fetch(`/api/${type}/${dossierId}`, { method: 'DELETE' })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) removeItem(dossierId, type);
+                    })
+                    .catch(() => handleError());
+            }
+            menu.classList.replace('d-block', 'd-none');
+        });
+    }
 }
 
-// Configuration des actions du menu contextuel
-function setupContextMenuActions(dossierId, data_fragment) {
-    const dossierIdInt = parseInt(dossierId);
+function updateUI(dossierId, newName) {
     const dossier = document.querySelector(`[data-id='${dossierId}']`);
-
-    // Ouvrir le dossier
-    const openDossierBtn = document.getElementById('openDossier');
-    openDossierBtn.setAttribute('data-dossier', dossierId);
-    openDossierBtn.setAttribute('data-fragment', data_fragment)
-
-    // Renommer le dossier
-    addEvent('#renameDossier', 'click', () => {
-        $('#renameDossierModal').modal('show');
-    });
-
-    addEvent('#submitNewDossierName', 'click', () => {
-        const newName = document.getElementById('newDossierName').value;
-        const responseMessage = document.getElementById('responseMessagediv'); // Élément de la modal où afficher la réponse
-        const responseMessageElement = document.getElementById('responseMessage'); // Élément de la modal où afficher la réponse
-
-        if (newName) {
-            fetch(`/api/dossiers/${dossierIdInt}`, {
-                method: 'PATCH',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ name: newName }),
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.id && data.name) {
-                    responseMessage.classList.add('alert-success');
-                    responseMessage.style.display = 'block';
-                    responseMessageElement.textContent = "Nom du dossier mis à jour avec succès !"; // Message de succès
-                    // Met à jour le nom dans l'UI
-                    const dossierPara = dossier ? dossier.nextElementSibling.nextElementSibling : null;
-                    
-                    dossierPara.textContent = newName;
-                    
-                    $('#renameDossierModal').modal('hide'); // Ferme le modal après la mise à jour
-                } else {
-                    responseMessage.classList.add('alert-danger');
-                    responseMessage.style.display = 'block';
-                    responseMessageElement.textContent = "Échec de la mise à jour du dossier."; // Message d'échec
-                }
-            })
-            .catch(error => {
-                responseMessage.classList.add('alert-danger');
-                responseMessage.style.display = 'block';
-                responseMessageElement.textContent = error.message; // Affiche l'erreur dans la modal
-            });
+    if (dossier) {
+        const nameElement = dossier.nextElementSibling ? dossier.nextElementSibling.nextElementSibling : null;
+        if (nameElement) {
+            nameElement.textContent = newName;
         }
-    });
-
-    // Supprimer le dossier
-    addEvent('#deleteDossier', 'click', () => {
-        if (confirm('Êtes-vous sûr de vouloir supprimer ce dossier ?')) {
-            fetch(`/delete_dossier/${dossierId}`, { method: 'DELETE' })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        removeDossier(dossierId);
-                    }
-                })
-                .catch(handleError);
-        }
-    });
+    }
 }
 
-// Supprimer un dossier et gérer l'affichage
-function removeDossier(dossierId) {
-    const dossier = document.getElementById(`dossier_${dossierId}`);
-    dossier.remove();
+function removeItem(dossierId, type, menu) {
+    const item = document.getElementById(`${type.slice(0, -1)}_${dossierId}`);
+    if (item) item.remove();
 
-    const container = document.getElementById('dossier-container');
-    if (!container.children.length) {
-        container.classList.remove('justify-content-start');
-        container.classList.add('justify-content-center');
-        container.innerHTML = '<div class="text-center"><p>Aucun dossier.</p></div>';
+    const container = document.getElementById(`${type.slice(0, -1)}-container`);
+    if (container && !container.children.length) {
+        container.classList.replace('justify-content-start', 'justify-content-center');
+        container.innerHTML = `<div class="text-center"><p>Aucun ${type.slice(0, -1)}.</p></div>`;
     }
 
-    const menu = document.getElementById('contextMenu');
-    toggleClass(menu, 'd-none', 'd-block');
+    if (menu) {
+        menu.classList.replace('d-block', 'd-none');
+    }
 }
 
-// Gérer les erreurs
-function handleError(error) {
-    console.error('Une erreur s\'est produite :', error);
+function showSuccess(message) {
+    const responseMessage = document.getElementById('responseMessagediv');
+    const responseMessageElement = document.getElementById('responseMessage');
+    if (responseMessage && responseMessageElement) {
+        responseMessage.classList.replace('alert-danger', 'alert-success');
+        responseMessage.style.display = 'block';
+        responseMessageElement.textContent = message;
+    }
+}
+
+function showError(message) {
+    const responseMessage = document.getElementById('responseMessagediv');
+    const responseMessageElement = document.getElementById('responseMessage');
+    if (responseMessage && responseMessageElement) {
+        responseMessage.classList.replace('alert-success', 'alert-danger');
+        responseMessage.style.display = 'block';
+        responseMessageElement.textContent = message;
+    }
+}
+
+function handleError() {
     alert('Une erreur s\'est produite. Veuillez réessayer.');
 }
 
-// Gestion des événements pour un élément spécifique
-function addEvent(selector, event, handler) {
-    const element = document.querySelector(selector);
-    if (element) {
-        element.addEventListener(event, handler);
-    }
-}
-
-// Fonction utilitaire pour ajouter et supprimer des classes
-function toggleClass(element, addClass, removeClass) {
-    if (element) {
-        element.classList.add(addClass);
-        element.classList.remove(removeClass);
-    }
+function capitalize(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
 }

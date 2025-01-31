@@ -1,164 +1,156 @@
-
-
-<div class='col-10'>
+{{ form_start(formViews.addDocument, {'attr': {'class': 'm-0'}}) }}
+<div class='col-12'>
     <div class="card shadow-sm">
-        <div class="card-body text-center">
-            <h4 class='mt-3 mb-5 border-bottom d-flex'>
-                <span>{{ document.dossier.name }} - {{ document.name }}</span>
-                {# <span>{{ form_row(formViews.addDocument.isActive, {'value': document.isActive}) }}</span> #}
-            </h4> 
-        
-            <form id="modalFormContainer" action="/api/documents" method="POST">
-                {{ form_start(formViews.addDocument) }}
-                    <div class="row">
-                        <div class='col-sm-12 col-md-4'>
-                            {{ form_row(formViews.addDocument.date_document, {'value': document.dateDocument|date('Y-m-d')}) }}
-                        </div>
-                        <div class='col-sm-12 col-md-4'>
-                            {{ form_row(formViews.addDocument.name, {'value': document.name}) }}
-                        </div>   
-                    </div>
-                    <div class="row">
-                        <div class='col-sm-12 col-md-4'>
-                            {{ form_row(formViews.addDocument.expediteur, {'value': document.expediteur}) }}
-                        </div>
-                        <div class='col-sm-12 col-md-4'>
-                            {{ form_row(formViews.addDocument.destinataire, {'value': document.destinataire}) }}
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class='col-12'>    
-                            {{ form_row(formViews.addDocument.details, {'value': document.details}) }}
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class='col-sm-12 col-md-4'>
-                            {{ form_row(formViews.addDocument.dossier) }} 
-                        </div>
-                        <div class='col-sm-12 col-md-4'>    
-                            {{ form_row(formViews.addDocument.typeDocument) }}
-                        </div>
-                    </div>
-                    <h5 class='my-5'>Images</h5>
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>Id</th>
-                                    <th>Nom</th>
-                                    <th class='d-none d-sm-table-cell'>Taille</th>
-                                    <th class='d-none d-sm-table-cell'>Fichier</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% if document.images is empty %}  
-                                    <tr>
-                                        <td colspan="4" class="text-center">Aucune image trouvée.</td>
-                                    </tr>
-                                {% else %}
-                                    {% for image in document.images %}
-                                        <tr>
-                                            <td>{{ image.id }}</td>
-                                            <td  style="max-width: 50px; word-wrap: break-word; white-space: normal;">{{ image.slug }}</td>
-                                            <td class="d-none d-sm-table-cell">
-                                                {% if image.imageSize is empty %}
-                                                    -
-                                                {% elseif image.imageSize > 1048576 %}
-                                                    {{ (image.imageSize / 1048576)|number_format(2, '.', ',') }} MB
-                                                {% elseif image.imageSize > 1024 %}
-                                                    {{ (image.imageSize / 1024)|number_format(2, '.', ',') }} KB
-                                                {% else %}
-                                                    {{ image.imageSize }} Bytes
-                                                {% endif %}
-                                            </td>
-                                            <td class='d-none d-sm-table-cell' style="max-width: 50px; word-wrap: break-word; white-space: normal;">{{ image.imageName }}</td>
-                                            <td>
-                                                <div class='d-flex justify-content-center'>
-                                                    <button type="button" class="btn btn-primary d-none d-sm-block" data-bs-toggle="modal" data-bs-target="#editImage" data-image='{{ image.id }}'>Modifier</button>
-                                                    <button type="button" class="btn btn-primary d-block d-sm-none" data-bs-toggle="modal" data-bs-target="#editImage" data-image="{{ image.id }}"><i class="fas fa-pen fa-sm"></i></button>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    {% endfor %}
-                                {% endif %}
-                            </tbody>
-                        </table>
-                {{ form_end(formViews.addDocument) }}
-            </form>
+        <div class="card-header">
+            <h4>{{ document.dossier.name }} - {{ document.name }}</h4>
+        </div>
+        <div class="card-body">
+            {{form_row(formViews.addDocument.id, {'value' : document.id})}}
+            <table class="table table-bordered">
+                <tbody>
+                    <tr>
+                        <th class='col-3' style='vertical-align: middle;'>Date</th>
+                        <td class='col-9 parent'>{{ form_row(formViews.addDocument.date_document) }}</td>
+                    </tr>
+                    <tr>
+                        <th class='col-3' style='vertical-align: middle;'>Nom</th>
+                        <td class='col-3 parent'>{{ form_row(formViews.addDocument.name) }}</td>
+                    </tr>
+                    <tr>
+                        <th class='col-3' style='vertical-align: middle;'>Expéditeur</th>
+                        <td class='col-3 parent'>{{ form_row(formViews.addDocument.expediteur) }}</td>
+                    </tr>
+                    <tr>
+                        <th class='col-3' style='vertical-align: middle;'>Destinataire</th>
+                        <td class='col-3 parent'>{{ form_row(formViews.addDocument.destinataire) }}</td>
+                    </tr>
+                    <tr>
+                        <th class='col-3' style='vertical-align: middle;'>Dossier</th>
+                        <td class='col-3 parent'>{{ form_row(formViews.addDocument.dossier) }}</td>
+                    </tr>
+                    <tr>
+                        <th class='col-3' style='vertical-align: middle;'>Type</th>
+                        <td class='col-3 parent'>{{ form_row(formViews.addDocument.typeDocument) }}</td>
+                    </tr>
+                    <tr>
+                        <th class='col-3' style='vertical-align: middle;'>Détails</th>
+                        <td class='col-3 parent'>{{ form_row(formViews.addDocument.details) }}</td>
+                    </tr>
+                </tbody>    
+            </table>
+        </div>
+        <div class="card-header mx-0">
+            <h4>Images</h4>
+        </div>
+        <div class='card-body'>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th class="col-4">Nom</th>
+                        <th class="col-4">Description</th>
+                        <th class="col-4">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {# {% for imageField in formViews.addDocument.images %}
+                        <tr>
+                            <td class="col-4">
+                                <div class="d-flex">{{ form_widget(imageField.slug) }}</div>
+                            </td>
+                            <td class="col-4">
+                                <div class="d-flex">{{ form_widget(imageField.imageDescription) }}</div>
+                            </td>
+                            <td class="col-4">
+                                <div class="d-flex">{{ form_rest(imageField) }}</div>
+                            </td>
+                        </tr>
+                    {% endfor %} #}
+                </tbody>
+            </table>
+            {{ form_row(formViews.addDocument.images) }}
+        </div>
+        {# NE PAS SUPPRIMER POUR MODAL !!! #}
+        {% set count = -1 %}{% for image in document.images %}{% set count = count + 1 %}<span id="{{ count }}" data-image-id="{{ image.id }}"></span>{% endfor %}
+        <div class='d-flex justify-content-center'>
+            {{ form_row(formViews.addDocument.submit, {'attr' : {'data-action' : "click->image-collection#handleButtonClick"}}) }} 
         </div>
     </div>
 </div>
+{{ form_end(formViews.addDocument) }}
 
-<div class="modal fade" id="editImage" tabindex="-1" aria-labelledby="editImageLabel" aria-hidden="true">
+{% for image in document.images %}
+<div class="modal fade" id="editImage{{ image.id }}" tabindex="-1" aria-labelledby="editImageLabel{{ image.id }}" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="editImageLabel"></h5>
+        <h5 class="modal-title" id="editImageLabel{{ image.id }}">{{ image.document }} - {{ image.slug }}</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        {{form_start(formViews.addImage)}}
-            {{ form_row(formViews.addImage.slug) }}
-            {{ form_row(formViews.addImage.imageSize) }}
-            {{ form_row(formViews.addImage.imageName) }}
-            {# <span id="download"></span> #}
-            {{ form_row(formViews.addImage.imageFile) }}
-        {{form_end(formViews.addImage)}}
-       
+        <form action="/{{ image.id }}/update_image/{{ document.id }}" method="POST" data-service={{ serviceLink }}>
+            <input type="hidden" name="image_id" value="{{ image.id }}">
+            <div class="mb-3">
+                <label for="slug" class="form-label">Slug</label>
+                <input type="text" class="form-control" id="slug" name="slug" value="{{ image.slug }}">
+            </div>
+            <div class="mb-3">
+                <label for="imageDescription" class="form-label">Description</label>
+                <textarea class="form-control" id="imageDescription" name="imageDescription">{{ image.imageDescription }}</textarea>
+            </div>
+            <div class="mb-3">
+                <label for="imageFile" class="form-label">Image File</label>
+                <input class="form-control" type="file" id="imageFile" name="imageFile">
+            </div>
+            <p>Informations</p>
+            <table class="table table-bordered">
+                <tbody>
+                    <tr>
+                        <td class="col-3">Nom</td>
+                        <td class="col-9">{{ image.imageName }}</td>
+                    </tr>
+                    <tr>
+                        <td class="col-3">Taille</td>
+                        <td class="col-9">
+                            {% if image.imageSize is empty %}
+                                -
+                            {% elseif image.imageSize > 1048576 %}
+                                {{ (image.imageSize / 1048576)|number_format(2, '.', ',') }} MB
+                            {% elseif image.imageSize > 1024 %}
+                                {{ (image.imageSize / 1024)|number_format(2, '.', ',') }} KB
+                            {% else %}
+                                {{ image.imageSize }} Bytes
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-3">Téléchargement</td>
+                        {% if image.imageName %}
+                            <td class="col-9"><a href="{{ asset('uploads/documents/' ~ image.imageName ) }}" download>
+                                <i class="fas fa-download fa-2x text-success"></i>
+                            </a></td>
+                        {% endif %}
+                    </tr>
+                </tbody>
+            </table>      
       </div>
-      
       <div class="modal-footer d-flex justify-content-between">
         <button type="button" class="btn btn-danger">Supprimer</button>
         <div>
+            <button type="submit" class="btn btn-primary">Enregistrer</button>
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-            <button type="button" class="btn btn-primary">Enregistrer</button>
         </div>
+        </form>
       </div>
     </div>
   </div>
 </div>
+{% endfor %}
 
-<script>
-    const loadingIndicator = document.getElementById('loadingIndicator');
-    document.querySelectorAll('.btn-primary[data-bs-toggle="modal"]').forEach(button => {
-        button.addEventListener('click', async function(event) {
-            const imageId = event.target.getAttribute('data-image');
-            if(imageId != null) {
-                document.getElementById('editImage').classList.remove('d-none');
-                loadingIndicator.style.display = 'flex';
-                document.getElementById('editImageLabel').textContent = "Modifier l'image " + imageId
 
-                const slugField = document.querySelector('input[name="image[slug]"]');
-                const imageSizeField = document.querySelector('input[name="image[imageSize]"]');
-                const imageNameField = document.querySelector('input[name="image[imageName]"]');
-                const imageFileField = document.querySelector('input[name="image[imageFile][file]"]');
-
-                const response = await fetch(`/api/images/${imageId}`);
-                const image = await response.json();
-
-                slugField.value = image.slug || '';  
-                imageSizeField.value = formatImageSize(image.imageSize) || '';  
-                imageNameField.value = image.imageName || '';  
-                imageFileField.value = image.imageFile || '';
-
-                loadingIndicator.style.display = 'none';
-            } else {
-                document.getElementById('editImage').classList.add('d-none');
-                const backdrops = document.querySelectorAll('.modal-backdrop');
-                backdrops.forEach(backdrop => backdrop.classList.add('d-none'));
-            }
-        });
-    });
-
-    function formatImageSize(imageSize) {
-        if (!imageSize) {
-            return "-";
-        } else if (imageSize > 1048576) {
-            return (imageSize / 1048576).toFixed(2) + " MB";
-        } else if (imageSize > 1024) {
-            return (imageSize / 1024).toFixed(2) + " KB";
-        } else { 
-            return imageSize + " Bytes";
+{% block stylesheets %}
+    <style>
+        .parent > div {
+            margin: 0rem !important;
         }
-    }
-</script>
+    </style>
+{% endblock %}

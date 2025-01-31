@@ -23,7 +23,6 @@ class FactureLigneRepository extends ServiceEntityRepository
             ->innerJoin('l.facture', 'f') 
             ->where('f.id = :factureId')  // Filtrer par facture
             ->setParameter('factureId', $factureId)
-            ->select('l.quantite * l.prix_unitaire AS totalMontant')  // Calculer le montant total
             ->getQuery()
             ->getResult();
     }
@@ -44,6 +43,8 @@ class FactureLigneRepository extends ServiceEntityRepository
 
         return $qb->getQuery()->getResult();
     }
+
+
 
 
 //    /**

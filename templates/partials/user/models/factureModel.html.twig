@@ -1,5 +1,6 @@
-{# id="factureId2" id="factureDate_facture" id="factureMontant" id="factureDateLimite" #}
 
+{% for facture in factures %}
+{% set total = 0 %}
 <div class="modal-body m-3 p-0 d-none" style="flex-direction: column;" id="facturehtml2print">
     <div id='headerPrint'>
         <!-- Informations de la société (statique) -->
@@ -12,7 +13,7 @@
             <p class='m-0 p-0'>Téléphone: 0781373785</p>
             <p class='m-0 p-0'>Email: dbsecretaire@gmail.com</p>
             <h2 class='mt-5'>
-                Facture n° {% for ligne in ligneFacture %}{% if loop.first %}{{ ligne.facture.id }}{% endif %}{% endfor %}
+                Facture n° {{ facture.id }}
             </h2>
         </div>
 
@@ -32,7 +33,7 @@
                     <td class="text-center border-1">{% if user.siret %}{{user.siret}}{% else %}N/A{% endif %}</td>
                     <td class="text-center border-1">
                         <label id="factureDate_facture" class="border-0 bg-transparent text-black">
-                            {% for ligne in ligneFacture %}{% if loop.first %}{{ ligne.facture.dateFacture |date('d/m/Y') }}{% endif %}{% endfor %}
+                            {{ facture.date_facture |date('d/m/Y') }}
                         </label>
                     </td>
                 </tr>
@@ -60,14 +61,13 @@
             </thead>
             <tbody id='factureContentTable2'>
             {% set total = 0 %}
-              {% for ligne in ligneFacture %}
-                {% set total = total + (ligne.prixUnitaire * ligne.quantite) %}
-
+              {% for ligne in facture.lignes %}
                 <tr>
                   <td class="text-start" style='font-size: 14px;'>{{ligne.designation}}</td>
                   <td class="text-end" style='font-size: 14px;'>{{ligne.quantite}}</td>
                   <td class="text-end" style='font-size: 14px;'>{{ligne.prixUnitaire | format_currency('EUR')}}</td>
-                  <td class="text-end" style='font-size: 14px;'>{{(ligne.prixUnitaire * ligne.quantite) | format_currency('EUR')}}</td>
+                {% set total = total + (ligne.prixUnitaire * ligne.quantite) %}
+                  <td class="text-end" style='font-size: 14px;'>{{ total | format_currency('EUR')}}</td>
                 </tr>
               {% endfor %}
             </tbody>
@@ -86,7 +86,7 @@
             <th class="text-end">Échéance</th>
             <td class="text-end">
                 <label class="border-0 bg-transparent text-black">
-                    {% for ligne in ligneFacture %}{% if loop.first %}{{ ligne.facture.dateFacture|date_modify('+1 month')|date('d/m/Y') }}{% endif %}{% endfor %}
+                    {{ facture.date_facture|date_modify('+1 month')|date('d/m/Y') }}
                 </label>
             </td>
         </tr>
@@ -99,3 +99,4 @@
         <p>Le paiement est dû dans un délai d'un mois à partir de la date de la facture.</p>
     </div>
 </div>
+{% endfor %}

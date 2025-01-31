@@ -62,6 +62,23 @@ class DossierRepository extends ServiceEntityRepository
             ->getResult(); 
     }
 
+    public function findByService($service, $userId): array
+    {
+        return $this->createQueryBuilder('d')
+            ->join('d.user', 'u')
+            ->leftJoin('d.repertoires', 'r')       // Joindre les répertoires
+            ->leftJoin('r.contacts', 'c')         // Joindre les contacts liés aux répertoires
+            ->leftJoin('d.documents', 'doc')      // Joindre les documents
+            ->leftJoin('doc.images', 'i')         // Joindre les images des documents
+            ->addSelect('r', 'c', 'doc', 'i')
+            ->andwhere('d.services = :service')
+            ->andWhere('u.id = :userId')
+            ->setParameter('service', $service)
+            ->setParameter('userId', $userId)
+            ->getQuery()
+            ->getResult();
+    }
+
     //    /**
     //     * @return Dossier[] Returns an array of Dossier objects
     //     */

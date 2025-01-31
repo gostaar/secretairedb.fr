@@ -3,12 +3,12 @@
 namespace App\Form;
 
 use App\Entity\Contact;
-use App\Entity\Repertoire;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 
 class ContactType extends AbstractType
@@ -16,11 +16,11 @@ class ContactType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('nom')
-            ->add('telephone')
-            ->add('email')
-            ->add('role')
-            ->add('commentaire')
+            ->add('nom', TextType::class)
+            ->add('email', EmailType::class)
+            // ->add('telephone', TextType::class)
+            // ->add('role', TextType::class)
+            // ->add('commentaire', TextareaType::class);
             // ->add('repertoire', EntityType::class, [
             //     'class' => Repertoire::class,
             //     'choice_label' => 'id',

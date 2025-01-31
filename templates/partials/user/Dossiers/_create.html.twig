@@ -5,8 +5,8 @@
         <h5 class="modal-title" id="exampleModalLabel">Créer un nouveau Dossier</h5>
       </div>
       <div class="modal-body">
-        <form id="modalFormContainerbis" action="/api/dossiers/" ~ service method="POST" data-service={{ service }}>
-          {{ form_start(formViews.addDossier, {'action': '/api/dossiers/' ~ service, 'method': 'POST'}) }}
+        {# <form id="modalFormContainerbis" action="/api/dossiers/" ~ serviceLink method="POST" data-service={{ serviceLink }}> #}
+          {{ form_start(formViews.addDossier) }}
           <div class="form-group">
             {{ form_row(formViews.addDossier.name) }}
           </div>
@@ -16,7 +16,7 @@
             {{ form_row(formViews.addDossier.submit) }}
           </div>
           {{ form_end(formViews.addDossier) }}
-        </form>
+        
       </div> 
     </div>
   </div>

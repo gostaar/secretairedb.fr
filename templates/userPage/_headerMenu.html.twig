@@ -1,6 +1,6 @@
 <!-- Menu Items -->
 {% set menuItems = [
-    { icon: 'home', text: 'Accueil', link: 'link-Acceuil', color: 'white' },
+    { icon: 'home', text: 'Accueil', link: 'link-Acceuil', color: 'white', service: 'Personnel' },
     { icon: 'file-alt', text: 'Administratif', link: 'link-Administratif', color: 'white', service: 'Administratif' },
     { icon: 'calendar-alt', text: 'Agenda', link: 'link-Agenda', color: 'white', service: 'Agenda' },
     { icon: 'briefcase', text: 'Commercial', link: 'link-Commercial', color: 'white', service: 'Commercial' },
@@ -10,26 +10,27 @@
 ] %}
 
     <!-- menus -->
+
     <div class='d-none d-md-flex flex-wrap justify-content-center'>
         {% for item in menuItems %}
-            {% if item.service is not defined or item.service in services %}
-                <div class="nav-item d-flex flex-column align-items-center p-1" style="position: relative; width: 130px;">
-                    <button data-fragment={{item.link}} class="change-fragment nav-link text-{{ item.color }}" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: transparent; border: none; z-index: 1; padding: 0;">
+                <div class="header-menu nav-item d-flex flex-column justify-content-center align-items-center p-1 " style="position: relative; width: 130px;">
+                    <button 
+                        data-fragment={{item.link}} 
+                        data-service={{item.service}} 
+                        class="change-fragment nav-link text-{{ item.color }}" 
+                        style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: transparent; border: none; z-index: 1; padding: 0;">
                     </button>    
-                    <h6 class="text-white">{{ item.text }}</h6>
+                    <h6 class="text-white" style="margin: 5px 0;">{{ item.text }}</h6>
                 </div>
-            {% endif %}
         {% endfor %}
     </div>
     <div class='d-block d-md-none'>
         {% for item in menuItems %}
-            {% if item.service is not defined or item.service in services %}
                 <div class="nav-item d-flex flex-column align-items-center p-1" style="position: relative; width: 130px;">
-                    <button data-fragment={{item.link}} class="change-fragment nav-link text-{{ item.color }}" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: transparent; border: none; z-index: 1; padding: 0;">
+                    <button data-fragment={{item.link}} data-service={{item.service}} class="change-fragment nav-link text-{{ item.color }}" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: transparent; border: none; z-index: 1; padding: 0;">
                     </button>    
                     <h6 class="text-white">{{ item.text }}</h6>
                 </div>
-            {% endif %}
         {% endfor %}
     </div>
 

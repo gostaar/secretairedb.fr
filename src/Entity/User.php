@@ -46,13 +46,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var Collection<int, DocumentsUtilisateur>
      */
-    #[ORM\OneToMany(targetEntity: DocumentsUtilisateur::class, mappedBy: 'user')]
+    #[ORM\OneToMany(targetEntity: DocumentsUtilisateur::class, mappedBy: 'user', cascade: ["persist"])]
     private Collection $documents;
 
     /**
      * @var Collection<int, Dossier>
      */
-    #[ORM\OneToMany(targetEntity: Dossier::class, mappedBy: 'user')]
+    #[ORM\OneToMany(targetEntity: Dossier::class, mappedBy: 'user', cascade: ["persist"])]
     private Collection $dossiers;
 
     /**
@@ -122,6 +122,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nomEntreprise = null;
 
+    private $passwordResetToken;
+    private $passwordResetExpiresAt;
+
+    /**
+     * @var Collection<int, Identifiants>
+     */
+    #[ORM\OneToMany(targetEntity: Identifiants::class, mappedBy: 'users', cascade: ["persist"])]
+    private Collection $identifiants;
+
+    
+
     public function __construct()
     {
         $this->devis = new ArrayCollection();
@@ -133,6 +144,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->services = new ArrayCollection();
         $this->typeDocuments = new ArrayCollection();
         $this->contacts = new ArrayCollection();
+        $this->identifiants = new ArrayCollection();
+        
     }
 
     //Redis
@@ -148,6 +161,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             $this->events,
             $this->contacts,
             $this->typeDocuments,
+            $this->identifiants,
         ];
     
         foreach ($relations as $relation) {
@@ -201,6 +215,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             //     $devis->getDevisVersions()->initialize();
             // }
         }
+
     }
 
     //Redis 
@@ -229,6 +244,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             "events" => $this->events ,
             "contacts" => $this->contacts ,
             "typeDocuments" => $this->typeDocuments ,
+            "identifiants" => $this->identifiants,
         ];
     }
 
@@ -258,6 +274,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $user->events = $data['events'] ?? []; 
         $user->contacts = $data['contacts'] ?? []; 
         $user->typeDocuments = $data['typeDocuments'] ?? []; 
+        $user->identifiants = $data['identifiants'] ?? []; 
+
         return $user;
     }
 
@@ -726,4 +744,58 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+
+    public function getPasswordResetToken(): ?string
+    {
+        return $this->passwordResetToken;
+    }
+
+    public function setPasswordResetToken(?string $token): self
+    {
+        $this->passwordResetToken = $token;
+        return $this;
+    }
+
+    public function getPasswordResetExpiresAt(): ?\DateTimeInterface
+    {
+        return $this->passwordResetExpiresAt;
+    }
+
+    public function setPasswordResetExpiresAt(\DateTimeInterface $expiresAt): self
+    {
+        $this->passwordResetExpiresAt = $expiresAt;
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Identifiants>
+     */
+    public function getIdentifiants(): Collection
+    {
+        return $this->identifiants;
+    }
+
+    public function addIdentifiant(Identifiants $identifiant): static
+    {
+        if (!$this->identifiants->contains($identifiant)) {
+            $this->identifiants->add($identifiant);
+            $identifiant->setUsers($this);
+        }
+
+        return $this;
+    }
+
+    public function removeIdentifiant(Identifiants $identifiant): static
+    {
+        if ($this->identifiants->removeElement($identifiant)) {
+            // set the owning side to null (unless already changed)
+            if ($identifiant->getUsers() === $this) {
+                $identifiant->setUsers(null);
+            }
+        }
+
+        return $this;
+    }
+
+   
 }

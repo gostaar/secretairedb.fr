@@ -25,9 +25,7 @@ use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
     operations: [
         new Get(),
         new GetCollection(),
-        new Post(
-            //controller: \App\Controller\User\DocumentsUtilisateurController::class . '::new',
-        ),
+        new Post(),
         new Patch(),
         new Delete(),
     ]
@@ -40,7 +38,6 @@ class DocumentsUtilisateur
     private ?int $id = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
-    #[Assert\NotNull(message: "La date ne peut pas être vide.")]
     private ?\DateTimeInterface $date_document = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -71,13 +68,20 @@ class DocumentsUtilisateur
     /**
      * @var Collection<int, Image>
      */
-    #[ORM\OneToMany(targetEntity: Image::class, mappedBy: 'document')]
+    #[ORM\OneToMany(targetEntity: Image::class, mappedBy: 'document', orphanRemoval: true, cascade:["persist"])]
     private Collection $images;
 
     public function __construct()
     {
+        $this->date_document = new \DateTime();
         $this->images = new ArrayCollection();
     }
+
+    public function preUpdate()
+    {
+        $this->date_document = new \DateTime();
+    }
+
 
     public function toArray(): array
     {
@@ -87,7 +91,6 @@ class DocumentsUtilisateur
             'name' => $this->getName(),
             'expediteur' => $this->getExpediteur(),
             'destinataire' => $this->getDestinataire(),
-            'file_path' => $this->getFilePath(),
             'is_active' => $this->isActive(),
             'details' => $this->getDetails(),
             'user' => $this->getUser(),
@@ -127,6 +130,7 @@ class DocumentsUtilisateur
     public function setName(?string $name): static
     {
         $this->name = $name;
+        $this->date_document = new \DateTime();
 
         return $this;
     }
@@ -223,22 +227,23 @@ class DocumentsUtilisateur
         return $this->images;
     }
 
-    public function addImage(Image $image): static
+    public function addImage(Image $image): self
     {
         if (!$this->images->contains($image)) {
-            $this->images->add($image);
-            $image->setDocuments($this);
+            $this->images[] = $image;
+            $image->setDocument($this);
         }
 
         return $this;
     }
 
+
     public function removeImage(Image $image): static
     {
         if ($this->images->removeElement($image)) {
             // set the owning side to null (unless already changed)
-            if ($image->getDocuments() === $this) {
-                $image->setDocuments(null);
+            if ($image->getDocument() === $this) {
+                $image->setDocument(null);
             }
         }
 

@@ -19,6 +19,9 @@ class FetchExtension extends AbstractExtension
         $this->client = $client;
     }
 
+   /**
+     * @return TwigFilter[]
+     */
     public function getFilters()
     {
         return [

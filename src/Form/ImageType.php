@@ -10,6 +10,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Vich\UploaderBundle\Form\Type\VichImageType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 
 
 class ImageType extends AbstractType
@@ -17,38 +18,30 @@ class ImageType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
+            ->add('id', HiddenType::class, [
+                'mapped' => false, 
+            ])
             ->add('slug', null, [
                 'label' => 'Nom',
                 'required' => false,
             ])
-            ->add('imageSize', TextType::class, [
-                'label' => 'Taille',
-                'required' => false,
-            ])
-            ->add('imageName', null, [
-                'label' => 'Nom de l\'Image',
+            ->add('imageDescription', TextType::class, [
+                'label' => 'Description',
                 'required' => false,
             ])
             ->add('imageFile', VichImageType::class, [
+                'required' => false,
                 'label' => 'Fichier',
-                'download_label' => 'Télécharger l\'image / document',
-                'imagine_pattern' => 'my_thumb_filter',
             ])
-            // ->add('updatedAt', null, [
-            //     'widget' => 'single_text',
-            //     'label' => false,
-            //     'attr' => ['style' => 'display: none;'],
-            // ])
-            // ->add('createdAt', null, [
-            //     'widget' => 'single_text',
-            //     'label' => false,
-            //     'attr' => ['style' => 'display: none;'],
-            // ])
-            // ->add('document', EntityType::class, [
-            //     'class' => DocumentsUtilisateur::class,
-            //     'choice_label' => 'id',
-
-            // ])
+            ->add('document', EntityType::class, [
+                'class' => DocumentsUtilisateur::class,
+                'choice_label' => 'name',
+                'label' => false,
+                'attr' => [
+                    'class' => 'd-none', 
+                ],
+            ])
+            
         ;
     }
 

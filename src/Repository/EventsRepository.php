@@ -51,4 +51,16 @@ class EventsRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    public function findByService($service, $userId): array
+    {
+        return $this->createQueryBuilder('e')
+            ->join('e.user', 'u')
+            ->andWhere('u.id = :userId')
+            ->where('e.services = :service')
+            ->setParameter('service', $service)
+            ->setParameter('userId', $userId)
+            ->getQuery()
+            ->getResult();
+    }
 }

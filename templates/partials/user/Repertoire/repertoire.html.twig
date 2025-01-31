@@ -1,10 +1,10 @@
 
-<div class="custom-bg full-height m-0 p-0 w-100">
-    <div class='flex-grow-1 p-4 d-flex justify-content-between flex-column'>
-        <div class="container card mb-4">
-            <div class="container card-header d-flex justify-content-between align-items-center mb-4">
-                <h4>{{ dossier.name }}</h4>
-            </div>
+<div class="custom-bg col-md-12">
+    <div class="card shadow-sm">
+        <div class="card-header mb-2">
+            <h4 class="m-3">{{ dossier.name }}</h4>
+        </div>
+        <div class="card-body">
             <!-- Main Content -->
             {% include 'partials/user/models/searchModel.html.twig' with {
                 'formViews': formViews,
@@ -17,6 +17,19 @@
                         <div class="col-md-4 mb-4">
                             <div class="card shadow rounded border-0" style="width: 100%; transition: transform 0.3s;">
                                 <div class="card-header text-center text-secondary py-4">
+                                    <div class="d-flex justify-content-end w-100 p-1" style="position: relative;">
+                                        <div style="position: absolute; top: 0; right: 0; bottom: 0; border: none; z-index: 0; padding: 0; width:50px; height:50px;" class="btn rounded-circle btn-secondary"></div>
+                                        <button
+                                            type="button" 
+                                            data-id="{{ repertoire.id }}"
+                                            data-repertoire="{{ repertoire.id }}" 
+                                            data-fragment='link-RepertoireEdit' 
+                                            data-action="edit" 
+                                            style="position: absolute; top: 0; right: 0; bottom: 0; border: none; z-index: 1; padding: 0; width:50px;" 
+                                            class="change-fragment col-4 btn card-link d-flex flex-column justify-content-start align-items-center text-center p-3">
+                                        </button> 
+                                        <i class='fas fa-pencil-alt fa-2x text-white mt-1' style="z-index: 0; margin-right: 5px;"></i>
+                                    </div>
                                     <i class="fas fa-address-book fa-4x"></i>
                                     <h5 class="card-title mt-2">{{ repertoire.nom }}</h5>
                                 </div>
@@ -33,8 +46,8 @@
                                                         <i class="fas fa-phone-alt fa-2x"></i>
                                                     </a>
                                                     <button type="button" class="p-3 btn btn-outline-secondary btn-sm mx-2 rounded-circle" data-bs-toggle="modal" data-bs-target="#contactsModal{{ repertoire.id }}">
-                                                    <i class="fas fa-users fa-2x"></i>
-            
+                                                        <i class="fas fa-users fa-2x"></i>
+                                                    </button>
                                                 </div>
                                             </div>
                                         </li>
@@ -52,11 +65,11 @@
                                     </ul>
                                 </div>
                             </div>
-
+                    
                             <!-- Modal pour voir les contacts -->
-                            {% include 'partials/user/EspacePersonnel/Repertoire/repertoireModalInfos.html.twig' %}
+                            {% include 'partials/user/Repertoire/repertoireModalInfos.html.twig' %}
                         </div>
-                    {% endfor %}
+                {% endfor %}
                 </div>
             {% else %}
                 <p class="text-center" style="font-size: 1.2rem; color: #888;">Aucun répertoire trouvé</p>
@@ -71,4 +84,4 @@
         </div>
     </div>
 </div>
-{% include 'partials/user/EspacePersonnel/Repertoire/repertoireModalCreate.html.twig' %}
+{% include 'partials/user/Repertoire/repertoireModalCreate.html.twig' %}

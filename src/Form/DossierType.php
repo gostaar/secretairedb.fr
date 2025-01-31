@@ -18,14 +18,6 @@ class DossierType extends AbstractType
     {
         $builder
             ->add('name')
-            // ->add('user', EntityType::class, [
-            //     'class' => User::class,
-            //     'choice_label' => 'id',
-            // ])
-            // ->add('services', EntityType::class, [
-            //     'class' => Services::class,
-            //     'choice_label' => 'id',
-            // ])
             ->add('submit', SubmitType::class, [
                 'label' => 'Enregistrer le Dossier',
             ])

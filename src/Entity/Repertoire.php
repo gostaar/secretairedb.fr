@@ -56,7 +56,7 @@ class Repertoire
     /**
      * @var Collection<int, Contact>
      */
-    #[ORM\OneToMany(targetEntity: Contact::class, mappedBy: 'repertoire')]
+    #[ORM\OneToMany(targetEntity: Contact::class, mappedBy: 'repertoire', orphanRemoval: true, cascade:["persist"])]
     private Collection $contacts;
 
     public function __construct()
@@ -83,7 +83,6 @@ class Repertoire
             'contacts' => $this->getContacts(),
         ];
     }
-
 
     public function __toString()
     {

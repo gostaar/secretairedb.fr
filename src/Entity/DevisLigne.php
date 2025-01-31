@@ -85,4 +85,9 @@ class DevisLigne
 
         return $this;
     }
+
+    public function totalMontant(): float
+    {
+        return $this->quantite * $this->prixUnitaire;
+    }
 }

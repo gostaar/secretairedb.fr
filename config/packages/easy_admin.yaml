@@ -1,0 +1,9 @@
+easy_admin:
+    entities:
+        User:
+            class: App\Entity\User
+            label: 'Utilisateur'
+            list:
+                fields:
+                    - { property: 'nom', label: "Nom d'utilisateur" }
+                    - { property: 'lastActivity', type: 'datetime', label: 'Date de création' }

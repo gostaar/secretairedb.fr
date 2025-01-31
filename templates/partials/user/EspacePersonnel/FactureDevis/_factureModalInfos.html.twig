@@ -1,43 +1,50 @@
-<div class="modal fade" id="factureDetailsModal" tabindex="-1" role="dialog" aria-labelledby="factureDetailsModalLabel" aria-hidden="true">
+{% for facture in factures %}
+{% set total = 0 %}
+<div class="modal fade" id="factureDetailsModal{{ facture.id }}" tabindex="-1" role="dialog" aria-labelledby="factureDetailsModalLabel{{ facture.id }}" aria-hidden="true">
   <div class="modal-dialog modal-lg" role="facture">
-    
-    <div class="modal-content" id="modalContentFacture">
+    <div class="modal-content" id="modalContentFacture{{ facture.id }}">
       <div class="modal-header">
-        <h5 class="modal-title w-100 d-flex justify-content-between" id="factureDetailsModalLabel">
-          <span>Détails de la facture n° {% for ligne in ligneFacture %}{% if loop.first %}{{ ligne.facture.id }}{% endif %}{% endfor %}</span>
-          {% set total = 0 %}
-
-          <span><label id="factureMontant2" class="border-0 bg-transparent text-black">{{ total | format_currency('EUR') }}</label></h5></span>
+        <h5 class="modal-title w-100 d-flex justify-content-between" id="factureDetailsModalLabel{{ facture.id }}">
+          <span>Détails de la facture n° {{ facture.id }}</span>
+        </h5>
       </div>
       <div class="modal-body m-3 p-0">
-
         <!-- Tableau des articles de la facture -->
-        <table class="table table-bordered" style="width: 100%; table-layout: fixed;" id='factureContentTable'>
-            <thead>
-                <tr>
-                    <th class="text-start border-1" style="background-color: #f0f0f0; width: 45%;">Désignation</th>
-                    <th class="text-center border-1" style="background-color: #f0f0f0; width: 10%;">Qté</th>
-                    <th class="text-center border-1" style="background-color: #f0f0f0; width: 17%;">PU</th>
-                    <th class="text-center border-1" style="background-color: #f0f0f0; width: 28%;">HTVA</th>
-                </tr>
-            </thead> 
-            <tbody>
-              {% for ligne in ligneFacture %}
-              {% set total = total + (ligne.prixUnitaire * ligne.quantite) %}
-                <tr>
-                  <td class="text-start" style='font-size: 14px;'>{{ligne.designation}}</td>
-                  <td class="text-end" style='font-size: 14px;'>{{ligne.quantite}}</td>
-                  <td class="text-end" style='font-size: 14px;'>{{ligne.prixUnitaire | format_currency('EUR')}}</td>
-                  <td class="text-end" style='font-size: 14px;'>{{(ligne.prixUnitaire * ligne.quantite) | format_currency('EUR')}}</td>
-                </tr>
-              {% endfor %}
-            </tbody>
+        <table class="table table-bordered" style="width: 100%; table-layout: fixed;" id="factureContentTable{{ facture.id }}">
+          <thead>
+            <tr>
+              <th class="text-start border-1" style="background-color: #f0f0f0; width: 45%;">Désignation</th>
+              <th class="text-center border-1" style="background-color: #f0f0f0; width: 10%;">Qté</th>
+              <th class="text-center border-1" style="background-color: #f0f0f0; width: 17%;">PU</th>
+              <th class="text-center border-1" style="background-color: #f0f0f0; width: 28%;">HTVA</th>
+            </tr>
+          </thead>
+          <tbody>
+       
+            {% for ligne in facture.lignes %}
+            {% if ligne.facture.id == facture.id %}
+            {% set total = total + (ligne.prixUnitaire * ligne.quantite) %}
+            <tr>
+              <td class="text-start" style="font-size: 14px;">{{ ligne.designation }}</td>
+              <td class="text-end" style="font-size: 14px;">{{ ligne.quantite }}</td>
+              <td class="text-end" style="font-size: 14px;">{{ ligne.prixUnitaire | format_currency('EUR') }}</td>
+              <td class="text-end" style="font-size: 14px;">{{ (ligne.prixUnitaire * ligne.quantite) | format_currency('EUR') }}</td>
+            </tr>
+            {% endif %}
+            {% endfor %}
+          </tbody>
         </table>
-       <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
-          <button type="button" class="btn btn-primary" id="btnPdfFacture">PDF</button>
-          <button type="button" class="btn btn-primary" id="btnPrintFacture">Impression</button>
+        <div class="text-end me-3">
+          <strong>Total : {{ total | format_currency('EUR') }}</strong>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+        <button type="button" class="btn btn-primary" id="btnPdfFacture">PDF</button>
+        <button type="button" class="btn btn-primary" id="btnPrintFacture">Impression</button>
       </div>
     </div>
   </div>
 </div>
+
+{% endfor %}

@@ -9,6 +9,7 @@ use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 use Symfony\Bridge\Doctrine\Security\User\UserLoaderInterface;
+use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * @extends ServiceEntityRepository<User>
@@ -16,23 +17,30 @@ use Symfony\Bridge\Doctrine\Security\User\UserLoaderInterface;
 class UserRepository extends ServiceEntityRepository implements UserLoaderInterface
 // implements PasswordUpgraderInterface
 {
-    public function __construct(ManagerRegistry $registry)
+    private EntityManagerInterface $_em;
+
+    public function __construct(ManagerRegistry $registry, EntityManagerInterface $_em)
     {
         parent::__construct($registry, User::class);
+        $this->_em = $_em;
     }
 
-    /**
-     * Used to upgrade (rehash) the user's password automatically over time.
-     */
-    public function upgradePassword(PasswordAuthenticatedUserInterface $user, string $newHashedPassword): void
+    public function updatePassword(User $user, string $hashedPassword): void
     {
-        if (!$user instanceof User) {
-            throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', $user::class));
+        $user = $this->_em->getRepository(User::class)->find($user->getId());
+
+        if (!$user) {
+            throw new \Exception('Utilisateur non trouvé.');
         }
 
-        $user->setPassword($newHashedPassword);
-        $this->getEntityManager()->persist($user);
-        $this->getEntityManager()->flush();
+        // Mettre à jour uniquement le mot de passe
+        $user->setPassword($hashedPassword);
+        $user->setPasswordResetToken(null);
+        $user->setPasswordResetExpiresAt(new \DateTime('+1 hour'));
+
+        // Sauvegarder les modifications
+        $this->_em->persist($user);
+        $this->_em->flush();
     }
 
     public function getUserId(): Response

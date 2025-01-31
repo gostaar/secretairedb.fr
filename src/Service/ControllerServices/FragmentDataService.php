@@ -7,6 +7,9 @@ use App\Repository\DocumentsUtilisateurRepository;
 use App\Repository\RepertoireRepository;
 use App\Repository\FactureRepository;
 use App\Repository\DevisRepository;
+use App\Repository\FactureLigneRepository;
+use App\Repository\DevisLigneRepository;
+use App\Repository\IdentifiantsRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
@@ -19,8 +22,10 @@ class FragmentDataService
     private DossierRepository $dossierRepository;
     private ServicesRepository $serviceRepository;
     private DocumentsUtilisateurRepository $documentsRepository;
-    private FactureRepository $factureRepository;
     private DevisRepository $devisRepository;
+    private FactureLigneRepository $factureLigneRepository;
+    private DevisLigneRepository $devisLigneRepository;
+    private IdentifiantsRepository $identifiantsRepository;
 
     public function __construct(
         FormService $formService,
@@ -31,7 +36,10 @@ class FragmentDataService
         ServicesRepository $serviceRepository,
         DocumentsUtilisateurRepository $documentsRepository,
         FactureRepository $factureRepository,
+        FactureLigneRepository $factureLigneRepository,
         DevisRepository $devisRepository,
+        DevisLigneRepository $devisLigneRepository,
+        IdentifiantsRepository $identifiantsRepository,
     ) {
         $this->formService = $formService;
         $this->redisService = $redisService;
@@ -41,29 +49,43 @@ class FragmentDataService
         $this->serviceRepository = $serviceRepository;
         $this->documentsRepository = $documentsRepository;
         $this->factureRepository = $factureRepository;
+        $this->factureLigneRepository = $factureLigneRepository;
         $this->devisRepository = $devisRepository;
+        $this->devisLigneRepository = $devisLigneRepository;
+        $this->identifiantsRepository = $identifiantsRepository;
     }
 
-    public function getFragmentData(Request $request, string $fragment, ?int $dossierId, $user, $documentId): array
+    public function getFragmentData(Request $request, ?string $fragment, ?int $dossierId, $user, $documentId, $repertoireId): array
     {
+        $fragment = $fragment === null ? '' : $fragment;
         $this->updateNavigationSession($request, $fragment, $dossierId);
-
-        $staticData = $this->getStaticDataFromCache($user, $fragment);
-        $dynamicData = $this->getDynamicDataFromCache($fragment, $dossierId);
+        $staticData = $this->routeDataService->getStaticData($user, $fragment);
+        $dynamicData = $this->routeDataService->getFormData($fragment);;
 
         $fragmentMapping = $this->routeDataService->getFragmentMapping($fragment);
 
         $services = $this->serviceRepository->getUserServices($user->getId());
         $dossiers = $this->dossierRepository->getUserDossiers($user->getId(), $fragmentMapping);
+        // dd($dossierId);
         $repertoires = $dossierId === null ? null : $this->repertoireRepository->getUserDossierRepertoires($user->getId(), $dossierId);
+        $repertoire = $repertoireId === null ? null : $this->repertoireRepository->find($repertoireId);
         $documents = $dossierId === null ? null : $this->documentsRepository->getUserDossierDocument($user->getId(), $dossierId);
         $document = $documentId === null ? null : $this->documentsRepository->find($documentId);
         $dossier = $dossierId === null ? null : $this->dossierRepository->find($dossierId);
         $facturesRepo = $this->factureRepository->getUserFactures($user->getId());
-        $factures = array_map(fn($facture) => $facture->toArray(), $facturesRepo);
+        $factures = array_map(function($facture) {
+            $factureArray = $facture->toArray();
+            $factureArray['lignes'] = $this->factureLigneRepository->findByFacture($facture->getId(), "1");
+            return $factureArray;
+        }, $facturesRepo);        
         $devisRepo = $this->devisRepository->getUserDevis($user->getId());
-        $devis = array_map(fn($devi) => $devi->toArray(), $devisRepo);
-        
+        $devis = array_map(function($devis) {
+            $devisArray = $devis->toArray();
+            $devisArray['lignes'] = $this->devisLigneRepository->findByDevis($devis->getId(), "1");
+            return $devisArray;
+        }, $devisRepo);
+        $identifiants = $this->identifiantsRepository->getUserIdentifiants($user->getId());
+
         return array_merge($staticData, $dynamicData, [
             'services' => $services,
             'dossiers' => $dossiers,
@@ -71,11 +93,11 @@ class FragmentDataService
             'documents' => $documents,
             'document' => $document,
             'repertoires' => $repertoires,
+            'repertoire' => $repertoire,
             'user' => $user,
             'factures' => $factures,
             'devis' => $devis,
-            'ligneFacture' => '',
-            'ligneDevis' => '',
+            'identifiants' => $identifiants,
         ]);
     }
 

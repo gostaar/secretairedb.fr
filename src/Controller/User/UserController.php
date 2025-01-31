@@ -23,22 +23,21 @@ class UserController extends AbstractController
     public function main(Request $request)
     {
         $user = $this->getUser();  
-        $fragment = $request->query->get('fragment', 'link-Acceuil');
+        $fragment = $request->query->get('fragment');
         $dossierId = $request->query->get('dossier');
         $documentId = $request->query->get('document');   
+        $repertoireId = $request->query->get('repertoire');   
 
-        $formFragment = $this->fragmentDataService->getFragmentData($request, $fragment, $dossierId, $user, $documentId);
-        $formViews = $this->formService->createFormViews($request, $formFragment, $user, $dossierId, $fragment, $documentId); 
+        $formFragment = $this->fragmentDataService->getFragmentData($request, $fragment, $dossierId, $user, $documentId, $repertoireId);
+        $formViews = $this->formService->createFormViews($request, $formFragment, $user, $dossierId, $fragment, $documentId, $repertoireId); 
         
         $formData = array_merge($formFragment, $formViews);
 
         //Recherche
-        if($formData['dossierSearchResults']){ $formData['dossierSearchResults'] === 'vide' ? $formData['dossiers'] = null : $formData['dossiers'] = $formData['dossierSearchResults'];}
-        if($formData['repertoireSearchResults']){ $formData['repertoireSearchResults'] === 'vide' ? $formData['repertoires'] = null : $formData['repertoires'] = $formData['repertoireSearchResults'];}
-        if($formData['documentSearchResults']){ $formData['documentSearchResults'] === 'vide' ? $formData['documents'] = null : $formData['documents'] = $formData['documentSearchResults'];}
-        if($formData['ligneFactureSearchResults']){ $formData['ligneFactureSearchResults'] === 'vide' ? $formData['ligneFacture'] = null : $formData['ligneFacture'] = $formData['ligneFactureSearchResults'];}
-        if($formData['ligneDevisSearchResults']){ $formData['ligneDevisSearchResults'] === 'vide' ? $formData['ligneDevis'] = null : $formData['ligneDevis'] = $formData['ligneDevisSearchResults'];}
-
+        if (isset($formData['searchResults']['dossierSearchResults'])){$formData['dossiers'] = $formData['searchResults']['dossierSearchResults'];}
+        if (isset($formData['searchResults']['repertoireSearchResults'])){ $formData['repertoires'] = $formData['searchResults']['repertoireSearchResults'];}
+        if (isset($formData['searchResults']['documentSearchResults'])){ $formData['documents'] = $formData['searchResults']['documentSearchResults'];}
+        
         return $formData;
     }
 
@@ -46,7 +45,6 @@ class UserController extends AbstractController
     public function index(Request $request): Response
     {
         $formData = $this->main($request);
-
         return $this->render('userPage/user.html.twig', $formData);
     }
 
@@ -55,8 +53,10 @@ class UserController extends AbstractController
     {
         $formData = $this->main($request);
 
-        return $this->json([
-            'fragmentContent' => $this->renderView('userPage/_fragmentContent.html.twig', $formData),
-        ]);
+        return $this->json(array_merge(
+            ['fragmentContent' => $this->renderView('userPage/_fragmentContent.html.twig', $formData)],
+            $formData
+        ));
     }
+
 }

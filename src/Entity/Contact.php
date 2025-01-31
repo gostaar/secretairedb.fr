@@ -36,6 +36,19 @@ class Contact
     #[ORM\ManyToOne(inversedBy: 'contacts')]
     private ?User $user = null;
 
+    public function toExport(): array
+    {
+        return [
+            'id' => $this->getId(),
+            'nom' => $this->getNom(),
+            'telephone' => $this->getTelephone(),
+            'email' => $this->getEmail(),
+            'role' => $this->getRole(),
+            'commentaire' => $this->getCommentaire(),
+            'repertoire' => $this->getRepertoire(),
+        ];
+    }
+
     public function __toString()
     {
         return $this->nom;

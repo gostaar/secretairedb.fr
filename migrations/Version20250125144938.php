@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20250116132019 extends AbstractMigration
+final class Version20250125144938 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -44,7 +44,7 @@ final class Version20250116132019 extends AbstractMigration
         $this->addSql('CREATE INDEX IDX_FE86641019EB6921 ON facture (client_id)');
         $this->addSql('CREATE TABLE facture_ligne (id SERIAL NOT NULL, facture_id INT NOT NULL, designation VARCHAR(255) NOT NULL, quantite INT NOT NULL, prix_unitaire NUMERIC(10, 2) NOT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE INDEX IDX_C5C453347F2DEE08 ON facture_ligne (facture_id)');
-        $this->addSql('CREATE TABLE image (id SERIAL NOT NULL, document_id INT DEFAULT NULL, image_name VARCHAR(255) NOT NULL, updated_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, image_description VARCHAR(255) DEFAULT NULL, PRIMARY KEY(id))');
+        $this->addSql('CREATE TABLE image (id SERIAL NOT NULL, document_id INT DEFAULT NULL, slug VARCHAR(255) DEFAULT NULL, image_name VARCHAR(255) DEFAULT NULL, image_size INT DEFAULT NULL, updated_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, image_description VARCHAR(255) DEFAULT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE INDEX IDX_C53D045FC33F7837 ON image (document_id)');
         $this->addSql('COMMENT ON COLUMN image.updated_at IS \'(DC2Type:datetime_immutable)\'');
         $this->addSql('COMMENT ON COLUMN image.created_at IS \'(DC2Type:datetime_immutable)\'');

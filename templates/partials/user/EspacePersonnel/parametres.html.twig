@@ -12,17 +12,17 @@
         <div class="card-body">
             <form action="/update-settings" method="POST">
                 <div class="mb-3">
-                    <label for="setting1" class="form-label">Exporter ...</label>
+                    <label for="setting1" class="form-label">Exporter mes données pour le service:</label>
                     <select class="form-select" id="setting1" name="setting1">
                     {% for s in services %}
-                        <option value="{{s}}">{{s}}</option>
+                        <option value="{{s.id}}">{{s.name}}</option>
                     {% endfor %}
                     </select>
                 </div>
-                <button type="submit" class="btn btn-primary">Sauvegarder</button>
+                <button type="submit" class="btn btn-primary">Exporter</button>
             </form>
         </div>
-        <div class="card-body">
+        {# <div class="card-body">
             <form action="/update-settings" method="POST">
                 <div class="mb-3">
                     <label for="theme" class="form-label">Choisir un thème</label>
@@ -34,10 +34,29 @@
                 </div>
                 <button type="submit" class="btn btn-primary">Sauvegarder</button>
             </form>
-        </div>
+        </div> #}
         <div class="card-body">
             <h5>Changer votre mot de passe</h5>
-            <form action="/change-password" method="POST">
+             {{ form_start(formViews.addEditPassword) }}
+                <div class="mb-3">
+                    {{ form_label(formViews.addEditPassword.currentPassword) }}
+                    {{ form_widget(formViews.addEditPassword.currentPassword) }}
+                    {{ form_errors(formViews.addEditPassword.currentPassword) }}
+                </div>
+                <div class="mb-3">
+                    {{ form_label(formViews.addEditPassword.newPassword) }}
+                    {{ form_widget(formViews.addEditPassword.newPassword) }}
+                    {{ form_errors(formViews.addEditPassword.newPassword) }}
+                </div>
+                <div class="mb-3">
+                    {{ form_label(formViews.addEditPassword.confirmPassword) }}
+                    {{ form_widget(formViews.addEditPassword.confirmPassword) }}
+                    {{ form_errors(formViews.addEditPassword.confirmPassword) }}
+                </div>
+
+                <button class='mb-3 btn btn-primary' type="submit">Modifier</button>
+            {{ form_end(formViews.addEditPassword) }}
+            {# <form action="/change-password" method="POST">
                 <div class="mb-3">
                     <label for="current-password" class="form-label">Mot de passe actuel</label>
                     <input type="password" class="form-control" id="current-password" name="current-password" required>
@@ -47,7 +66,7 @@
                     <input type="password" class="form-control" id="new-password" name="new-password" required>
                 </div>
                 <button type="submit" class="btn btn-primary">Changer le mot de passe</button>
-            </form>
+            </form> #}
         </div>
     </div>
 </div>

@@ -5,8 +5,7 @@
 {% block body %}
     <div id="userContent" class="custom-bg d-flex flex-column min-vh-100">
         {% include 'userPage/_header.html.twig' %}
-        
-        <main id="fragmentContent" class="container d-flex justify-content-center flex-grow-1 py-4">
+        <main id="fragmentContent" class="container d-flex flex-column justify-content-start flex-grow-1 py-4">
             {% include 'partials/flash.html.twig' %}
             {% include 'userPage/_fragmentContent.html.twig' %}
         </main>

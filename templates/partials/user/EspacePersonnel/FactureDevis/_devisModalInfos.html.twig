@@ -1,17 +1,17 @@
-<div class="modal fade" id="devisDetailsModal" tabindex="-1" role="dialog" aria-labelledby="devisDetailsModalLabel" aria-hidden="true">
+{% for devi in devis %}
+{% set total = 0 %}
+<div class="modal fade" id="devisDetailsModal{{devi.id}}" tabindex="-1" role="dialog" aria-labelledby="devisDetailsModalLabel{{devi.id}}" aria-hidden="true">
   <div class="modal-dialog modal-lg" role="document">
     
-    <div class="modal-content" id="modalContentDevis">
+    <div class="modal-content" id="modalContentDevis{{devi.id}}">
       <div class="modal-header">
-        <h5 class="modal-title w-100 d-flex justify-content-between" id="devisDetailsModalLabel">
-          <span>Détails du devis n° <label id="devisId" class="border-0 bg-transparent text-black"></label></span>
-          {% set total = 0 %}
-          <span><label id="devisMontant2" class="border-0 bg-transparent text-black">{{ total | format_currency('EUR') }}</label></h5></span>
+        <h5 class="modal-title w-100 d-flex justify-content-between" id="devisDetailsModalLabel{{devi.id}}">
+          <span>Détails du devis n° {{ devi.id }}<label id="devisId" class="border-0 bg-transparent text-black"></label></span>
       </div>
       <div class="modal-body m-3 p-0">
 
         <!-- Tableau des articles du devis -->
-        <table class="table table-bordered" style="width: 100%; table-layout: fixed;" id='devisContentTable'>
+        <table class="table table-bordered" style="width: 100%; table-layout: fixed;" id='devisContentTable{{devi.id}}'>
             <thead>
                 <tr>
                     <th class="text-start border-1" style="background-color: #f0f0f0; width: 45%;">Désignation</th>
@@ -21,17 +21,22 @@
                 </tr>
             </thead> 
             <tbody>
-              {% for ligne in ligneDevis %}
-                {% set total = total + (ligne.prixUnitaire * ligne.quantite) %}
+            {% for ligne in devi.lignes %}
+            {% if ligne.devis.id == devi.id %}
+            {% set total = total + (ligne.prixUnitaire * ligne.quantite) %}
                   <tr>
                     <td class="text-start" style='font-size: 14px;'>{{ligne.designation}}</td>
                     <td class="text-end" style='font-size: 14px;'>{{ligne.quantite}}</td>
                     <td class="text-end" style='font-size: 14px;'>{{ligne.prixUnitaire | format_currency('EUR')}}</td>
                     <td class="text-end" style='font-size: 14px;'>{{(ligne.prixUnitaire * ligne.quantite) | format_currency('EUR')}}</td>
                   </tr>
-                {% endfor %}
+            {% endif %}
+            {% endfor %}
             </tbody>
         </table>
+        <div class="text-end me-3">
+          <strong>Total : {{ total | format_currency('EUR') }}</strong>
+        </div>
        <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
           <button type="button" class="btn btn-primary" id="btnPdfDevis">PDF</button>
@@ -40,3 +45,4 @@
     </div>
   </div>
 </div>
+{% endfor %}

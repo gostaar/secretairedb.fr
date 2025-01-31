@@ -11,24 +11,23 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Patch;
+use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use App\Security\OwnedEntityInterface;
 
 #[ORM\Entity(repositoryClass: DossierRepository::class)]
 #[ApiResource(
-    security: "is_granted('VIEW', object)",
+    // security: "is_granted('VIEW', object)",
     operations: [
         new Post(
             controller: \App\Controller\User\DossierController::class . '::new',
             uriTemplate: '/dossiers/{serviceName}'
         ),
-        new Patch(
-            // controller: \App\Controller\User\DossierController::class . '::edit',
-            // uriTemplate: '/dossiers/{dossierId}'
-        ),
+        new Patch(),
         new Get(),
-        new GetCollection()
+        new GetCollection(),
+        new Delete()
     ])
 ]
 class Dossier implements OwnedEntityInterface
@@ -48,7 +47,7 @@ class Dossier implements OwnedEntityInterface
     /**
      * @var Collection<int, DocumentsUtilisateur>
      */
-    #[ORM\OneToMany(targetEntity: DocumentsUtilisateur::class, mappedBy: 'dossier')]
+    #[ORM\OneToMany(targetEntity: DocumentsUtilisateur::class, mappedBy: 'dossier', cascade:["remove"])]
     private Collection $documents;
 
     /**

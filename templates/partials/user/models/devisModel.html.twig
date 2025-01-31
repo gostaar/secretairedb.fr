@@ -1,5 +1,6 @@
 {# id="devisId2" id="devisDate_devis" id="devisMontant" id="devisDateLimite" #}
-
+{% for devi in devis %}
+{% set total = 0 %}
 <div class="modal-body m-3 p-0 d-none" style="flex-direction: column;" id="devishtml2print">
     <headerPrint id='headerPrint'>
         <!-- Informations de la société (statique) -->
@@ -12,7 +13,7 @@
             <p class='m-0 p-0'>Téléphone: 0781373785</p>
             <p class='m-0 p-0'>Email: dbsecretaire@gmail.com</p>
             <h2 class='mt-5'>
-                Devis n° {% for ligne in ligneDevis %}{% if loop.first %}{{ ligne.devis.id }}{% endif %}{% endfor %}
+                Devis n° {{ devi.id }}
             </h2>
         </div>
 
@@ -32,7 +33,7 @@
                     <td class="text-center border-1">{% if user.siret %}{{user.siret}}{% else %}N/A{% endif %}</td>
                     <td class="text-center border-1">
                         <label id="devisDate_devis" class="border-0 bg-transparent text-black">
-                            {% for ligne in ligneDevis %}{% if loop.first %}{{ ligne.devis.dateDevis |date('d/m/Y') }}{% endif %}{% endfor %}
+                            {{ devi.date_devis |date('d/m/Y') }}
                         </label>
                     </td>
                 </tr>
@@ -60,14 +61,14 @@
             </thead>
             <tbody id='devisContentTable2'>
             {% set total = 0 %}
-                {% for ligne in ligneDevis %}
-                  {% set total = total + (ligne.prixUnitaire * ligne.quantite) %}
+                {% for ligne in devi.lignes %}
 
                   <tr>
                     <td class="text-start" style='font-size: 14px;'>{{ligne.designation}}</td>
                     <td class="text-end" style='font-size: 14px;'>{{ligne.quantite}}</td>
                     <td class="text-end" style='font-size: 14px;'>{{ligne.prixUnitaire | format_currency('EUR')}}</td>
-                    <td class="text-end" style='font-size: 14px;'>{{(ligne.prixUnitaire * ligne.quantite) | format_currency('EUR')}}</td>
+                  {% set total = total + (ligne.prixUnitaire * ligne.quantite) %}
+                    <td class="text-end" style='font-size: 14px;'>{{total | format_currency('EUR')}}</td>
                   </tr>
                 {% endfor %}
             </tbody>
@@ -86,7 +87,7 @@
             <th class="text-end">Échéance</th>
             <td class="text-end">
                 <label id="devisDateLimite" class="border-0 bg-transparent text-black">
-                    {% for ligne in ligneDevis %}{% if loop.first %}{{ ligne.devis.dateDevis|date_modify('+1 month')|date('d/m/Y') }}{% endif %}{% endfor %}
+                    {{ devi.date_devis|date_modify('+1 month')|date('d/m/Y') }}
                 </label>
             </td>
         </tr>
@@ -101,4 +102,4 @@
         </div>
     </footerPrint>
 </div>
-      
+{% endfor %}      
