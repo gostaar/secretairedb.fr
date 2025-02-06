@@ -27,7 +27,7 @@ class PaiementCrudController extends AbstractCrudController
 
             DateTimeField::new('date_paiement'),
 
-            FormField::addPanel('Relations avec d\'autres entités')->setIcon('fa fa-link'),
+            FormField::addFieldSet('Relations avec d\'autres entités')->setIcon('fa fa-link'),
             AssociationField::new('facture', 'facture associée')
                 ->setFormTypeOptions([
                     'by_reference' => true,

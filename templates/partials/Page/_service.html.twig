@@ -53,7 +53,6 @@
     ] %}
 {% endif %}
 <section class="background-secretariat d-flex flex-column flex-fill min-vh-100">
-    {% include 'partials/Page/_navBar.html.twig' %}
 
     <section class="hero">
         <div class="heroContent">
@@ -61,12 +60,12 @@
             <p>Détails des services proposés</p>
         </div>
         <div class="w-100 my-3">
-            <button type="button" class="change-fragment-site btn btn-warning fs-5 border border-secondary" data-fragment={{initialisation.fragmentValue}} data-subFragment="contact" >
+            <a class="btn btn-warning fs-5 border border-secondary" href='{{path('subfragment', {fragment: initialisation.fragmentValue, subfragment: 'contact'})}}'>
                 Contactez-nous
-            </button>
+            </a>
         </div>
         <div class="w-100 my-3">
-            <button type="button" class="change-fragment-site btn btn-primary fs-5" data-fragment={{initialisation.fragmentButtonValue}} data-subFragment="acceuil">{{initialisation.buttonValue}}</button>
+<a class="btn btn-primary fs-5 text-white" style='background-color: #0d6efd !important;' href='{{path('subfragment', {fragment: initialisation.fragmentButtonValue, subfragment: app.request.attributes.get('subfragment')})}}'>{{initialisation.buttonValue}}</a>
         </div>
     </section>
     <section class="intro d-flex flex-column justify-content-evenly bg-white flex-fill">
@@ -155,6 +154,20 @@
                 </div>
             </div>
         </div>
-    </sectionclass=intro>
     <p class="p-3 text-center">Cette liste n'est pas exhastive, pour tout autre demande, n'hésitez pas à nous contacter!</p>
+    </section>
 </section>
+
+<style>
+    /* Ajout d'une couleur de fond lorsque le menu est déroulé */
+    .collapse.show {
+        background-color: #f0f8ff; /* Couleur de fond lorsque le menu est ouvert */
+        transition: background-color 0.3s ease; /* Animation douce */
+    }
+
+    /* Optionnel : changer la couleur du bouton aussi */
+    button[aria-expanded="true"] {
+        background-color: #e0f0ff; /* Légère variation pour le bouton */
+        transition: background-color 0.3s ease;
+    }
+</style>

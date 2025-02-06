@@ -1,157 +1,125 @@
-<!-- Main Content -->
-<div class="flex-grow-1 p-4 d-flex flex-column">
-    <div class="container card mb-4">
-        <div class="container card-header d-flex justify-content-between align-items-center">
-            <h4>Espace personnel</h4>
-        </div>
+{% extends 'base.html.twig' %}
 
-        <div class="card-body p-2 p-md-5 m-md-4 c-access d-flex justify-content-around flex-wrap">
-            {% set buttons = [
-                {id: 'btnFactures', icon: 'file-invoice', link: 'link-Factures', text: 'Factures'},
-                {id: 'btnDevis', icon: 'file-contract', link: 'link-Devis', text: 'Devis'},
-                {id: 'btnProfile', icon: 'user-circle', link: 'link-Profile', text: 'Informations'},
-                {id: 'btnParametres', icon: 'cogs', link: 'link-parametres', text: 'Paramètres'}
-            ] %}
-            {% for button in buttons %}
-                {% if button.service is not defined or button.service is empty or button.service in services %}
-                    <div class="d-flex flex-column align-items-center" style="position: relative; width: 130px;">
-                        <button 
-                            type="button" 
-                            id="{{ button.id }}"
-                            data-fragment="{{ button.link }}" 
-                            class="change-fragment btn d-flex flex-column flex-start align-items-center text-decoration-none"
-                            style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: transparent; border: none; z-index: 1; padding: 0;">
-                        </button>
+{% block title %}Dashboard utilisateur{% endblock %}
 
-                        <!-- Affichage de l'icône en version mobile et desktop -->
-                        <i class="fas fa-{{ button.icon }} fa-2x d-sm-none text-black"></i>
-                        <i class="fas fa-{{ button.icon }} fa-3x d-none d-sm-inline d-md-inline text-black"></i>
-
-                        <!-- Affichage du titre en version mobile et desktop -->
-                        <h6 class="d-block d-md-none text-center text-black">{{ button.text }}</h6>
-                        <h5 class="d-none d-md-block text-center text-black">{{ button.text }}</h5>
-                    </div>
-                {% endif %}    
-            {% endfor %}
-        </div>
-    </div>
-
-    <div class="container card mb-4">
-        <div class="container card-header d-flex justify-content-between align-items-center">
-            <h4>Mes factures</h4>
-        </div>
-        <div class="card-body">
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>Nom de la facture</th>
-                        <th>ID</th>
-                        <th>Status</th>
-                        <th>Informations</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% if factures is empty %}  
-                        <tr>
-                            <td colspan="4" class="text-center">Aucune facture trouvée.</td>
-                        </tr>
-                    {% else %}
-                        {% for facture in factures|slice(0, 3) %}
-                            <tr>
-                                <td>{{ facture.id }}</td>
-                                <td>{{ facture.status }}</td>
-                                <td>{{ facture.commentaire }}</td>
-                                <td>{{ facture.is_active }}</td>
-                            </tr>
-                        {% endfor %}
-                    {% endif %}
-                </tbody>
-            </table>
-            <div class="d-flex justify-content-center">
-                <button id='btnFacture' data-fragment='link-Factures' class="change-fragment btn btn-secondary btn-sm">Accéder</button>
-            </div>
-        </div>
-    </div>
-
-    <div class="container card mb-4">
-        <div class="container card-header d-flex justify-content-between align-items-center">
-            <h4>Mes Devis</h4>
-        </div>
-        <div class="card-body">
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>Nom du devis</th>
-                        <th>ID</th>
-                        <th>Status</th>
-                        <th>Informations</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% if devis is empty %}  
-                        <tr>
-                            <td colspan="4" class="text-center">Aucun devis trouvé.</td>
-                        </tr>
-                    {% else %}
-                        {% for devi in devis|slice(0, 3) %}
-                            <tr>
-                                <td>{{ devi.id }}</td>
-                                <td>{{ devi.status }}</td>
-                                <td>{{ devi.commentaire }}</td>
-                                <td>{{ devi.is_active }}</td>
-                            </tr>
-                        {% endfor %}
-                    {% endif %}
-                </tbody>
-            </table>
-            <div class="d-flex justify-content-center">
-                <button id='btnDevis' data-fragment='link-Devis' class="change-fragment btn btn-secondary btn-sm">Accéder</button>
-            </div>
-        </div>
-    </div>
-
-    {# {% if 'Repertoire' in services %}
-        <div class="container card mb-4">
-            <div class="container card-header d-flex justify-content-between align-items-center">
-                <h4>Mon répertoire</h4>
-            </div>
-            <div class="card-body">
-                {% if dossiers is not empty %}
-                    <div class="flex-grow-1 p-4 d-flex justify-content-center gap-3">
-                        {% for dossier in dossiers|slice(0, 3) %}
-                        <div class="repertoire d-flex flex-column align-items-center p-1" style="position: relative; width: 130px;">
-                            <button 
-                                type="button" 
-                                data-id="{{ dossier.id }}" 
-                                class="btn d-flex flex-column flex-start align-items-center text-decoration-none"
-                                style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: transparent; border: none; z-index: 1; padding: 0;">
-                            </button>
-
-                            <i class="fas fa-folder fa-3x text-center text-warning"></i>
-                            <p class='text-black text-center'>{{ dossier.name }}</p>
+{% block body %}
+    <div id="userContent" class="custom-bg d-flex flex-column min-vh-100">
+        {% include 'userPage/_header.html.twig' %}
+        <main id="fragmentContent" class="container d-flex flex-column justify-content-start flex-grow-1 py-4">
+            {% include 'partials/flash.html.twig' %}
+                <!-- Main Content -->
+                <div class="flex-grow-1 p-4 d-flex flex-column">
+                    <div class="container card mb-4">
+                        <div class="container card-header d-flex justify-content-between align-items-center">
+                            <h4>Espace personnel</h4>
                         </div>
-                        {% endfor %}
+
+                        <div class="card-body p-2 p-md-5 m-md-4 c-access d-flex justify-content-around flex-wrap">
+                            {% set buttons = [
+                                {id: 'btnFactures', icon: 'file-invoice', link: '/user/factures', text: 'Factures'},
+                                {id: 'btnDevis', icon: 'file-contract', link: '/user/devis', text: 'Devis'},
+                                {id: 'btnProfile', icon: 'user-circle', link: '/user/profile', text: 'Informations'},
+                                {id: 'btnParametres', icon: 'cogs', link: '/user/parametres', text: 'Paramètres'}
+                            ] %}
+                            {% for button in buttons %}
+                                {% if button.service is not defined or button.service is empty or button.service in services %}
+                                    <div class="d-flex flex-column align-items-center" style="position: relative; width: 130px;">
+                                        <a 
+                                            href="{{ button.link }}"
+                                            class="btn d-flex flex-column flex-start align-items-center text-decoration-none"
+                                            style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: transparent; border: none; z-index: 1; padding: 0;">
+                                        </a>
+
+                                        <!-- Affichage de l'icône en version mobile et desktop -->
+                                        <i class="fas fa-{{ button.icon }} fa-2x d-sm-none text-black"></i>
+                                        <i class="fas fa-{{ button.icon }} fa-3x d-none d-sm-inline d-md-inline text-black"></i>
+
+                                        <!-- Affichage du titre en version mobile et desktop -->
+                                        <h6 class="d-block d-md-none text-center text-black">{{ button.text }}</h6>
+                                        <h5 class="d-none d-md-block text-center text-black">{{ button.text }}</h5>
+                                    </div>
+                                {% endif %}    
+                            {% endfor %}
+                        </div>
                     </div>
-                {% else %}
-                    <div class="text-center">
-                        <p>Aucun dossier.</p>
+
+                    <div class="container card mb-4">
+                        <div class="container card-header d-flex justify-content-between align-items-center">
+                            <h4>Mes factures</h4>
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Nom de la facture</th>
+                                        <th>ID</th>
+                                        <th>Status</th>
+                                        <th>Informations</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% if factures is empty %}  
+                                        <tr>
+                                            <td colspan="4" class="text-center">Aucune facture trouvée.</td>
+                                        </tr>
+                                    {% else %}
+                                        {% for facture in factures|slice(0, 3) %}
+                                            <tr>
+                                                <td>{{ facture.id }}</td>
+                                                <td>{{ facture.status }}</td>
+                                                <td>{{ facture.commentaire }}</td>
+                                                <td>{{ facture.is_active }}</td>
+                                            </tr>
+                                        {% endfor %}
+                                    {% endif %}
+                                </tbody>
+                            </table>
+                            <div class="d-flex justify-content-center">
+                                <a id='btnFacture' href='/user/dactures' class="change-fragment btn btn-secondary btn-sm">Accéder</a>
+                            </div>
+                        </div>
                     </div>
-                {% endif %}
-                <div class="d-flex justify-content-center">
-                    <button id='btnRepertoire' data-fragment='link-Repertoire' class="change-fragment btn btn-secondary btn-sm">Voir plus</button>
+
+                    <div class="container card mb-4">
+                        <div class="container card-header d-flex justify-content-between align-items-center">
+                            <h4>Mes Devis</h4>
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Nom du devis</th>
+                                        <th>ID</th>
+                                        <th>Status</th>
+                                        <th>Informations</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% if devis is empty %}  
+                                        <tr>
+                                            <td colspan="4" class="text-center">Aucun devis trouvé.</td>
+                                        </tr>
+                                    {% else %}
+                                        {% for devi in devis|slice(0, 3) %}
+                                            <tr>
+                                                <td>{{ devi.id }}</td>
+                                                <td>{{ devi.status }}</td>
+                                                <td>{{ devi.commentaire }}</td>
+                                                <td>{{ devi.is_active }}</td>
+                                            </tr>
+                                        {% endfor %}
+                                    {% endif %}
+                                </tbody>
+                            </table>
+                            <div class="d-flex justify-content-center">
+                                <a id='btnDevis' href='/user/devis' class="btn btn-secondary btn-sm">Accéder</a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
-    {% endif %} #}
+        </main>
 
-</div>
+        {% include 'userPage/_footer.html.twig' %}
+    </div>
+{% endblock %}
 
-{% include 'partials/user/Dossiers/_create.html.twig' %}
-
-{% include 'partials/user/Dossiers/_rename.html.twig' %}
- 
-<div id="contextMenu" class="dropdown-menu d-none" style="position: absolute;">
-    <button class="btn dropdown-item change-fragment" id="openDossier">Ouvrir le dossier</button>
-    <a class="dropdown-item" href="javascript:void(0)" id="renameDossier">Renommer le dossier</a>
-    <a class="dropdown-item" href="javascript:void(0)" id="deleteDossier">Supprimer le dossier</a>
-</div>

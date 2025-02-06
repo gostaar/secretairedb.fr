@@ -417,3 +417,7 @@ button.remove-ligne {
     align-items: center;
     gap: 10px;
 }
+
+.cursor-pointer {
+    cursor: pointer;
+}

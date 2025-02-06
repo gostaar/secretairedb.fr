@@ -1,37 +1,49 @@
 <!-- Menu Items -->
 {% set menuItems = [
-    { icon: 'home', text: 'Accueil', link: 'link-Acceuil', color: 'white', service: 'Personnel' },
-    { icon: 'file-alt', text: 'Administratif', link: 'link-Administratif', color: 'white', service: 'Administratif' },
-    { icon: 'calendar-alt', text: 'Agenda', link: 'link-Agenda', color: 'white', service: 'Agenda' },
-    { icon: 'briefcase', text: 'Commercial', link: 'link-Commercial', color: 'white', service: 'Commercial' },
-    { icon: 'laptop-code', text: 'Numérique', link: 'link-Numerique', color: 'white', service: 'Numerique' },
-    { icon: 'phone-alt', text: 'Téléphone', link: 'link-Telephone', color: 'white', service: 'Telephonique' },
-    { icon: 'folder', text: 'Répertoire', link: 'link-Repertoire', color: 'white', service:'Repertoire' },
+    { icon: 'home', text: 'Accueil', color: 'white', service: '' },
+    { icon: 'file-alt', text: 'Administratif', color: 'white', service: 'Administratif' },
+    { icon: 'calendar-alt', text: 'Agenda', color: 'white', service: 'Agenda' },
+    { icon: 'briefcase', text: 'Commercial', color: 'white', service: 'Commercial' },
+    { icon: 'laptop-code', text: 'Numérique', color: 'white', service: 'Numerique' },
+    { icon: 'phone-alt', text: 'Téléphone', color: 'white', service: 'Telephonique' },
+    { icon: 'folder', text: 'Répertoire', color: 'white', service:'Repertoire' },
 ] %}
 
     <!-- menus -->
 
     <div class='d-none d-md-flex flex-wrap justify-content-center'>
-        {% for item in menuItems %}
-                <div class="header-menu nav-item d-flex flex-column justify-content-center align-items-center p-1 " style="position: relative; width: 130px;">
-                    <button 
-                        data-fragment={{item.link}} 
-                        data-service={{item.service}} 
-                        class="change-fragment nav-link text-{{ item.color }}" 
+        {% if services is defined %}
+        {% for item in menuItems | filter(item => item.service is empty or item.service in services) %}
+                <div class="header-menu nav-item d-flex flex-column justify-content-center align-items-center p-1 
+                    {% if service is defined and item.service == service %} bg-success rounded {% endif %}
+                    {% if service is not defined and item.service == '' %} bg-success rounded {% endif %}"                
+                    style="position: relative; width: 130px;">
+                    <a href={% if item.service is empty %}"{{ path('user') }}"{% else %}"{{ path('dossiers', {'service': item.service}) }}"{% endif %}
+                        class="nav-link text-{{ item.color }}" 
                         style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: transparent; border: none; z-index: 1; padding: 0;">
-                    </button>    
+                    </a>    
                     <h6 class="text-white" style="margin: 5px 0;">{{ item.text }}</h6>
                 </div>
         {% endfor %}
+        {% endif %}
     </div>
     <div class='d-block d-md-none'>
-        {% for item in menuItems %}
-                <div class="nav-item d-flex flex-column align-items-center p-1" style="position: relative; width: 130px;">
-                    <button data-fragment={{item.link}} data-service={{item.service}} class="change-fragment nav-link text-{{ item.color }}" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: transparent; border: none; z-index: 1; padding: 0;">
-                    </button>    
+        {% if services is defined %}
+        {% for item in menuItems | filter(item => item.service is empty or item.service in services) %}
+                <div class="nav-item d-flex flex-column align-items-center p-1
+                    {% if service is defined and item.service == service %} bg-success rounded {% endif %}
+                    {% if service is not defined and item.service == '' %} bg-success rounded {% endif %}" 
+                    style="position: relative; width: 130px;">
+                    <a 
+                        href={% if item.service is empty %}"{{ path('user') }}"{% else %}"{{ path('dossiers', {'service': item.service}) }}"{% endif %} 
+                        class="nav-link text-{{ item.color }}" 
+                        style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: transparent; border: none; z-index: 1; padding: 0;">
+                    </a>    
                     <h6 class="text-white">{{ item.text }}</h6>
                 </div>
         {% endfor %}
+        {% endif %}
+
     </div>
 
 

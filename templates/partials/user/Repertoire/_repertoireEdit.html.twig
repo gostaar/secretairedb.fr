@@ -1,157 +1,171 @@
-{{ form_start(formViews.addRepertoire, {'attr': {'class': 'm-0'}}) }}
-<div class='col-12'>
-    <div class="card shadow-sm">
-        <div class="card-header">
-            <h4>{{ repertoire.dossier.name }} - {{ repertoire.nom }}</h4>
-        </div>
-        <div class="card-body">
-            <table class="table table-bordered">
-                <tbody>
-                    <tr>
-                        <th class='col-2' style='vertical-align: middle;'>Nom</th>
-                        <td class='col-10 parent'>{{ form_row(formViews.addRepertoire.nom) }}</td>
-                    </tr>
-                    <tr>
-                        <th class='col-2' style='vertical-align: middle;'>Adresse</th>
-                        <td class='col-10 parent'>{{ form_row(formViews.addRepertoire.adresse) }}</td>
-                    </tr>
-                    <tr>
-                        <th class='col-2' style='vertical-align: middle;'>Code Postal</th>
-                        <td class='col-10 parent'>{{ form_row(formViews.addRepertoire.codePostal) }}</td>
-                    </tr>
-                    <tr>
-                        <th class='col-2' style='vertical-align: middle;'>Ville</th>
-                        <td class='col-10 parent'>{{ form_row(formViews.addRepertoire.ville) }}</td>
-                    </tr>
-                    <tr>
-                        <th class='col-2' style='vertical-align: middle;'>Pays</th>
-                        <td class='col-10 parent'>{{ form_row(formViews.addRepertoire.pays) }}</td>
-                    </tr>
-                    <tr>
-                        <th class='col-2' style='vertical-align: middle;'>Téléphone</th>
-                        <td class='col-10 parent'>{{ form_row(formViews.addRepertoire.telephone) }}</td>
-                    </tr>
-                    <tr>
-                        <th class='col-2' style='vertical-align: middle;'>Mobile</th>
-                        <td class='col-10 parent'>{{ form_row(formViews.addRepertoire.mobile) }}</td>
-                    </tr>
-                    <tr>
-                        <th class='col-2' style='vertical-align: middle;'>Email</th>
-                        <td class='col-10 parent'>{{ form_row(formViews.addRepertoire.email) }}</td>
-                    </tr>
-                    <tr>
-                        <th class='col-2' style='vertical-align: middle;'>Siret</th>
-                        <td class='col-10 parent'>{{ form_row(formViews.addRepertoire.siret) }}</td>
-                    </tr>
-                    <tr>
-                        <th class='col-2' style='vertical-align: middle;'>Nom de l'entreprise</th>
-                        <td class='col-10 parent'>{{ form_row(formViews.addRepertoire.nomEntreprise) }}</td>
-                    </tr>
-                </tbody>    
-            </table>
-        </div>
-        <div class="card-header mx-0">
-            <h4>Contacts</h4>
-        </div>
-        <div class='card-body'>
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Nom</th>
-                        <th>email</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {# {% if repertoire.contacts is empty %}  
-                        <tr>
-                            <td colspan="4" class="text-center">Aucun contact trouvé.</td>
-                        </tr>
-                    {% else %}
-                        {% for contact in repertoire.contacts %}
-                            <tr> 
-                                <td class='col-3' style="max-width: 50px; word-wrap: break-word; white-space: normal; vertical-align: middle;">{{ contact.nom }}</td>
-                                <td class='col-3' style="max-width: 50px; word-wrap: break-word; white-space: normal; vertical-align: middle;">{{ contact.email }}</td>
-                                <td class='col-3'>
-                                    <div class='d-flex justify-content-start'>
-                                        <button type="button" class="btn btn-primary d-none d-sm-block" data-bs-toggle="modal" data-bs-target="#editContact{{ contact.id }}" data-id="{{ contact.id }}">          
-                                            Modifier
-                                        </button>
-                                        <button type="button" class="btn btn-primary d-block d-sm-none" data-toggle="modal" data-target="#editContact" data-id="{{ contact.id }}"><i class="fas fa-pen fa-sm"></i></button>
-                                    </div>
-                                </td>
-                            </tr>
-                        {% endfor %}
-                    {% endif %} #}
-                </tbody>
-            </table>
-            {{ form_row(formViews.addRepertoire.contacts) }}
-        </div>
-        {% set count = -1 %}{% for contact in repertoire.contacts %}{% set count = count + 1 %}<span id="{{ count }}" data-contact-id="{{ contact.id }}"></span>{% endfor %}
-        <div class='d-flex justify-content-center'>
-            <button type="submit" class="btn btn-primary">Enregistrer</button>
-        </div>
+{% extends 'base.html.twig' %}
+
+{% block title %}Dashboard utilisateur{% endblock %}
+
+{% block body %}
+    <div id="userContent" class="custom-bg d-flex flex-column min-vh-100">
+        {% include 'userPage/_header.html.twig' %}
+        <main id="fragmentContent" class="container d-flex flex-column justify-content-start flex-grow-1 py-4">
+            {% include 'partials/flash.html.twig' %}                
+                {{ form_start(formRepertoire, {'attr': {'class': 'm-0'}}) }}
+                <div class='col-12'>
+                    <div class="card shadow-sm">
+                        <div class="card-header">
+                            <h4>{{ repertoire.dossier.name }} - {{ repertoire.nom }}</h4>
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-bordered">
+                                <tbody>
+                                    <tr>
+                                        <th class='col-2' style='vertical-align: middle;'>Nom</th>
+                                        <td class='col-10 parent'>{{ form_row(formRepertoire.nom) }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th class='col-2' style='vertical-align: middle;'>Adresse</th>
+                                        <td class='col-10 parent'>{{ form_row(formRepertoire.adresse) }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th class='col-2' style='vertical-align: middle;'>Code Postal</th>
+                                        <td class='col-10 parent'>{{ form_row(formRepertoire.codePostal) }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th class='col-2' style='vertical-align: middle;'>Ville</th>
+                                        <td class='col-10 parent'>{{ form_row(formRepertoire.ville) }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th class='col-2' style='vertical-align: middle;'>Pays</th>
+                                        <td class='col-10 parent'>{{ form_row(formRepertoire.pays) }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th class='col-2' style='vertical-align: middle;'>Téléphone</th>
+                                        <td class='col-10 parent'>{{ form_row(formRepertoire.telephone) }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th class='col-2' style='vertical-align: middle;'>Mobile</th>
+                                        <td class='col-10 parent'>{{ form_row(formRepertoire.mobile) }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th class='col-2' style='vertical-align: middle;'>Email</th>
+                                        <td class='col-10 parent'>{{ form_row(formRepertoire.email) }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th class='col-2' style='vertical-align: middle;'>Siret</th>
+                                        <td class='col-10 parent'>{{ form_row(formRepertoire.siret) }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th class='col-2' style='vertical-align: middle;'>Nom de l'entreprise</th>
+                                        <td class='col-10 parent'>{{ form_row(formRepertoire.nomEntreprise) }}</td>
+                                    </tr>
+                                </tbody>    
+                            </table>
+                        </div>
+                        <div class="card-header mx-0">
+                            <h4>Contacts</h4>
+                        </div>
+                        <div class='card-body'>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Nom</th>
+                                        <th>email</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {# {% if repertoire.contacts is empty %}  
+                                        <tr>
+                                            <td colspan="4" class="text-center">Aucun contact trouvé.</td>
+                                        </tr>
+                                    {% else %}
+                                        {% for contact in repertoire.contacts %}
+                                            <tr> 
+                                                <td class='col-3' style="max-width: 50px; word-wrap: break-word; white-space: normal; vertical-align: middle;">{{ contact.nom }}</td>
+                                                <td class='col-3' style="max-width: 50px; word-wrap: break-word; white-space: normal; vertical-align: middle;">{{ contact.email }}</td>
+                                                <td class='col-3'>
+                                                    <div class='d-flex justify-content-start'>
+                                                        <button type="button" class="btn btn-primary d-none d-sm-block" data-bs-toggle="modal" data-bs-target="#editContact{{ contact.id }}" data-id="{{ contact.id }}">          
+                                                            Modifier
+                                                        </button>
+                                                        <button type="button" class="btn btn-primary d-block d-sm-none" data-toggle="modal" data-target="#editContact" data-id="{{ contact.id }}"><i class="fas fa-pen fa-sm"></i></button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                    {% endif %} #}
+                                </tbody>
+                            </table>
+                            {{ form_row(formRepertoire.contacts) }}
+                        </div>
+                        {% set count = -1 %}{% for contact in repertoire.contacts %}{% set count = count + 1 %}<span id="{{ count }}" data-contact-id="{{ contact.id }}"></span>{% endfor %}
+                        <div class='d-flex justify-content-center'>
+                            <button type="submit" class="mb-3 btn btn-primary">Enregistrer</button>
+                        </div>
+                    </div>
+                </div>
+                {{ form_end(formRepertoire) }}
+
+                {% for contact in repertoire.contacts %}
+                <div class="modal fade" id="editContact{{ contact.id }}" tabindex="-1" aria-labelledby="editContactLabel{{ contact.id }}" aria-hidden="true">
+                    <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+
+                                    <h5 class="modal-title" id="editContactLabel">{{ contact.nom }}</h5> 
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form action="/update_contact/{{service}}/{{repertoire.dossier.id}}/{{ repertoire.id }}/{{ contact.id }}" method="POST" data-service={{ repertoire.dossier.services }}>
+                                    <table class="table">
+                                        <tr>
+                                            <th class="col-2" style="vertical-align: middle;">Nom</th>
+                                            <td class="col-10 parent">
+                                                <input type="text" name="nom" value="{{ contact.nom }}" class="form-control" />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th class="col-2" style="vertical-align: middle;">Email</th>
+                                            <td class="col-10 parent">
+                                                <input type="email" name="email" value="{{ contact.email }}" class="form-control" />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th class="col-2" style="vertical-align: middle;">Téléphone</th>
+                                            <td class="col-10 parent">
+                                                <input type="text" name="telephone" value="{{ contact.telephone }}" class="form-control" />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th class="col-2" style="vertical-align: middle;">Rôle</th>
+                                            <td class="col-10 parent">
+                                                <input type="text" name="role" value="{{ contact.role }}" class="form-control" />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th class="col-2" style="vertical-align: middle;">Commentaire</th>
+                                            <td class="col-10 parent">
+                                                <textarea name="commentaire" class="form-control">{{ contact.commentaire }}</textarea>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <button type="submit" class="btn btn-primary">Mettre à jour</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>                   
+                </div>
+                {% endfor %}
+                            
+
+
+                {% block stylesheets %}
+                    <style>
+                        .parent > div {
+                            margin: 0rem !important;
+                        }
+                    </style>
+                {% endblock %}
+        </main>
+
+        {% include 'userPage/_footer.html.twig' %}
     </div>
-</div>
-{{ form_end(formViews.addRepertoire) }}
-
-{% for contact in repertoire.contacts %}
-<div class="modal fade" id="editContact{{ contact.id }}" tabindex="-1" aria-labelledby="editContactLabel{{ contact.id }}" aria-hidden="true">
-    <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-
-                    <h5 class="modal-title" id="editContactLabel">{{ contact.nom }}</h5> 
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form action="/{{ contact.id }}/update_contact/{{ repertoire.id }}" method="POST" data-service={{ serviceLink }}>
-                    <table class="table">
-                        <tr>
-                            <th class="col-2" style="vertical-align: middle;">Nom</th>
-                            <td class="col-10 parent">
-                                <input type="text" name="nom" value="{{ contact.nom }}" class="form-control" />
-                            </td>
-                        </tr>
-                        <tr>
-                            <th class="col-2" style="vertical-align: middle;">Email</th>
-                            <td class="col-10 parent">
-                                <input type="email" name="email" value="{{ contact.email }}" class="form-control" />
-                            </td>
-                        </tr>
-                        <tr>
-                            <th class="col-2" style="vertical-align: middle;">Téléphone</th>
-                            <td class="col-10 parent">
-                                <input type="text" name="telephone" value="{{ contact.telephone }}" class="form-control" />
-                            </td>
-                        </tr>
-                        <tr>
-                            <th class="col-2" style="vertical-align: middle;">Rôle</th>
-                            <td class="col-10 parent">
-                                <input type="text" name="role" value="{{ contact.role }}" class="form-control" />
-                            </td>
-                        </tr>
-                        <tr>
-                            <th class="col-2" style="vertical-align: middle;">Commentaire</th>
-                            <td class="col-10 parent">
-                                <textarea name="commentaire" class="form-control">{{ contact.commentaire }}</textarea>
-                            </td>
-                        </tr>
-                    </table>
-                    <button type="submit" class="btn btn-primary">Mettre à jour</button>
-                </form>
-            </div>
-        </div>
-    </div>                   
-</div>
-{% endfor %}
-              
-
-
-{% block stylesheets %}
-    <style>
-        .parent > div {
-            margin: 0rem !important;
-        }
-    </style>
 {% endblock %}

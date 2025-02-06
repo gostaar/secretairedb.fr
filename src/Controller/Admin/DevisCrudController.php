@@ -33,7 +33,7 @@ class DevisCrudController extends AbstractCrudController
             TextField::new('commentaire'),
             BooleanField::new('is_active', 'Actif'),
             
-            FormField::addPanel('Relations avec d\'autres entités')->setIcon('fa fa-link'),
+            FormField::addFieldSet('Relations avec d\'autres entités')->setIcon('fa fa-link'),
             AssociationField::new('client', 'Utilisateur associé')
                 ->setFormTypeOptions([
                     'by_reference' => true, // Par défaut, mais explicite

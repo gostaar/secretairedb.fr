@@ -13,18 +13,24 @@ use App\Repository\ContactRepository;
 
 class UpdateController extends AbstractController
 {
-
+    private EntityManagerInterface $entityManager;
     private ContactRepository $contactRepository;
 
-    public function __construct(ContactRepository $contactRepository){
+    public function __construct(ContactRepository $contactRepository, EntityManagerInterface $entityManager){
         $this->contactRepository = $contactRepository;
+        $this->entityManager = $entityManager;
     }
     
-    #[Route('{id}/update_contact/{repertoireId}', name: 'update_contact')]
-    public function updateContact(\App\Entity\Contact $contact, $repertoireId, Request $request, EntityManagerInterface $em): Response
+    #[Route('update_contact/{service}/{dossierId}/{repertoireId}/{contactId}', name: 'update_contact')]
+    public function updateContact(Request $request, EntityManagerInterface $em): Response
     {
-        $url = $_ENV['URL'];
-        
+        $service = $request->attributes->get('service');
+        $dossier = $request->attributes->get('dossierId');
+        $repertoire = $request->attributes->get('repertoireId');
+        $contactId = $request->attributes->get('contactId');
+
+        $contact = $this->entityManager->getRepository(\App\Entity\Contact::class)->find($contactId);
+
         $data = $request->request->all();
         
         if (isset($data['nom'])) { $contact->setNom($data['nom']); }
@@ -35,29 +41,20 @@ class UpdateController extends AbstractController
         
         $em->flush();
 
-        return  $this->redirect($url . '/user?fragment=link-RepertoireEdit&repertoire=' . $repertoireId);
+        return $this->redirect("/user/{$service}/{$dossier}/{$repertoire}");
     }
     
-    #[Route('{id}/update_image/{documentId}', name: 'update_image')]
-    public function updateImage(\App\Entity\Image $image, $documentId, Request $request, EntityManagerInterface $em) : Response
+    #[Route('/updateIdentifiant/{id}', name: 'update_identifiant')]
+    public function updateIdentifiants(\App\Entity\Identifiants $identifiant, Request $request, EntityManagerInterface $em) : Response
     {
-        $url = $_ENV['URL'];
-
         $data = $request->request->all();
-        
-        if (isset($data['slug'])) { $image->setSlug($data['slug']); }
-        if (isset($data['imageName'])) { $image->setImageName($data['imageName']); }
-        if (isset($data['imageSize'])) { $image->setImageSize($data['imageSize']);}
-        if (isset($data['imageDescription'])) { $image->setImageDescription($data['imageDescription']);}
-        
+
+        if (isset($data['site'])) { $identifiant->setSite($data['site']); }
+        if (isset($data['identifiant'])) { $identifiant->setIdentifiant($data['identifiant']); }
+        if (isset($data['password'])) { $identifiant->setPassword($data['password']); }
+
         $em->flush();
 
-        return  $this->redirect($url . '/user?fragment=link-DocumentEdit&document=' . $documentId);
-    }
-
-    #[Route('/update_user/{id}', name: 'update_user')]
-    public function updateUser(\App\Entity\USer $user)
-    {
-        
+        return  $this->redirect('/user/profile');
     }
 }

@@ -57,7 +57,7 @@ class DocumentsUtilisateurCrudController extends AbstractCrudController
             TextField::new('details')
                 ->onlyOnForms(),
 
-            FormField::addPanel('Relations avec d\'autres entités')->setIcon('fa fa-link'),
+            FormField::addFieldSet('Relations avec d\'autres entités')->setIcon('fa fa-link'),
             AssociationField::new('user', 'Utilisateur associé')
                 ->setFormTypeOptions([
                     'by_reference' => true,

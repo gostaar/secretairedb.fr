@@ -31,7 +31,7 @@ class EventsCrudController extends AbstractCrudController
             DateTimeField::new('end'),
             ArrayField::new('google_calendar_event_id'),            
             
-            FormField::addPanel('Relations avec d\'autres entités')->setIcon('fa fa-link'),
+            FormField::addFieldSet('Relations avec d\'autres entités')->setIcon('fa fa-link'),
             AssociationField::new('services', 'Service associé')
                 ->setFormTypeOptions([
                     'by_reference' => true, // Par défaut, mais explicite

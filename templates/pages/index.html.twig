@@ -3,11 +3,16 @@
 {% block title %}Secrétaire{% endblock %}
 
 {% block body %}
-    <div id="fragmentContent" class="d-flex min-vh-100">
-        {% include 'pages/_fragmentContent.html.twig' with {
-            'sections': sections,
-            'currentFragment': currentFragment,
-            'currentSubFragment': currentSubFragment,
-        } %}
-    </div>
+{% include 'partials/flash.html.twig' %}
+    <main class="d-flex min-vh-100">
+        
+        <div id="partproChoice" class="bg-image p-5">
+            <h1 class="col-sm-12 col-md-4 m-0 text-center">Bienvenue sur Delphine Bauwens Secrétaire Pro</h1>
+            <div class="d-flex justify-content-center flex-column flex-wrap gap-3">
+                <a href='{{path('subfragment', {fragment : "part", subfragment : 'acceuil'})}}' class="w-100 btn btn-lg p-4 p-md-5 p-lg-5 fs-2 fw-bold btn-primary">Vous êtes un particulier</a>
+                <a href='{{path('subfragment', {fragment : "pro", subfragment : 'acceuil'})}}' class="w-100 btn btn-lg p-4 p-md-5 p-lg-5 fs-2 fw-bold btn-secondary">Vous êtes un professionnel</a>
+            </div>
+        </div>
+
+    </main>
 {% endblock %}

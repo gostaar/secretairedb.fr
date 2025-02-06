@@ -1,72 +1,55 @@
-<div class="modal fade" id="formViews.addRepertoireModal" tabindex="-1" role="dialog" aria-labelledby="repertoireModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl" role="repertoire">
+<div class="modal fade" id="addRepertoireModal" tabindex="-1" role="dialog" aria-labelledby="repertoireModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="repertoireModalLabel">Créer un nouveau contact</h5>
-                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                <h5 class="modal-title" id="repertoireModalLabel">Créer un nouveau répertoire</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="btn-close"></button>
             </div>
             <div class="modal-body">
-                {{ form_start(formViews.addRepertoire, {'action': '/api/repertoire/' ~ serviceLink, 'method': 'POST'}) }}
+                {{ form_start(formRepertoire)}}
                 
-                
-                <div class="mb-3">
-                    {{ form_row(formViews.addRepertoire.nom) }}
-                </div>
-
-                <div class="mb-3">
-                    {{ form_row(formViews.addRepertoire.adresse) }}
-                </div>
-
-                <div class="mb-3">
-                    {{ form_row(formViews.addRepertoire.codePostal) }}
-                </div>
-
-                <div class="mb-3">
-                    {{ form_row(formViews.addRepertoire.ville) }}
-                </div>
-
-                <div class="mb-3">
-                    {{ form_row(formViews.addRepertoire.pays) }}
-                </div>
-
-                <div class="mb-3">
-                    {{ form_row(formViews.addRepertoire.telephone) }}
-                </div>
-
-                <div class="mb-3">
-                    {{ form_row(formViews.addRepertoire.mobile) }}
-                </div>
-
-                <div class="mb-3">
-                    {{ form_row(formViews.addRepertoire.email) }}
-                </div>
-
-                <div class="mb-3">
-                    {{ form_row(formViews.addRepertoire.nomEntreprise) }}
-                </div>
-
-                <div class="mb-3">
-                    {{ form_row(formViews.addRepertoire.siret) }}
-                </div>
-        
-                <!-- Bouton pour afficher le formulaire du contact -->
-                <button type="button" class="btn btn-secondary" id="showContactFormBtn">Ajouter un nouveau contact</button>
-
-                <!-- Formulaire pour le contact (initialement masqué) -->
-                <div id="contactForm" class="mt-3" style="display: none;">
-                    <div class="mb-3">
-                        <label for="contact_nom">Nom du contact</label>
-                        <input type="text" id="contact_nom" name="contact_nom" class="form-control" placeholder="Nom du contact">
+                <div class="col-12 d-md-flex d-sm-block flex-wrap ">
+                    <div class="col-md-4 col-sm-12  px-2">
+                        {{ form_row(formRepertoire.nom) }}
                     </div>
-                    <div class="mb-3">
-                        <label for="contact_email">Email du contact</label>
-                        <input type="email" id="contact_email" name="contact_email" class="form-control" placeholder="Email du contact">
+                    <div class="col-md-4 col-sm-12  px-2">
+                        {{ form_row(formRepertoire.email) }}
                     </div>
-                    <div class="mb-3">
-                        <label for="contact_telephone">Téléphone du contact</label>
-                        <input type="text" id="contact_telephone" name="contact_telephone" class="form-control" placeholder="Téléphone du contact">
+                </div>
+
+                <div class="col-12 d-md-flex d-sm-block flex-wrap ">
+                    <div class="col-md-4 col-sm-12  px-2">
+                        {{ form_row(formRepertoire.adresse) }}
+                    </div>
+                    <div class="col-md-4 col-sm-12  px-2">
+                        {{ form_row(formRepertoire.codePostal) }}
+                    </div>
+                    <div class="col-md-4 col-sm-12  px-2">
+                        {{ form_row(formRepertoire.ville) }}
+                    </div>
+                </div>
+
+               <div class="col-12 d-md-flex d-sm-block flex-wrap ">
+                    <div class="col-md-4 col-sm-12  px-2">
+                        {{ form_row(formRepertoire.pays) }}
+                    </div>
+                </div>
+
+                <div class="col-12 d-md-flex d-sm-block flex-wrap ">
+                    <div class="col-md-4 col-sm-12  px-2">
+                        {{ form_row(formRepertoire.telephone) }}
+                    </div>
+                    <div class="col-md-4 col-sm-12  px-2">
+                        {{ form_row(formRepertoire.mobile) }}
+                    </div>
+                </div>
+
+                <div class="col-12 d-md-flex d-sm-block flex-wrap ">
+                    <div class="col-md-4 col-sm-12 px-2">
+                        {{ form_row(formRepertoire.nomEntreprise) }}
+                    </div>
+                    <div class="col-md-4 col-sm-12  px-2">
+                        {{ form_row(formRepertoire.siret) }}
                     </div>
                 </div>
                 
@@ -75,7 +58,7 @@
                     <button type="submit" class="btn btn-primary">Enregistrer</button>
                 </div>
                 
-                {{ form_end(formViews.addRepertoire) }}
+                {{ form_end(formRepertoire) }}
             </div>
         </div>
     </div>

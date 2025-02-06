@@ -6,10 +6,9 @@ security:
     providers:
         # used to reload user from session & other features (e.g. switch_user)
         app_user_provider:
-            id: App\Security\CachedUserProvider
-            # entity:
-            #     class: App\Entity\User
-            #     property: email
+            entity:
+                class: App\Entity\User
+                property: email
         # used to reload user from session & other features (e.g. switch_user)
     firewalls:
 

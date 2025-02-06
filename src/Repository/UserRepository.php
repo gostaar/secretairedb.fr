@@ -36,7 +36,7 @@ class UserRepository extends ServiceEntityRepository implements UserLoaderInterf
         // Mettre à jour uniquement le mot de passe
         $user->setPassword($hashedPassword);
         $user->setPasswordResetToken(null);
-        $user->setPasswordResetExpiresAt(new \DateTime('+1 hour'));
+        $user->setPasswordResetExpiresAt(new \DateTimeImmutable('+1 hour'));
 
         // Sauvegarder les modifications
         $this->_em->persist($user);

@@ -29,7 +29,7 @@ class DossierCrudController extends AbstractCrudController
             // Champ pour le nom du dossier
             TextField::new('name', 'Nom du dossier'),
 
-            FormField::addPanel('Relations avec d\'autres entités')->setIcon('fa fa-link'),
+            FormField::addFieldSet('Relations avec d\'autres entités')->setIcon('fa fa-link'),
             AssociationField::new('services', 'Service associé')
                 ->setFormTypeOptions([
                     'by_reference' => true, // Par défaut, mais explicite

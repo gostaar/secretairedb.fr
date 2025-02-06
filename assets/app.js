@@ -1,4 +1,3 @@
-import { initializeNavigation, initializeFragments } from './js/mainFunctions.js';
 import { Application } from 'stimulus';
 import { definitionsFromContext } from 'stimulus/webpack-helpers';
 import FormCollectionController from './controllers/form-collection_controller'; // Importer le contrôleur Stimulus
@@ -14,10 +13,6 @@ function main() {
 
         // Vous pouvez aussi enregistrer le contrôleur manuellement
         application.register('form-collection', FormCollectionController);
-
-        // Initialiser les autres fonctionnalités
-        initializeFragments();
-        initializeNavigation();
     });
 }
 

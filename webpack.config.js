@@ -4,7 +4,7 @@ const webpack = require('webpack');
 
 dotenv.config();
 
-Encore.configureRuntimeEnvironment(process.env.NODE_ENV || 'development');
+Encore.configureRuntimeEnvironment(process.env.NODE_ENV || 'production');
 Encore.enableSingleRuntimeChunk();
 
 Encore
@@ -14,7 +14,7 @@ Encore
     .addEntry('loginStyle', './assets/styles/login.css')
     .addEntry('siteStyle', './assets/styles/site.css')
     .addEntry('userStyle', './assets/styles/user.css')
-    .addEntry('script', './assets/js/script.js')
+    // .addEntry('script', './assets/js/script.js')
     // .addEntry('google', './assets/js/google/main.js')
     // .addEntry('styles', './assets/styles/app.css')
     .enableSassLoader()

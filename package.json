@@ -2,7 +2,7 @@
   "scripts": {
     "dev": "webpack --config webpack.config.js",
     "dev-server": "webpack-dev-server --config webpack.config.js",
-    "prod": "webpack --config webpack.config.js --mode production"
+    "build": "webpack --mode production"
   },
   "devDependencies": {
     "@babel/core": "^7.26.7",
@@ -14,7 +14,7 @@
     "@symfony/webpack-encore": "^5.0.1",
     "babel-loader": "^9.2.1",
     "file-loader": "^6.2.0",
-    "sass": "^1.81.0",
+    "sass": "^1.83.4",
     "sass-loader": "^16.0.3",
     "webpack": "^5.97.0",
     "webpack-cli": "^5.1.4",
@@ -33,6 +33,7 @@
     "dom-animation": "^1.0.2",
     "dotenv": "^16.4.5",
     "flatted": "^3.3.2",
+    "fullcalendar": "^6.1.15",
     "jquery": "^3.7.1",
     "stimulus": "^3.2.2",
     "tslib": "^2.8.1"

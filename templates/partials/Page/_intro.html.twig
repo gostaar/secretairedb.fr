@@ -12,21 +12,18 @@
     ] %}
 {% endif %}
 <section class='background-index d-flex flex-column flex-fill min-vh-100'>
-
-    {% include 'partials/Page/_navBar.html.twig' %}
-
     <section class="hero">
         <div class="heroContent">
             <h1>Votre Secrétaire Indépendante</h1>
             <p>Des services de secrétariat professionnels pour tous.</p>
         </div>
         <div class="w-100 my-3">
-            <button type="button" class="change-fragment-site btn btn-warning fs-5 border border-secondary" data-fragment={{initialisation.fragmentValue}} data-subFragment="contact" >
+            <a class="btn btn-warning fs-5 border border-secondary" href='{{path('subfragment', {fragment: initialisation.fragmentValue, subfragment: 'contact'})}}'>
                 Contactez-nous
-            </button>
+            </a>
         </div>
         <div class="w-100 my-3">
-          <button type="button" class="change-fragment-site btn btn-primary fs-5" data-fragment={{initialisation.fragmentButtonValue}} data-subFragment="acceuil">{{initialisation.buttonValue}}</button>
+          <button type="button" class="btn btn-primary fs-5 text-white" style='background-color: #0d6efd !important;' data-fragment={{initialisation.fragmentButtonValue}} data-subFragment="acceuil">{{initialisation.buttonValue}}</button>
         </div>
     </section>
 

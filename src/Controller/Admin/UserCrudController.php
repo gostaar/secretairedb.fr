@@ -22,7 +22,7 @@ class UserCrudController extends AbstractCrudController
     {
         return [
             // Bloc : Identifiant utilisateur
-            FormField::addPanel('Identifiant utilisateur')->setIcon('fa fa-id-card'),
+            FormField::addFieldSet('Identifiant utilisateur')->setIcon('fa fa-id-card'),
             IdField::new('id', 'ID')
                 ->onlyOnIndex(),
             EmailField::new('email', 'Email'),
@@ -36,7 +36,7 @@ class UserCrudController extends AbstractCrudController
                 ->setRequired(true),
 
             // Bloc : Informations personnelles
-            FormField::addPanel('Informations personnelles')->setIcon('fa fa-user'),
+            FormField::addFieldSet('Informations personnelles')->setIcon('fa fa-user'),
 
             // Nom et Entreprise côte à côte
             FormField::addRow(),
@@ -68,12 +68,12 @@ class UserCrudController extends AbstractCrudController
                 ->setColumns(6),
 
             // Bloc : Informations professionnelles
-            FormField::addPanel('Informations professionnelles')->setIcon('fa fa-building'),
+            FormField::addFieldSet('Informations professionnelles')->setIcon('fa fa-building'),
             TextField::new('siret', 'Numéro SIRET')
                 ->onlyOnForms(),
 
             // Bloc : Relations avec d'autres entités
-            FormField::addPanel('Relations avec d\'autres entités')->setIcon('fa fa-link'),
+            FormField::addFieldSet('Relations avec d\'autres entités')->setIcon('fa fa-link'),
             AssociationField::new('services', 'Services')
                 ->setFormTypeOptions(['by_reference' => false])
                 ->autocomplete(),

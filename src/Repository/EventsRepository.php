@@ -63,4 +63,23 @@ class EventsRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    public function getUserEvents(int $userId, string $serviceName)
+    {
+        $events = $this->createQueryBuilder('e')
+            ->join('e.user', 'u')
+            ->andWhere('u.id = :userId')  
+            ->setParameter('userId', $userId)
+            ->join('e.services', 's')
+            ->andWhere('s.name = :serviceName')
+            ->setParameter('serviceName', $serviceName)  
+            ->getQuery()
+            ->getResult(); 
+
+        usort($events, function ($event1, $event2) {
+            return $event1->getStart()->getTimestamp() - $event2->getStart()->getTimestamp();
+        });
+        
+        return $events;
+    }
 }

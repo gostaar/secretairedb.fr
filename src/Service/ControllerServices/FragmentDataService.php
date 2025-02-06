@@ -10,14 +10,15 @@ use App\Repository\DevisRepository;
 use App\Repository\FactureLigneRepository;
 use App\Repository\DevisLigneRepository;
 use App\Repository\IdentifiantsRepository;
+use App\Repository\GoogleTokenRepository;
+use App\Repository\EventsRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Google_Client;
+use Google_Service_Calendar;
 
 class FragmentDataService
 {
-    private FormService $formService;
-    private RedisService $redisService;
-    private RouteDataService $routeDataService;
     private RepertoireRepository $repertoireRepository;
     private DossierRepository $dossierRepository;
     private ServicesRepository $serviceRepository;
@@ -26,11 +27,10 @@ class FragmentDataService
     private FactureLigneRepository $factureLigneRepository;
     private DevisLigneRepository $devisLigneRepository;
     private IdentifiantsRepository $identifiantsRepository;
+    private EventsRepository $eventsRepository;
+    private GoogleTokenRepository $googleTokenRepository;
 
     public function __construct(
-        FormService $formService,
-        RedisService $redisService,
-        RouteDataService $routeDataService,
         RepertoireRepository $repertoireRepository,
         DossierRepository $dossierRepository,
         ServicesRepository $serviceRepository,
@@ -40,10 +40,10 @@ class FragmentDataService
         DevisRepository $devisRepository,
         DevisLigneRepository $devisLigneRepository,
         IdentifiantsRepository $identifiantsRepository,
+        EventsRepository $eventsRepository,
+        GoogleTokenRepository $googleTokenRepository,
+        string $googleCredentials,
     ) {
-        $this->formService = $formService;
-        $this->redisService = $redisService;
-        $this->routeDataService = $routeDataService;
         $this->repertoireRepository = $repertoireRepository;
         $this->dossierRepository = $dossierRepository;
         $this->serviceRepository = $serviceRepository;
@@ -53,24 +53,21 @@ class FragmentDataService
         $this->devisRepository = $devisRepository;
         $this->devisLigneRepository = $devisLigneRepository;
         $this->identifiantsRepository = $identifiantsRepository;
+        $this->eventsRepository = $eventsRepository;
+        $this->googleTokenRepository = $googleTokenRepository;
+        $this->googleCredentials = $googleCredentials;
     }
 
-    public function getFragmentData(Request $request, ?string $fragment, ?int $dossierId, $user, $documentId, $repertoireId): array
+    public function getFragmentData(?int $dossierId, $user, ?int $documentId, ?int $repertoireId, ?string $service): array
     {
-        $fragment = $fragment === null ? '' : $fragment;
-        $this->updateNavigationSession($request, $fragment, $dossierId);
-        $staticData = $this->routeDataService->getStaticData($user, $fragment);
-        $dynamicData = $this->routeDataService->getFormData($fragment);;
-
-        $fragmentMapping = $this->routeDataService->getFragmentMapping($fragment);
-
         $services = $this->serviceRepository->getUserServices($user->getId());
-        $dossiers = $this->dossierRepository->getUserDossiers($user->getId(), $fragmentMapping);
-        // dd($dossierId);
+        $dossiers = $service !== null ? $this->dossierRepository->getUserDossiers($user->getId(), $service) : null;
+
         $repertoires = $dossierId === null ? null : $this->repertoireRepository->getUserDossierRepertoires($user->getId(), $dossierId);
         $repertoire = $repertoireId === null ? null : $this->repertoireRepository->find($repertoireId);
         $documents = $dossierId === null ? null : $this->documentsRepository->getUserDossierDocument($user->getId(), $dossierId);
         $document = $documentId === null ? null : $this->documentsRepository->find($documentId);
+        $events = $service === null ? null : $this->eventsRepository->getUserEvents($user->getId(), $service);
         $dossier = $dossierId === null ? null : $this->dossierRepository->find($dossierId);
         $facturesRepo = $this->factureRepository->getUserFactures($user->getId());
         $factures = array_map(function($facture) {
@@ -85,8 +82,13 @@ class FragmentDataService
             return $devisArray;
         }, $devisRepo);
         $identifiants = $this->identifiantsRepository->getUserIdentifiants($user->getId());
+        
+        //Google
+        $isTokenValid = false;
+        $googleToken = $this->googleTokenRepository->findValidTokenByUser($user);
+       
 
-        return array_merge($staticData, $dynamicData, [
+        return [
             'services' => $services,
             'dossiers' => $dossiers,
             'dossier' => $dossier,
@@ -98,43 +100,37 @@ class FragmentDataService
             'factures' => $factures,
             'devis' => $devis,
             'identifiants' => $identifiants,
+            'events' => $events,
+            'isTokenValid' => $isTokenValid,
+        ];
+    }
+
+    public function fetchGoogleCalendarEvents(string $accessToken): array
+    {
+        $client = new Google_Client();
+        $client->setAuthConfig($this->googleCredentials);
+        $client->setScopes(['https://www.googleapis.com/auth/calendar']);
+        $client->setAccessType('offline');
+        $client->setPrompt('select_account consent');
+        $client->setAccessToken($accessToken);
+
+        $calendarService = new Google_Service_Calendar($client);
+        $events = $calendarService->events->listEvents('primary', [
+            'timeMin' => date('c'),
+            'maxResults' => 10,
+            'singleEvents' => true,
+            'orderBy' => 'startTime'
         ]);
+
+        return array_map(function ($event) {
+            return [
+                'id' => $event->getId(),
+                'summary' => $event->getSummary(),
+                'start' => $event->getStart()->getDateTime() ?? $event->getStart()->getDate(),
+                'end' => $event->getEnd()->getDateTime() ?? $event->getEnd()->getDate(),
+                'location' => $event->getLocation(),
+                'description' => $event->getDescription(),
+            ];
+        }, $events->getItems());
     }
-
-    private function updateNavigationSession(Request $request, string $fragment, ?int $dossierId): void
-    {
-        $request->getSession()->set('previous_fragment', $fragment);
-        $request->getSession()->set('previous_dossier_id', $dossierId);
-    }
-
-    private function getStaticDataFromCache($user, $fragment): array
-    {
-        $cacheKey = 'staticData_' . md5($user->getId());
-        $staticData = $this->redisService->get($cacheKey);
-
-        if (!$staticData) {
-            $staticData = $this->routeDataService->getStaticData($user, $fragment);
-            $this->redisService->set($cacheKey, serialize($staticData));
-        } else {
-            $staticData = unserialize($staticData);
-        }
-
-        return $staticData;
-    }
-
-    private function getDynamicDataFromCache(string $fragment, ?int $dossierId): array
-    {
-        $cacheKey = 'dynamicData_' . md5($fragment . $dossierId);
-        $cachedData = $this->redisService->get($cacheKey);
-
-        if (!$cachedData) {
-            $dynamicData = $this->routeDataService->getFormData($fragment);
-            $this->redisService->set($cacheKey, serialize($dynamicData));
-        } else {
-            $dynamicData = unserialize($cachedData);
-        }
-
-        return $dynamicData;
-    }
-
 }

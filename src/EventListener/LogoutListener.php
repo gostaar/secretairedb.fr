@@ -5,16 +5,13 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Http\Event\LogoutEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use App\Service\ControllerServices\RedisService;
 
 class LogoutListener implements EventSubscriberInterface
 {
-    private $redisService;
     private $requestStack;
 
-    public function __construct(RedisService $redisService, RequestStack $requestStack)
+    public function __construct(RequestStack $requestStack)
     {
-        $this->redisService = $redisService;
         $this->requestStack = $requestStack;
     }
 
@@ -22,31 +19,31 @@ class LogoutListener implements EventSubscriberInterface
     public function onLogout(LogoutEvent $event): void
     {
         $token = $event->getToken();
-        if ($token && $token->getUser()) {
-            $this->clearCacheOnLogout($token->getUser());
-        }
+        // if ($token && $token->getUser()) {
+        //     $this->clearCacheOnLogout($token->getUser());
+        // }
     }
 
-    private function clearCacheOnLogout($user): void
-    {
-        $this->redisService->delete('staticData_' . md5($user->getId()));
-        $userDataKeys = $this->redisService->keys('user*');
-        foreach ($userDataKeys as $key) {
-            $this->redisService->delete($key);
-        }
-        $dynamicDataKeys = $this->redisService->keys('dynamicData_*');
-        foreach ($dynamicDataKeys as $key) {
-            $this->redisService->delete($key);
-        }
-        $sfKeys = $this->redisService->keys('sf_*');
-        foreach ($sfKeys as $key) {
-            $this->redisService->delete($key);
-        }
+    // private function clearCacheOnLogout($user): void
+    // {
+    //     $this->redisService->delete('staticData_' . md5($user->getId()));
+    //     $userDataKeys = $this->redisService->keys('user*');
+    //     foreach ($userDataKeys as $key) {
+    //         $this->redisService->delete($key);
+    //     }
+    //     $dynamicDataKeys = $this->redisService->keys('dynamicData_*');
+    //     foreach ($dynamicDataKeys as $key) {
+    //         $this->redisService->delete($key);
+    //     }
+    //     $sfKeys = $this->redisService->keys('sf_*');
+    //     foreach ($sfKeys as $key) {
+    //         $this->redisService->delete($key);
+    //     }
 
-        // Supprimer d'autres caches dynamiques si nécessaire
-        // Exemple :
-        // $this->redisService->del('dynamicData_' . md5($user->getId()));
-    }
+    //     // Supprimer d'autres caches dynamiques si nécessaire
+    //     // Exemple :
+    //     // $this->redisService->del('dynamicData_' . md5($user->getId()));
+    // }
 
     // Retourne les événements auxquels ce listener s'abonne
     public static function getSubscribedEvents(): array

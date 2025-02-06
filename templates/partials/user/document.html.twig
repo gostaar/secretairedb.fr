@@ -1,123 +1,159 @@
-<!-- Main Content -->
-<div class="col-md-12">
-    <div class="card shadow-sm">
-         <div class="card-header mb-2">
-            <h4 class="m-3">{{ dossier.name }}</h4>
-        </div>
-        <div class="card-body d-flex align-items-center flex-column">
-           <div class="col-md-12">
-                {% include 'partials/user/models/searchModel.html.twig' with {
-                    'formViews': formViews,
-                    'fragment': fragment,
-                    'dossier' : dossier,
-                } only %}
-            </div>
+{% extends 'base.html.twig' %}
 
-                <div class="col-12 d-flex justify-content-start" id="document-container">
-                {% for document in documents %}
-                        <div class="document d-flex flex-column align-items-center p-1" style="position: relative; width: 130px;">
-                            <button 
-                                type="button" 
-                                data-id="{{ document.id }}"
-                                data-document="{{ document.id }}" 
-                                data-fragment='link-DocumentEdit' 
-                                data-action="edit" 
-                                class="btn btn-secondary change-fragment"
-                                style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: transparent; border: none; z-index: 1; padding: 0;">
-                            </button>
+{% block title %}Dashboard utilisateur{% endblock %}
 
-                            {% if document.name ends with '.pdf' %}
-                                <i class="far fa-file-pdf text-danger fa-3x"></i>
-                            {% elseif document.name ends with '.jpg' or document.name ends with '.png' %}
-                                <i class="far fa-file-image text-primary fa-3x"></i>
-                            {% elseif document.name ends with '.txt' %}
-                                <i class="far fa-file text-muted fa-3x" ></i>
-                            {% elseif document.name ends with '.xls' or document.name ends with '.xlsx' %}
-                                <i class="far fa-file-excel text-success fa-3x"></i>
-                            {% elseif document.name ends with '.doc' or document.name ends with '.docx' %}
-                                <i class="far fa-file-word text-info fa-3x"></i>
+{% block body %}
+    <div id="userContent" class="custom-bg d-flex flex-column min-vh-100">
+        {% include 'userPage/_header.html.twig' %}
+        <main id="fragmentContent" class="container d-flex flex-column justify-content-start flex-grow-1 py-4">
+            {% include 'partials/flash.html.twig' %}
+        <!-- Main Content -->
+        <div class="col-md-12">
+            <div class="card shadow-sm">
+                <div class="card-header mb-2">
+                    <h4 class="m-3">{{ dossier.name }}</h4>
+                </div>
+                <div class="card-body d-flex align-items-center flex-column">
+                  <div class="col-md-12">
+                        {% include 'partials/user/models/searchModel.html.twig' with {
+                            'formSearch' : formSearch, 
+                            'dossier' : dossier,
+                        } only %}
+                    </div>
+
+                        <div class="col-12 d-flex justify-content-start flex-wrap" id="document-container">
+                        {% for document in documents %}
+                                <div class="document d-flex flex-column align-items-center p-1" style="position: relative; width: 130px;">
+                                    <a 
+                                        href="{{ path('document', {'service': dossier.services, 'dossierId': dossier.id, 'documentId' : document.id}) }}"
+                                        class="btn btn-secondary"
+                                        style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: transparent; border: none; z-index: 1; padding: 0;">
+                                    </a>
+
+                                    {% if document.name ends with '.pdf' %}
+                                        <i class="far fa-file-pdf text-danger fa-3x"></i>
+                                    {% elseif document.name ends with '.jpg' or document.name ends with '.png' %}
+                                        <i class="far fa-file-image text-dark fa-3x"></i>
+                                    {% elseif document.name ends with '.txt' %}
+                                        <i class="far fa-file text-dark fa-3x" ></i>
+                                    {% elseif document.name ends with '.xls' or document.name ends with '.xlsx' %}
+                                        <i class="far fa-file-excel text-success fa-3x"></i>
+                                    {% elseif document.name ends with '.doc' or document.name ends with '.docx' %}
+                                        <i class="far fa-file-word text-primary fa-3x"></i>
+                                    {% else %}
+                                        <i class="far fa-file text-dark fa-3x"></i>
+                                    {% endif %}
+                                    <p class='text-black text-center'>{{ document.name }}</p>
+                                </div>
+                              
                             {% else %}
-                                <i class="far fa-file text-dark fa-3x"></i>
-                            {% endif %}
-                            <p class='text-black text-center'>{{ document.name }}</p>
-                        </div>
-                       
-                    {% else %}
-                    <div class="col-12 d-flex justify-content-center">
-                        <div class="text-center">
-                            <div style="position: relative; display: inline-block;">
-                                <i class="fas fa-file-alt fa-5x text-center m-5"></i>
-                                <div style="position: absolute; 
-                                        top: 0; left: 0; 
-                                        right: 0; bottom: 0; 
-                                        background-color: rgba(255, 255, 255, 0.7); 
-                                        z-index: 1;">
+                            <div class="col-12 d-flex justify-content-center">
+                                <div class="text-center">
+                                    <div style="position: relative; display: inline-block;">
+                                        <i class="fas fa-file-alt fa-5x text-center m-5"></i>
+                                        <div style="position: absolute; 
+                                                top: 0; left: 0; 
+                                                right: 0; bottom: 0; 
+                                                background-color: rgba(255, 255, 255, 0.7); 
+                                                z-index: 1;">
+                                        </div>
+                                    </div>
+                                    <h1 style="color: grey;">Aucun Documents</h1>
+                                    <p class="text-muted">À cet endroit, vous pourrez consulter vos documents.</p>
                                 </div>
                             </div>
-                            <h1 style="color: grey;">Aucun Documents</h1>
-                            <p class="text-muted">À cet endroit, vous pourrez consulter vos documents.</p>
-                        </div>
+                          
+                            {% endfor %}</div>
+
                     </div>
-                   
-                    {% endfor %}</div>
-
-            </div>
-            <div class='d-flex justify-content-center mb-3'>
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#documentModal" data-action="add">
-                    Ajouter un fichier
-                </button>
+                    <div class='d-flex justify-content-center mb-3'>
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#documentModal" data-action="add">
+                            Ajouter un fichier
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-</div>
 
-<div id="contextMenu" class="dropdown-menu d-none" style="position: absolute;">
-    <button class="btn dropdown-item change-fragment" id="opendDocument">Ouvrir le document</button>
-    <a class="dropdown-item" href="javascript:void(0)" id="renameDocument">Renommer le document</a>
-    <a class="dropdown-item" href="javascript:void(0)" id="deleteDocument">Supprimer le document</a>
-</div>
-
-<div class="modal fade" id="documentModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Créer un nouveau Document</h5>
-      </div>
-      <div class="modal-body">
-          {{ form_start(formViews.addAddDocument) }}
-          <div class="form-group">
-            {{ form_row(formViews.addAddDocument.name) }}
-          </div>
-          <div class='d-flex justify-content-center gap-3'>
-            <button type="button" class="btn btn-secondary mb-3" data-dismiss="modal">Annuler</button>
-            {# <button type="submit" class="btn btn-primary mb-3">Enregistrer</button> #}
-            {{ form_row(formViews.addAddDocument.submit) }}
-          </div>
-          {{ form_end(formViews.addAddDocument) }}
-      </div> 
-    </div>
-  </div>
-</div>
-
-<div class="modal fade" id="renameDocumentsModal" tabindex="-1" role="dialog" aria-labelledby="renameDocumentModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="renameDocumentModalLabel">Renommer le Document</h5>
-      </div>
-      <div class="alert m-0" id="responseMessagediv" role="alert" style='display:none;'>
-          <span id="responseMessage"></span>
-      </div>
-      <div class="modal-body">
-        <div class="form-group">
-          <label for="newDocumentName" class="col-form-label">Entrez le nouveau nom du Document :</label>
-          <input type="text" class="form-control" id="newDocumentsName" placeholder="Nouveau nom du Document">
+        <div id="contextMenu" class="dropdown-menu d-none" style="position: absolute;">
+            <button class="btn dropdown-item" id="opendDocument">Ouvrir le document</button>
+            <a class="dropdown-item" href="javascript:void(0)" id="renameDocument">Renommer le document</a>
+            <a class="dropdown-item" href="javascript:void(0)" id="deleteDocument">Supprimer le document</a>
         </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
-        <button type="submit" class="btn btn-primary" id="submitNewDocumentsName">Renommer</button>
-      </div>
+
+        <div class="modal fade" id="documentModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Créer un nouveau Document</h5>
+              </div>
+              <div class="modal-body">
+                {{ form_start(formDocument) }}
+                  <fieldset>
+                    <p>Selectionner un type de fichier:</p>
+                    <div class='d-flex justify-content-around mt-3'>
+                      <div class='d-flex flex-column'>
+                        <label class="mb-3" for="pdf"><i class="far fa-file-pdf text-danger fa-3x"></i></label>
+                        <input class="mb-3" type="radio" id="pdf" name="type" value=".pdf"/>
+                      </div>
+                      <div class='d-flex flex-column'>
+                        <label class="mb-3" for="jpg"><i class="far fa-file-image text-dark fa-3x"></i></label>
+                        <input class="mb-3" type="radio" id="jpg" name="type" value=".jpg" />
+                      </div>
+                      <div class='d-flex flex-column'>
+                        <label class="mb-3" for="doc"><i class="far fa-file-word text-primary fa-3x" ></i></label>
+                        <input class="mb-3" type="radio" id="doc" name="type" value=".doc" checked/>
+                      </div>
+                      <div class='d-flex flex-column'>
+                        <label class="mb-3" for="xls"><i class="far fa-file-excel text-success fa-3x"></i></label>
+                        <input class="mb-3" type="radio" id="xls" name="type" value=".xls" />
+                      </div>
+                      <div class='d-flex flex-column'>
+                        <label class="mb-3" for="txt"><i class="far fa-file text-dark fa-3x"></i></label>
+                        <input class="mb-3" type="radio" id="txt" name="type" value=".txt" />
+                      </div>
+                    </div>
+
+                  </fieldset>
+        
+                  <div class="form-group">
+                    {{ form_row(formDocument.name) }}
+                  </div>
+                  <div class='d-flex justify-content-center gap-3'>
+                    <button type="button" class="btn btn-secondary mb-3" data-dismiss="modal">Annuler</button>
+                    {# <button type="submit" class="btn btn-primary mb-3">Enregistrer</button> #}
+                    {{ form_row(formDocument.submit) }}
+                  </div>
+                {{ form_end(formDocument) }}
+              </div> 
+            </div>
+          </div>
+        </div>
+
+        <div class="modal fade" id="renameDocumentsModal" tabindex="-1" role="dialog" aria-labelledby="renameDocumentModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="renameDocumentModalLabel">Renommer le Document</h5>
+              </div>
+              <div class="alert m-0" id="responseMessagediv" role="alert" style='display:none;'>
+                  <span id="responseMessage"></span>
+              </div>
+              <div class="modal-body">
+                <div class="form-group">
+                  <label for="newDocumentName" class="col-form-label">Entrez le nouveau nom du Document :</label>
+                  <input type="text" class="form-control" id="newDocumentsName" placeholder="Nouveau nom du Document">
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                <button type="submit" class="btn btn-primary" id="submitNewDocumentsName">Renommer</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        </main>
+
+        {% include 'userPage/_footer.html.twig' %}
     </div>
-  </div>
-</div>
+{% endblock %}

@@ -11,13 +11,6 @@ use Symfony\Component\Mime\Email;
 
 class JobController extends AbstractController
 {
-    // Route pour afficher le formulaire
-    #[Route('/jobs', name: 'jobs')]
-    public function showForm(): Response
-    {
-        return $this->render('jobs/jobs.html.twig');
-    }
-
     // Route pour gérer l'envoi du formulaire de candidature
     #[Route('/jobs/send', name: 'jobs_handler', methods: ['POST'])]
     public function handleContactForm(Request $request, MailerInterface $mailer): Response
@@ -28,16 +21,14 @@ class JobController extends AbstractController
         $job = $request->request->get('job');
         $cv = $request->files->get('cv');
 
-        // Validation basique
-        if (empty($name) || empty($email) || empty($job) || !$cv) {
-            $this->addFlash('error', 'Tous les champs sont obligatoires.');
-            return $this->redirectToRoute('jobs');
+        if($job === "Autre"){
+            $job = $request->request->get('customJob');
         }
 
         // Création d'un email pour la candidature
         $emailMessage = (new Email())
-            ->from('noreply@secretairepro.com')
-            ->to('contact@secretairepro.com') // Adresse où tu souhaites recevoir la candidature
+            ->from('contact@dbsecretaire.fr')
+            ->to('dbsecretaire@gmail.com') // Adresse où tu souhaites recevoir la candidature
             ->subject('Nouvelle candidature pour le poste de ' . $job)
             ->html('<p>Nom : ' . $name . '</p>
                     <p>Email : ' . $email . '</p>
@@ -56,6 +47,6 @@ class JobController extends AbstractController
         }
 
         // Redirection vers la page d'affichage des jobs
-        return $this->redirectToRoute('jobs');
+        return $this->redirect($this->generateUrl('subfragment', ['fragment' => 'part', 'subfragment' => 'job']));
     }
 }

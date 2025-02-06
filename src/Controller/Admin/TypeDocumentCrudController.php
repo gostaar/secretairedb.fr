@@ -21,7 +21,7 @@ class TypeDocumentCrudController extends AbstractCrudController
         return [
             TextField::new('name'),
             
-            FormField::addPanel('Relations avec d\'autres entités')->setIcon('fa fa-link'),
+            FormField::addFieldSet('Relations avec d\'autres entités')->setIcon('fa fa-link'),
             AssociationField::new('documents')
                 ->setFormTypeOptions([
                     'by_reference' => false, 

@@ -1,56 +1,163 @@
+{% extends 'base.html.twig' %}
 
+{% block title %}Dashboard utilisateur{% endblock %}
 
-            <!-- Main Content -->
-            <div class="flex-grow-1 p-4">
-                
-                {# <div class="container bg-white border rounded mb-5 p-4">
-                                  
-                    <h2 class="text-center mb-2">Créer un événement</h2>
-                
-                    <form id="create-event-form">
-                        <div class="mb-3">
-                            <label for="event-title" class="form-label">Titre :</label>
-                            <input type="text" id="event-title" name="title" class="form-control" required>
-                        </div>
-                
-                        <div class="mb-3">
-                            <label for="event-description" class="form-label">Description :</label>
-                            <textarea id="event-description" name="description" class="form-control"></textarea>
-                        </div>
+{% block body %}
+    <div id="userContent" class="custom-bg d-flex flex-column min-vh-100">
+        {% include 'userPage/_header.html.twig' %}
+        <main id="fragmentContent" class="container d-flex flex-column justify-content-start flex-grow-1 py-4">
+        
+        <!-- Main Content -->
 
-                        <div class="mb-3">
-                            <label for="event-location" class="form-label">Lieu :</label>
-                            <textarea id="event-location" name="location" class="form-control"></textarea>
-                        </div>
-                
-                        <div class="mb-3">
-                            <label for="event-start-date" class="form-label">Date de début :</label>
-                            <input type="datetime-local" id="event-start-date" name="start" class="form-control" required>
-                        </div>
-                
-                        <div class="mb-3">
-                            <label for="event-end-date" class="form-label">Date de fin :</label>
-                            <input type="datetime-local" id="event-end-date" name="end" class="form-control" required>
-                        </div>
-                
-                        <button type="submit" id="create-event-button" class="btn btn-primary w-100 d-none">Créer l'événement</button>
-                    </form>
-                    <!-- Bouton "Authorize" avec logo Google -->
-                    <button id="authorize_button" class="btn btn-outline-danger w-100 d-flex align-items-center justify-content-center mt-2 d-none">
-                        <img src="{{ asset('build/images/google.png') }}" alt="Google logo" style="width: 20px; margin-right: 10px;" >
-                        Connexion avec Google
-                    </button>
-                
-                    <!-- Bouton "Sign Out" -->
-                    <button id="signout_button" class="btn btn-outline-secondary w-100 mt-2 d-none">Déconnexion</button>
-                    <div id='message'>
-                        <div id="status-message" class="mt-3 text-center d-none"></div>
-                        
-                        <pre id="content" style="white-space: pre-wrap;" class="d-none"></pre>
+            <div class="container bg-white border rounded p-4">
 
-                    </div>
-
+                <div class="d-flex justify-content-between align-items-center">
+                    <ul class="nav nav-tabs" id="myTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link active" id="calendar-tab" data-bs-toggle="tab" href="#calendar" role="tab" aria-controls="calendar" aria-selected="true">Agenda</a>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <a class="nav-link" id="list-tab" data-bs-toggle="tab" href="#list" role="tab" aria-controls="list" aria-selected="false">Liste</a>
+                        </li>
+                    </ul>
+                   
                 </div>
-                
-                {% include 'partials/Agenda/_agendaTab.html.twig' %} #}
-</div>
+                <div class="tab-content bg-white border rounded mb-5 p-4" id="myTabContent">
+                    <div class="tab-pane fade show active" id="calendar" role="tabpanel" aria-labelledby="calendar-tab">
+                        <div class="container card mt-3 ">
+                            <div class="card-body">
+                                <div id="calendar"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Modale pour afficher les détails de l'événement -->
+                    {% for event in events %}
+                    <div class="modal fade" id="eventDetailsModal" tabindex="-1" aria-labelledby="eventDetailsModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="eventDetailsModalLabel">Détails de l'événement</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+
+                                <div class="modal-body">
+                                    <p><strong>Évènement: </strong>{% if event.title is defined %}{{ event.title}}{% else %}{{event.summary}}{% endif %}</p>
+                                    <p><strong>Description: </strong>{% if event.description is empty %}Aucune description{% else %}{{ event.description }}{% endif %}</p>
+                                    <p><strong>Lieu: </strong>{% if event.location is empty %}Aucun lieu défini{% else %}{{ event.location }}{% endif %}</p>
+                                    <p><strong>Date de début: </strong>{% if event.start is empty %}Aucune date de début{% else %}{{ event.start|date('d/m/Y H:i') }}{% endif %}</p>
+                                    <p><strong>Date de fin: </strong>{% if event.end is empty %}Aucune date de début{% else %}{{ event.end|date('d/m/Y H:i') }}{% endif %}</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    <div class="tab-pane fade" id="list" role="tabpanel" aria-labelledby="list-tab">
+                        <div class="container mt-3">
+                            <h5>Évènements à venir</h5>
+                            <ul class="list-group list-group-flush">
+                                {% for event in events %}
+                                    <li class="list-group-item cursor-pointer" data-bs-toggle="modal" data-bs-target="#eventDetailsModal">
+                                        <strong>{% if event.title is defined %}{{ event.title}}{% else %}{{event.summary}}{% endif %}</strong><br>
+                                        <small>{{ event.start|date('d/m/Y H:i') }}</small><br>
+                                    </li>
+                                {% else %}
+                                    <li>Aucun événement à venir.</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-center gap-2">
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#eventModal">Créer un évènement</button>
+                    {% if origin == "Google" %}<a class='btn btn-danger' href='{{path('google_disconnect')}}'>Se déconnecter</a>{% endif %}
+                </div>
+            </div>
+            <div class="modal fade" id="eventModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Créer un nouvel évènement</h5>
+                        </div>
+                        <div class="modal-body">
+                        {% if formEvent is defined %}
+                            {{ form_start(formEvent) }}
+                            <div class="form-group">
+                                {{ form_rest(formEvent) }}
+                            </div>
+                            <div class='d-flex justify-content-center gap-3'>
+                                <button type="button" class="btn btn-secondary mb-3" data-dismiss="modal">Annuler</button>
+                                <button type="submit" class="btn btn-primary mb-3" >Enregistrer</button>
+                            </div>
+                            {{ form_end(formEvent) }}
+                        {% endif %}
+                        </div> 
+                    </div>
+                </div>
+            </div>
+
+             <!-- Modal Structure -->
+            <div id="eventDetailModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="ModalLabel">Détails</h5>
+                        </div>
+                        <div class='modal-body'>
+                            <p id="modalTitle"></p>
+                            <div id="modalDetails"></div>
+                            <button type="button" class="btn btn-secondary mb-3" data-dismiss="modal">Fermer</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    const calendarEl = document.getElementById('calendar');
+                    const eventsData = {{ events | json_encode | raw }}; 
+                    const calendar = new FullCalendar.Calendar(calendarEl, {
+                        events: eventsData,
+                        locale: 'fr',
+                        eventContent: function(info) {
+                            const title = info.event.extendedProps.summary || info.event.title;
+                            
+                            return {
+                                html: `
+                                    <div class="fc-event-title fw-bold">${title}</div>
+                                `
+                            };
+                        },
+                        eventDidMount: function(info) {
+                            info.el.style.backgroundColor = '#3788d8';
+                            info.el.style.color = 'white';
+                            info.el.style.cursor = 'pointer'; 
+                        },
+                        eventClick: function(info) {
+                            // Ouvrir la modal avec les informations de l'événement
+                            const modalTitle = document.getElementById('modalTitle');
+                            const modalDetails = document.getElementById('modalDetails');
+                            
+                            modalTitle.innerHTML = `<strong>Titre: </strong>${info.event.extendedProps.summary || info.event.title}`;
+
+                            modalDetails.innerHTML = `
+                                <p><strong>Description:</strong> ${info.event.extendedProps.description || 'Aucune description'}</p>
+                                <p><strong>Lieu:</strong> ${info.event.extendedProps.location || 'Aucune localisation'}</p>
+                                <p><strong>Date de début:</strong> ${info.event.start.toLocaleString() || 'Aucune date de début'}</p>
+                                <p><strong>Date de fin:</strong> ${info.event._instance.range.end ? info.event._instance.range.end.toLocaleString() : 'Aucune date de fin'}</p>
+                            `;
+                            
+                            const modal = new bootstrap.Modal(document.getElementById('eventDetailModal'));
+                            modal.show();
+                        }
+                    });
+
+                    calendar.render();
+                });
+            </script>
+        </main>
+        {% include 'userPage/_footer.html.twig' %}
+    </div>
+{% endblock %}

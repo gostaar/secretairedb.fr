@@ -21,12 +21,12 @@ class RepertoireCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         return [
-            FormField::addPanel('Informations Générales')->setIcon('fa fa-info-circle'),
+            FormField::addFieldSet('Informations Générales')->setIcon('fa fa-info-circle'),
             FormField::addRow(),
             TextField::new('nom', 'Nom du Répertoire')
                 ->setColumns(6),
 
-            FormField::addPanel('Adresse')->setIcon('fa fa-map-marker-alt'),
+            FormField::addFieldSet('Adresse')->setIcon('fa fa-map-marker-alt'),
             FormField::addRow(),
             TextField::new('adresse', 'Adresse')
                 ->onlyOnForms()
@@ -42,7 +42,7 @@ class RepertoireCrudController extends AbstractCrudController
                 ->onlyOnForms()
                 ->setColumns(6),
 
-            FormField::addPanel('Contact')->setIcon('fa fa-phone'),
+            FormField::addFieldSet('Contact')->setIcon('fa fa-phone'),
             FormField::addRow(),
             TextField::new('telephone', 'Téléphone')
                 ->onlyOnForms()
@@ -54,7 +54,7 @@ class RepertoireCrudController extends AbstractCrudController
                 ->onlyOnForms()
                 ->setColumns(4),
 
-            FormField::addPanel('Entreprise')->setIcon('fa fa-building'),
+            FormField::addFieldSet('Entreprise')->setIcon('fa fa-building'),
             FormField::addRow(),
             TextField::new('siret', 'SIRET')
                 ->onlyOnForms()
@@ -63,7 +63,7 @@ class RepertoireCrudController extends AbstractCrudController
                 ->onlyOnForms()
                 ->setColumns(6),
 
-            FormField::addPanel('Relations avec d\'autres entités')->setIcon('fa fa-link'),
+            FormField::addFieldSet('Relations avec d\'autres entités')->setIcon('fa fa-link'),
             FormField::addRow(),
             AssociationField::new('user', 'Utilisateur associé')
                 ->setFormTypeOptions(['by_reference' => true])

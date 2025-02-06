@@ -28,11 +28,11 @@
                             <h2><a href="{{ path('app_logout') }}" class="text-warning" >Secrétaire Pro</a></h2>
                         </div>
                         <div class="user-avatar d-flex mb-4 justify-content-center align-items-center gap-3">
-                            <a href="{{ path('user', {fragment: 'link-Profile'}) }}" class="d-flex justify-content-center align-items-center">
+                            <a href="{{ path('profile') }}" class="d-flex justify-content-center align-items-center">
                                 <img src="{{ asset('build/images/avatar.png') }}" alt="Avatar" class="icon-size"/>
                             </a>
                             <div class="d-flex flex-column">
-                                <a href="{{ path('user', {fragment: 'link-Profile'}) }}" class="list-unstyled text-white">{{ app.user.email }}</a>
+                                <a href="{{ path('profile') }}" class="list-unstyled text-white">{{ app.user.email }}</a>
                                 <div class="list-unstyled">
                                     <a href="{{ path('app_logout') }}" class="bt w-100 deconnexion">Déconnexion</a>
                                 </div>

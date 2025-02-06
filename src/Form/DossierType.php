@@ -18,9 +18,6 @@ class DossierType extends AbstractType
     {
         $builder
             ->add('name')
-            ->add('submit', SubmitType::class, [
-                'label' => 'Enregistrer le Dossier',
-            ])
         ;
     }
 
@@ -28,6 +25,11 @@ class DossierType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Dossier::class,
+        ]);
+
+        $resolver->setDefined([
+            'userId', 
+            'serviceId'
         ]);
     }
 }

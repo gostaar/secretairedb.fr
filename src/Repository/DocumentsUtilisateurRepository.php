@@ -64,6 +64,17 @@ class DocumentsUtilisateurRepository extends ServiceEntityRepository
             ->getResult();    
     }
 
+    // public function findDocument($documentId)
+    // {
+    //     return $this->createQueryBuilder('d')
+    //     ->leftJoin('d.images', 'i')  // Jointure avec les images
+    //     ->addSelect('i')             // Sélection des images en plus du document
+    //     ->where('d.id = :id')
+    //     ->setParameter('id', $documentId)
+    //     ->getQuery()
+    //     ->getOneOrNullResult();
+    // }
+
     //    /**
     //     * @return DocumentsUtilisateur[] Returns an array of DocumentsUtilisateur objects
     //     */

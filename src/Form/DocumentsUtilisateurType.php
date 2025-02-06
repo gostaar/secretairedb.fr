@@ -32,8 +32,9 @@ class DocumentsUtilisateurType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $userId = $options['user']->getId();
+        $userId = $options['userId'];
         $user = $this->entityManager->find(User::class, $userId);
+
         $documentId = $options['documentId'];
         $document = $documentId && is_numeric($documentId) ? $this->entityManager->find(\App\Entity\DocumentsUtilisateur::class, $documentId) : null;
         $dossier = $document ? $document->getDossier() : null;
@@ -90,12 +91,6 @@ class DocumentsUtilisateurType extends AbstractType
                 'label' => false,
                 'attr' => ['class' => 'border-0']
             ])
-            ->add('user', EntityType::class, [
-                'class' => \App\Entity\User::class,
-                'data' => $user,
-                'label' => false,
-                'attr' => ['style' => 'display: none;'],
-            ])
             ->add('dossier', EntityType::class, [
                 'class' => Dossier::class,
                 'choices' => $dossiers,
@@ -141,8 +136,9 @@ class DocumentsUtilisateurType extends AbstractType
         ]);
         
         $resolver->setDefined([
-            'user', 
-            'documentId'
+            'userId',
+            'documentId',
+            'dossierId',
         ]);
 
     }

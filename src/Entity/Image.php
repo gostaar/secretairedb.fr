@@ -24,20 +24,7 @@ use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 #[ORM\Entity(repositoryClass: ImageRepository::class)]
 #[ORM\HasLifecycleCallbacks()]
 #[Vich\Uploadable]
-#[ApiResource(
-    normalizationContext: ['groups' => ['image:read']],
-    denormalizationContext: ['groups' => ['image:write']],
-    types: ['https://schema.org/Image'],
-    outputFormats: ['jsonld' => ['application/ld+json']],
-    operations: [
-        new GetCollection(),
-        new Get(),
-        new Post(
-            inputFormats: ['multipart' => ['multipart/form-data']]
-        ),
-        new Delete(),
-    ])
-]
+#[ApiResource]
 
 class Image
 {
@@ -74,7 +61,7 @@ class Image
     private ?string $imageDescription = null;
 
     public function __toString(){
-        return $this->imageName;
+        return $this->slug;
     }
 
     public function getId(): ?int
@@ -87,9 +74,15 @@ class Image
         return $this->imageFile;
     }
 
-    public function setImageFile(?File $image = null)
+    public function setImageFile(?File $imageFile = null)
     {
-        $this->imageFile = $image;
+        $this->imageFile = $imageFile;
+
+        if ($imageFile) {
+            // dd($imageFile);
+            $this->setImageName($imageFile->getFilename());
+            $this->setImageSize($imageFile->getSize());
+        }
 
         return $this;
     }

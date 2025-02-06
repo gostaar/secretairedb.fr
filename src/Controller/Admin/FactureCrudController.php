@@ -34,7 +34,7 @@ class FactureCrudController extends AbstractCrudController
             TextField::new('commentaire'),
             BooleanField::new('is_active', 'Actif')->setFormTypeOption('mapped', false),
             
-            FormField::addPanel('Relations avec d\'autres entités')->setIcon('fa fa-link'),
+            FormField::addFieldSet('Relations avec d\'autres entités')->setIcon('fa fa-link'),
             AssociationField::new('paiements')
                 ->setFormTypeOptions([
                     'by_reference' => false,

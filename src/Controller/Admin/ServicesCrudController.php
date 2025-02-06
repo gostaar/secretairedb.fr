@@ -32,7 +32,7 @@ class ServicesCrudController extends AbstractCrudController
                 ->onlyOnForms(), // Affiché uniquement lors de la création / modification
 
             // Relation avec "Dossier" (un service peut être lié à plusieurs dossiers)
-            FormField::addPanel('Relations avec d\'autres entités')->setIcon('fa fa-link'),
+            FormField::addFieldSet('Relations avec d\'autres entités')->setIcon('fa fa-link'),
             AssociationField::new('dossiers')
                 ->setFormTypeOptions([
                     'by_reference' => false, // Permet de gérer la relation dans le formulaire

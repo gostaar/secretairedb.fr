@@ -17,11 +17,37 @@ export default class extends Controller {
         btn.addEventListener('click', this.addElement);
         
         Array.from(this.element.children).forEach(child => {
-            this.addEditButton(child); // Ajoute le bouton d'édition
-            this.addDeleteButton(child); // Ajoute le bouton de suppression
+            this.applyStyles(child);
+            this.addEditButton(child);
+            this.addDeleteButton(child);
         });
         
         this.element.append(btn);
+    }
+
+    /**
+     * Ajoute les classes Bootstrap et met en forme les éléments existants
+     * 
+     * @param {HTMLElement} item
+     */
+    applyStyles = (item) => {
+        item.classList.add('d-flex', 'align-items-center', 'gap-2', 'border-0', 'rounded');
+
+        // Sélectionne les inputs et applique les classes Bootstrap
+        const inputs = item.querySelectorAll('input, select, textarea');
+        inputs.forEach(input => {
+            input.classList.add('form-control');
+            const parentInput = input.parentElement;
+            if (parentInput) {
+                parentInput.classList.add('col-6', 'px-2');
+            }
+        });
+
+        // Ajoute une classe au premier div trouvé
+        const firstDiv = item.querySelector('div');
+        if (firstDiv) {
+            firstDiv.classList.add('d-flex', 'col-8');
+        }
     }
     
     /**

@@ -1,65 +1,233 @@
-<!-- Main Content -->
-<div class="col-md-12">
-    <div class="card shadow-sm">
-        <div class="card-header mb-2">
-            <h4 class="m-3">{{ serviceLink }}</h4>
-        </div>
-        <div class="card-body">
-            <!-- Barre de recherche -->
-            {% include 'partials/user/models/searchModel.html.twig' with {
-                'formViews': formViews,
-                'fragment': fragment
-            } only %}
-            {% if dossiers is not empty %}
-                <div class="d-flex flex-wrap justify-content-center justify-content-md-start" id="dossier-container">
-                {% for dossier in dossiers %}
-                    <div class="repertoire d-flex flex-column align-items-center p-1" style="position: relative; width: 130px;">
-                        <button 
-                            type="button"
-                            data-id="{{ dossier.id }}"
-                            data-fragment="link-Page{{ serviceLink == 'Repertoire' ? 'Repertoire' : 'Document' }}"
-                            data-dossier='{{dossier.id}}'
-                            class="btn d-flex flex-column flex-start align-items-center text-decoration-none change-fragment"
-                            style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: transparent; border: none; z-index: 1; padding: 0;">
-                        </button>
+{% extends 'base.html.twig' %}
 
-                        <i class="fas fa-folder fa-3x text-center text-warning"></i>
-                        <p class='text-black text-center'>{{ dossier.name }}</p>
-                    </div>
-                {% endfor %}
-                </div>
-            {% else %}
-                <!-- Aucun document -->
-                <div class="text-center">
-                    <div style="position: relative; display: inline-block;">
-                        <i class="fas fa-file-alt fa-5x text-center m-5"></i>
-                        <div style="position: absolute; 
-                                top: 0; left: 0; 
-                                right: 0; bottom: 0; 
-                                background-color: rgba(255, 255, 255, 0.7); 
-                                z-index: 1;">
+{% block title %}Dashboard utilisateur{% endblock %}
+
+{% block body %}
+    <div id="userContent" class="custom-bg d-flex flex-column min-vh-100">
+        {% include 'userPage/_header.html.twig' %}
+        <main id="fragmentContent" class="container d-flex flex-column justify-content-start flex-grow-1 py-4">
+            {% include 'partials/flash.html.twig' %}
+                <!-- Main Content -->
+                <div class="col-md-12">
+                    <div class="card shadow-sm">
+                        <div class="card-header mb-2">
+                            <h4 class="m-3">Service {% if service == "Telephonique" %}Téléphonique{% elseif service == "Repertoire" %}Répertoire{% elseif service == "Numerique" %}Numérique{% else %}{{ service }}{% endif %}</h4>
+                        </div>
+                        <div class="card-body">
+                            <!-- Barre de recherche -->
+                            {% include 'partials/user/models/searchModel.html.twig' with {
+                                'formSearch' : formSearch 
+                            } only %}
+                            {% if dossiers is not empty %}
+                                <div class="d-flex flex-wrap justify-content-center justify-content-md-start" id="dossier-container">
+                                {% for dossier in dossiers %}
+                                    <div class="repertoire d-flex flex-column align-items-center p-1" style="position: relative; width: 130px;">
+                                        <a 
+                                            data-service={{dossier.services}}
+                                            data-name={{dossier.name}}
+                                            data-id={{dossier.id}}
+                                            href="{{ path('dossier', {'service': dossier.services, 'dossierId': dossier.id}) }}"
+                                            class="btn d-flex flex-column flex-start align-items-center text-decoration-none"
+                                            style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: transparent; border: none; z-index: 1; padding: 0;">
+                                        </a>
+
+                                        <i class="fas fa-folder fa-3x text-center text-warning"></i>
+                                        <p class='text-black text-center'>{{ dossier.name }}</p>
+                                    </div>
+                                {% endfor %}
+                                </div>
+                            {% else %}
+                                <!-- Aucun document -->
+                                <div class="text-center">
+                                    <div style="position: relative; display: inline-block;">
+                                        <i class="fas fa-file-alt fa-5x text-center m-5"></i>
+                                        <div style="position: absolute; 
+                                                top: 0; left: 0; 
+                                                right: 0; bottom: 0; 
+                                                background-color: rgba(255, 255, 255, 0.7); 
+                                                z-index: 1;">
+                                        </div>
+                                    </div>
+                                    <h1 style="color: grey;">Aucun dossiers</h1>
+                                    <p class="text-muted">À cet endroit, vous pourrez consulter vos dossiers.</p>
+                                </div>
+                            {% endif %}
+                            
+                            <div class="d-flex justify-content-center mt-4">
+                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#dossierModal">
+                                    Créer un nouveau dossier
+                                </button>
+                            </div>
                         </div>
                     </div>
-                    <h1 style="color: grey;">Aucun dossiers</h1>
-                    <p class="text-muted">À cet endroit, vous pourrez consulter vos dossiers.</p>
                 </div>
-            {% endif %}
-            
-            <div class="d-flex justify-content-center mt-4">
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#dossierModal">
-                    Créer un nouveau dossier
-                </button>
-            </div>
-        </div>
+
+                {% include 'partials/user/Dossiers/_create.html.twig' %}
+
+                {% include 'partials/user/Dossiers/_rename.html.twig' %}
+                
+                <div id="contextMenuDossier" class="dropdown-menu d-none" style="position: absolute;">
+                    <a class="dropdown-item" href="javascript:void(0)" id="openDossier">Ouvrir le dossier</a>
+                    <a class="dropdown-item" href="javascript:void(0)" id="renameDossier">Renommer le dossier</a>
+                    <a class="dropdown-item" href="javascript:void(0)" id="deleteDossier">Supprimer le dossier</a>
+                </div>
+
+                <script>
+                    document.addEventListener("DOMContentLoaded", function () {
+                        document.addEventListener('contextmenu', (e) => {
+                            const target = e.target;
+                            if (target && target.getAttribute('data-id')) {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                const dossierId = target.getAttribute('data-id');
+                                const service = target.getAttribute('data-service');
+                                const name = target.getAttribute('data-name');
+
+                                const ContextMenu = document.getElementById('contextMenuDossier');
+                                const openDossierBtn = document.querySelector('#openDossier');
+
+                                showContextMenu(e, dossierId, ContextMenu, name);
+                                openDossierBtn.setAttribute('href', "{{ path('dossier', {'service': '__SERVICE__', 'dossierId': '__DOSSIER_ID__'}) }}".replace('__SERVICE__', service).replace('__DOSSIER_ID__', dossierId));
+                                openDossierBtn.addEventListener('click', () => {
+                                    ContextMenu.classList.replace('d-block', 'd-none');
+                                });
+                            }
+                        }); 
+
+                        function showContextMenu(e, dossierId, menu, name) {
+                            menu.classList.replace('d-none', 'd-block');
+                            menu.style.left = `${e.pageX}px`;
+                            menu.style.top = `${e.pageY}px`;
+                            setupContextMenuActions(dossierId, menu, name);
+                        }
+
+                        function setupContextMenuActions(dossierId, menu, name) {
+                            setupRenameAction('#renameDossier', dossierId, 'dossiers', 'Nom du dossier mis à jour avec succès !', menu, name);
+                            setupDeleteAction('#deleteDossier', dossierId, 'dossiers', menu);
+                        }
+
+                        function setupRenameAction(selector, dossierId, type, successMessage, menu, name) {
+                            const button = document.querySelector(selector);
+                            if (button) {
+                                button.addEventListener('click', () => {
+                                    const myModal = new bootstrap.Modal(document.getElementById(`rename${capitalize(type)}Modal`));
+                                    
+                                    if (myModal) {
+                                        myModal.show();
+                                        document.getElementById('renameDossierModalLabel').textContent = `Renommer ${name}`
+                                    }
+                                menu.classList.replace('d-block', 'd-none');
+                                });
+                            }
+
+                            const submitButton = document.getElementById(`submitNew${capitalize(type)}Name`);
+                            if (submitButton) {
+                                submitButton.addEventListener('click', () => {
+                                    const newName = document.getElementById(`new${capitalize(type)}Name`).value;
+                                    if (newName) {
+                                        console.log(`/api/${type}/${dossierId}`);
+                                        fetch(`/api/${type}/${dossierId}`, {
+                                            method: 'PATCH',
+                                            headers: { 'Content-Type': 'application/json' },
+                                            body: JSON.stringify({ name: newName }),
+                                        })
+                                        .then(response => response.json(
+                                            console.log(response)
+                                        ))
+                                        .then(data => {
+                                            if (data.id && data.name) {
+                                                updateUI(dossierId, newName);
+                                                showSuccess(successMessage);
+                                                const modal = document.getElementById(`rename${capitalize(type)}Modal`);
+                                                if (modal) {
+                                                    modal.classList.remove('show');
+                                                }
+
+                                                location.reload(); 
+                                            } else {
+                                                showError('Échec de la mise à jour.');
+                                            }
+                                        })
+                                        .catch(() => showError('Erreur lors de la mise à jour.'));
+                                    }
+                                });
+                            }
+                        }
+
+                        function setupDeleteAction(selector, dossierId, type, menu) {
+                            const button = document.querySelector(selector);
+                            if (button) {
+                                button.addEventListener('click', () => {
+                                    if (confirm(`Êtes-vous sûr de vouloir supprimer ce ${type.slice(0, -1)} ?`)) {
+                                        fetch(`/api/${type}/${dossierId}`, { method: 'DELETE' })
+                                            .then(response => response.json())
+                                            .then(data => {
+                                                if (data.success) removeItem(dossierId, type);
+                                            })
+                                            .catch(() => handleError());
+                                    }
+                                    menu.classList.replace('d-block', 'd-none');
+                                });
+                            }
+                        }
+
+                        function updateUI(dossierId, newName) {
+                            const dossier = document.querySelector(`[data-id='${dossierId}']`);
+                            if (dossier) {
+                                const nameElement = dossier.nextElementSibling ? dossier.nextElementSibling.nextElementSibling : null;
+                                if (nameElement) {
+                                    nameElement.textContent = newName;
+                                }
+                            }
+                        }
+
+                        function removeItem(dossierId, type, menu) {
+                            const item = document.getElementById(`${type.slice(0, -1)}_${dossierId}`);
+                            if (item) item.remove();
+
+                            const container = document.getElementById(`${type.slice(0, -1)}-container`);
+                            if (container && !container.children.length) {
+                                container.classList.replace('justify-content-start', 'justify-content-center');
+                                container.innerHTML = `<div class="text-center"><p>Aucun ${type.slice(0, -1)}.</p></div>`;
+                            }
+
+                            if (menu) {
+                                menu.classList.replace('d-block', 'd-none');
+                            }
+                        }
+
+                        function showSuccess(message) {
+                            const responseMessage = document.getElementById('responseMessagediv');
+                            const responseMessageElement = document.getElementById('responseMessage');
+                            if (responseMessage && responseMessageElement) {
+                                responseMessage.classList.replace('alert-danger', 'alert-success');
+                                responseMessage.style.display = 'block';
+                                responseMessageElement.textContent = message;
+                            }
+                        }
+
+                        function showError(message) {
+                            const responseMessage = document.getElementById('responseMessagediv');
+                            const responseMessageElement = document.getElementById('responseMessage');
+                            if (responseMessage && responseMessageElement) {
+                                responseMessage.classList.replace('alert-success', 'alert-danger');
+                                responseMessage.style.display = 'block';
+                                responseMessageElement.textContent = message;
+                            }
+                        }
+
+                        function handleError() {
+                            alert('Une erreur s\'est produite. Veuillez réessayer.');
+                        }
+
+                        function capitalize(string) {
+                            return string.charAt(0).toUpperCase() + string.slice(1);
+                        }
+                    });
+                </script>
+        </main>
+
+        {% include 'userPage/_footer.html.twig' %}
     </div>
-</div>
+{% endblock %}
 
-{% include 'partials/user/Dossiers/_create.html.twig' %}
-
-{% include 'partials/user/Dossiers/_rename.html.twig' %}
- 
-<div id="contextMenuDossier" class="dropdown-menu d-none" style="position: absolute;">
-    <button class="btn dropdown-item change-fragment" id="openDossier">Ouvrir le dossier</button>
-    <a class="dropdown-item" href="javascript:void(0)" id="renameDossier">Renommer le dossier</a>
-    <a class="dropdown-item" href="javascript:void(0)" id="deleteDossier">Supprimer le dossier</a>
-</div>

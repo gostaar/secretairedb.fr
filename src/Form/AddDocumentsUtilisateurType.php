@@ -26,11 +26,31 @@ class AddDocumentsUtilisateurType extends AbstractType
     public function __construct(EntityManagerInterface $entityManager){
         $this->entityManager = $entityManager;
     }
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+
+        $userId = $options['userId'];
+        $dossierId  = $options['dossierId'];
+
+        $user = $this->entityManager->getRepository(User::class)->find($userId);
+        $dossier = $this->entityManager->getRepository(Dossier::class)->find($dossierId);
+
         $builder
             ->add('name', null, [
                 'label' => 'Nom du document'
+            ])
+            ->add('user', EntityType::class, [
+                'class' => User::class,
+                'data' => $user,
+                'label' => false,
+                'attr' => ['style' => 'display: none;'],
+            ])
+            ->add('dossier', EntityType::class, [
+                'class' => Dossier::class,
+                'data' => $dossier,
+                'label' => false,
+                'attr' => ['style' => 'display: none;'],
             ])
             ->add('submit', SubmitType::class, [
                 'label' => 'Enregistrer',
@@ -43,7 +63,10 @@ class AddDocumentsUtilisateurType extends AbstractType
         $resolver->setDefaults([
             'data_class' => DocumentsUtilisateur::class,
         ]);
-        $resolver->setDefined(['user']);
-        $resolver->setDefined(['documentId']);
+        $resolver->setDefined([
+            'userId',
+            'documentId',
+            'dossierId',
+        ]);
     }
 }

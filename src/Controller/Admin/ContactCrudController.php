@@ -31,7 +31,7 @@ class ContactCrudController extends AbstractCrudController
             TextField::new('commentaire')
                 ->onlyOnForms(),
                 
-            FormField::addPanel('Relations avec d\'autres entités')->setIcon('fa fa-link'),
+            FormField::addFieldSet('Relations avec d\'autres entités')->setIcon('fa fa-link'),
             AssociationField::new('repertoire', 'Répertoire associé')
                 ->setFormTypeOptions([
                     'by_reference' => true, // Par défaut, mais explicite

@@ -7,7 +7,159 @@
         {% include 'userPage/_header.html.twig' %}
         <main id="fragmentContent" class="container d-flex flex-column justify-content-start flex-grow-1 py-4">
             {% include 'partials/flash.html.twig' %}
-            {% include 'userPage/_fragmentContent.html.twig' %}
+            <!-- Main Content -->
+                <div class="row g-4">
+                    <div class="col-md-12">
+                        <div class="card shadow-sm">
+                            <div class="card-body text-center px-0">
+                                <h3 class='m-3'>Bienvenue {{app.user.nom}} !</h3>
+                                <p class='m-3'>Dans cette interface, vous pourrez naviguer entre les différents services proposés</p>
+                                <p class='m-3'>Vous accèderez également à vos informations personnelles ici: </p>
+                                <div class="container my-5 position-relative px-0">
+                                <div class='card-header text-start px-0 mb-5'>
+                                    <h3 class='m-3' style='padding-left: 1rem;'>Espace Personnel</h3>
+                                </div>
+                                    <div class='d-flex flex-wrap justify-content-center align-items-center'> 
+                                        {% set submenuItems = [
+                                            { href: 'profile', icon: 'fa-user-circle', title: 'Profil', color: 'white' },
+                                            { href: 'factures', icon: 'fa-file-invoice', title: 'Factures', color: 'white'},
+                                            { href: 'devis', icon: 'fa-file-contract', title: 'Devis', color: 'white'},
+                                            { href: 'parametres', icon: 'fa-cogs', title: 'Paramètres', color: 'white'},
+                                        ] %}
+                                        <div class='w-50 d-none d-sm-flex justify-content-end px-5'>
+                                        <a href="{{path('espacePersonnel')}}">
+                                            <img src='{{asset('build/images/espaceperso.png')}}'></a>
+                                        </div>
+                                        <div class='d-flex flex-column flex-grow-1'>
+                                            {% for submenu in submenuItems %}
+                                                <div class="d-flex align-items-center w-100 p-1" style="position: relative; width: 130px;">
+                                                    <a 
+                                                        href="{{path(submenu.href)}}"
+                                                        style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: transparent; border: none; z-index: 1; padding: 0;" 
+                                                        class="col-6 btn card-link d-flex flex-column justify-content-start align-items-center text-center p-3">
+                                                    </a>
+                                                    <div class='d-flex align-items-center w-100'>
+                                                        <i class="col-3 fas {{ submenu.icon }} fa-3x text-dark mb-2"></i>
+                                                        <h5 class="text-start text-dark">{{ submenu.title }}</h5>
+                                                    </div>
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <!-- Card 1 -->   
+                    <div class="col-md-12">
+                        <div class="card shadow-sm">
+                            <div class="card-header mb-5">
+                                <h2 class="m-3">Services</h2>
+                            </div>
+                            <div class="card-body">
+                                <div class="container mb-5 position-relative">
+                                    <div class='d-flex flex-wrap justify-content-center align-items-center'>   
+                                        {% set items = [
+                                            { id: 'btnEspacePersonnel', icon: 'fa-user-circle', title: 'Espace Personnel', service: 'espacePersonnel', description:'Gérez votre espace personnel' },
+                                            { id: 'btnAgenda', icon: 'fa-calendar-alt', title: 'Agenda', service: 'Agenda', description:'Gérez votre agenda'  },
+                                            { id: 'btnTelephone', icon: 'fa-phone-alt', title: 'Gestion Téléphonique', service: 'Telephonique', description:'Gérez vos appels téléphoniques'  },
+                                            { id: 'btnAdministratif', icon: 'fa-file-alt', title: 'Documents Administratifs', service: 'Administratif', description:'Gérez votre service administratif'  },
+                                            { id: 'btnCommercial', icon: 'fa-briefcase', title: 'Documents commerciaux', service: 'Commercial', description:'Gérez vos documents commerciaux'  },
+                                            { id: 'btnNumerique', icon: 'fa-laptop-code', title: 'Documents numériques', service: 'Numerique', description:'Gérez vos documents numériques'  },
+                                            { id: 'btnRepertoire', icon: 'fa-address-book', title: 'Gestion du répertoire', service: 'Repertoire', description:'Gérez vos répertoires'  }
+                                        ] %}
+                                        <div class='d-flex flex-column flex-grow-1'>
+                                            {% if services is defined %}
+                                            {% for item in items | filter(item => item.service == 'espacePersonnel' or item.service in services) %}
+                                                <div class="d-flex align-items-center w-100 p-1 mb-2" style="position: relative; width: 130px;">
+                                                    <a 
+                                                        href={% if item.service == "espacePersonnel" %}"{{path('espacePersonnel')}}"{% else %}"{{ path('dossiers', {'service': item.service}) }}"{% endif %}
+                                                        id="{{ item.id }}" 
+                                                        style="position: absolute; top: 0; right: 0; bottom: 0; background-color: transparent; border: none; z-index: 1; padding: 0;" 
+                                                        class="col-8 btn card-link d-flex flex-column justify-content-between align-items-center text-center p-3">
+                                                    </a>
+                                                    <div class='d-flex align-items-center justify-content-end w-100'>
+                                                        <h5 class="text-end text-dark">{{ item.title }}</h5>
+                                                        <i class="col-3 text-center fas {{ item.icon }} fa-3x text-dark mb-2"></i>
+                                                        {# <p class="text-muted small">{{ item.description }}</p> #}
+                                                    </div>
+                                                        
+                                                </div>
+                                            {% endfor %}
+                                            {% endif %}
+                                        </div>
+                                        <div class='w-50 d-none d-sm-flex justify-content-start px-5'>
+                                            <img src='{{asset('build/images/services.png')}}'>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <!-- Card 2 -->
+                    {# <div class="col-md-6">
+                        <div class="card shadow-sm">
+                            <div class="card-body">
+                                <h2 class="m-3">Actualités</h2>
+                            
+                                <div class='d-flex flex-wrap justify-content-center'>
+                                    {% set actualite = [
+                                        { id: 'news1', href: '/actualites/article1', icon: 'fa-newspaper', title: 'Nouvelle fonctionnalité ajoutée',
+                                        description: 'Découvrez notre dernière mise à jour qui améliore l’expérience utilisateur.'},
+                                        { id: 'news2', href: '/actualites/article2', icon: 'fa-chart-line', title: 'Croissance de l’entreprise',
+                                        description: 'Un rapport montre une augmentation de 20% dans les ventes cette année.'},
+                                        { id: 'news3', href: '/actualites/article3', icon: 'fa-handshake', title: 'Nouveau partenariat signé',
+                                        description: 'Nous sommes fiers d’annoncer un partenariat stratégique avec XYZ Corp.'},
+                                    ] %}
+                                    {% for item in actualite %}
+                                        <a id="{{ item.id }}" href="{{ item.href }}" style="max-width:200px;" class="mb-4 btn card-link d-flex flex-column justify-content-start align-items-center text-center p-3">
+                                            <i class="fas {{ item.icon }} fa-3x text-success mb-2"></i>
+                                            <h5 class="text-dark">{{ item.title }}</h5>
+                                            <p class="text-muted small">{{ item.description }}</p>
+                                        </a>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div> #}
+
+                <!-- Card 3 -->
+                    <div class="col-md-12">
+                        <div class="card shadow-sm">
+                            <div class="card-header">
+                                <h2 class="m-3">Accès direct</h2>
+                            </div>
+                            <div class="card-body">
+                                <div class='d-flex flex-wrap justify-content-center'>
+                                    {% set access_items = [
+                                        {href: path('_s'), icon: 'fa-tag', id: 'Nos offres', text: 'Nos offres', description:"Plus d'informations"},
+                                        {href: path('subfragment', {'fragment': 'part', 'subfragment': 'contact'}), icon: 'fa-question-circle', id: "J'ai une question", text: "J'ai une question", description:"Contactez-nous ici"},
+                                        {href: path('rgpd'), icon: 'fa-user-shield', id: 'Données personnelles', text: 'Données personnelles', description:"Comment mes données personnelles sont-elles gérées?"},
+                                        {href: path('offresPartenaires'), icon: 'fa-handshake', id: 'Offres partenaires', text: 'Offres partenaires', description:"Découvrez les offres de nos partenaires"},
+                                    ] %}
+                                    {% for item in access_items %}
+                                            <!-- Remplacez le bouton par un lien redirigeant -->
+                                            <a href="{{ item.href }}" id="{{ item.id }}" 
+                                                style="width:200px; {% if item.id == "Nos offres" %}margin-left:1rem;{% endif %}" 
+                                                class="border mb-4 btn card-link d-flex flex-column justify-content-between align-items-center text-center p-3">
+                                                <i class="fas {{ item.icon }} fa-3x text-dark mb-2"></i>
+                                                <h5 class="text-dark">{{ item.text }}</h5>
+                                                <p class="text-muted small">{{ item.description }}</p>
+                                            </a>
+                                        {# {% else %}
+                                            <button type='button' id="{{ item.id }}" data-fragment="{{ item.href }}" data-user="{{ app.user.email }}" style="max-width:200px;" class="border mb-4 btn card-link d-flex flex-column justify-content-between align-items-center text-center p-3">
+                                                <i class="fas {{ item.icon }} fa-3x text-dark mb-2"></i>
+                                                <h5 class="text-dark">{{ item.text }}</h5>
+                                                <p class="text-muted small">{{ item.description }}</p>
+                                            </button>
+                                        {% endif %} #}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
         </main>
 
         {% include 'userPage/_footer.html.twig' %}

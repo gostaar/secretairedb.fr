@@ -1,9 +1,9 @@
-{% if formViews.addSearchData %}
-    {{ form_start(formViews.addSearchData, {'attr': {'id': 'searchForm'}}) }}
-    <div class="mb-3 col-xl-4 d-flex gap-3 w-100 align-items-center" id="fragment" data-fragment="{{ fragment }}" {% if dossier is defined %}data-dossier="{{ dossier.id }}"{% endif %}>
+{% if formSearch %}
+    {{ form_start(formSearch, {'attr': {'id': 'searchForm'}}) }}
+    <div class="mb-3 col-xl-4 d-flex gap-3 w-100 align-items-center" id="fragment" {% if dossier is defined %}data-dossier="{{ dossier.id }}"{% endif %}>
         <div class="input-group mb-0">
-            {{ form_widget(formViews.addSearchData.q, {'attr': {'class': 'form-control', 'placeholder': 'Rechercher...'}}) }}
-            {{ form_errors(formViews.addSearchData.q) }}
+            {{ form_widget(formSearch.q, {'attr': {'class': 'form-control', 'placeholder': 'Rechercher...'}}) }}
+            {{ form_errors(formSearch.q) }}
         </div>
         <div>
             <button class="btn btn-primary d-flex align-items-center" type="submit" id="button-addon2">
@@ -14,5 +14,5 @@
             </button>
         </div>
     </div>
-    {{ form_end(formViews.addSearchData) }}
+    {{ form_end(formSearch) }}
 {% endif %}

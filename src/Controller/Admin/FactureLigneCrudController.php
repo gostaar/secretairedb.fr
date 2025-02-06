@@ -27,7 +27,7 @@ class FactureLigneCrudController extends AbstractCrudController
             NumberField::new('quanite'),
             NumberField::new('prix_unitaire'),
                        
-            FormField::addPanel('Relations avec d\'autres entités')->setIcon('fa fa-link'),
+            FormField::addFieldSet('Relations avec d\'autres entités')->setIcon('fa fa-link'),
             AssociationField::new('facture')
                 ->setFormTypeOptions([
                     'by_reference' => false,

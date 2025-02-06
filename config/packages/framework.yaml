@@ -13,6 +13,8 @@ framework:
     session: true
     #esi: true
     #fragments: true
+    mailer:
+        dsn: 'smtp://%env(MAILER_USERNAME)%:%env(MAILER_PASSWORD)%@smtp.gmail.com:587'
 
 when@test:
     framework:

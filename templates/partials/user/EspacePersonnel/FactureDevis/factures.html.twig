@@ -1,87 +1,98 @@
-<!-- Main Content -->
-{% include 'partials/user/models/factureModel.html.twig' %}
-<div class="flex-grow-1 p-4 d-flex flex-column">
-    <div class="container card mb-4">
-        <div class="container card-header d-flex justify-content-between align-items-center">
-            <h4>Factures</h4>
-        </div>
-        <div class="card-body">
-        {% if factures is not empty %}
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>N°</th>
-                        <th>Statut</th>
-                        <th>Détails</th>
-                        {# <th>Active</th> #}
-                        <th>Montant</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for facture in factures %}
-                        <tr class="d-none d-sm-table-row" id="fragmentFacture{{ facture.id }}" data-fragment="{{ fragment }}" data-facture="{{ facture.id }}">
-                            <td>{{ facture.id }}</td>
-                            <td>{{ facture.status }}</td>
-                            <td>{{ facture.commentaire }}</td>
-                            {% if facture.lignes %}
-                                {% set totalMontant = 0 %}
-                                {% for ligne in facture.lignes %}
-                                    {% set totalMontant = totalMontant + (ligne.prixUnitaire * ligne.quantite) %}
-                                {% endfor %}
-                                    <td>{{ totalMontant | format_currency('EUR') }}</td>
-                            {% else %}
-                                <td>{{ 0 | format_currency('EUR') }}</td>
-                            {% endif %}
+{% extends 'base.html.twig' %}
 
-                            <td> 
-                                <button type="button" class="btn text-primary text-decoration-underline" data-toggle="modal" data-target="#factureDetailsModal{{ facture.id }}">
-                                    Détails
-                                </button>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        {% else %}
-            <!-- Aucun document -->
-            <div class="text-center">
-                <div style="position: relative; display: inline-block;">
-                    <i class="fas fa-file-alt fa-5x text-center m-5"></i>
-                    <div style="position: absolute; 
-                            top: 0; left: 0; 
-                            right: 0; bottom: 0; 
-                            background-color: rgba(255, 255, 255, 0.7); 
-                            z-index: 1;">
+{% block title %}Dashboard utilisateur{% endblock %}
+
+{% block body %}
+    <div id="userContent" class="custom-bg d-flex flex-column min-vh-100">
+        {% include 'userPage/_header.html.twig' %}
+        <main id="fragmentContent" class="container d-flex flex-column justify-content-start flex-grow-1 py-4">
+            {% include 'partials/flash.html.twig' %}                
+                <!-- Main Content -->
+                {% include 'partials/user/models/factureModel.html.twig' %}
+                <div class="flex-grow-1 p-4 d-flex flex-column">
+                    <div class="container card mb-4">
+                        <div class="container card-header d-flex justify-content-between align-items-center">
+                            <h4>Factures</h4>
+                        </div>
+                        <div class="card-body">
+                        {% if factures is not empty %}
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>N°</th>
+                                        <th>Statut</th>
+                                        <th>Détails</th>
+                                        {# <th>Active</th> #}
+                                        <th>Montant</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for facture in factures %}
+                                        <tr class="d-none d-sm-table-row" id="fragmentFacture{{ facture.id }}" data-facture="{{ facture.id }}">
+                                            <td>{{ facture.id }}</td>
+                                            <td>{{ facture.status }}</td>
+                                            <td>{{ facture.commentaire }}</td>
+                                            {% if facture.lignes %}
+                                                {% set totalMontant = 0 %}
+                                                {% for ligne in facture.lignes %}
+                                                    {% set totalMontant = totalMontant + (ligne.prixUnitaire * ligne.quantite) %}
+                                                {% endfor %}
+                                                    <td>{{ totalMontant | format_currency('EUR') }}</td>
+                                            {% else %}
+                                                <td>{{ 0 | format_currency('EUR') }}</td>
+                                            {% endif %}
+
+                                            <td> 
+                                                <button type="button" class="btn text-primary text-decoration-underline" data-toggle="modal" data-target="#factureDetailsModal{{ facture.id }}">
+                                                    Détails
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        {% else %}
+                            <!-- Aucun document -->
+                            <div class="text-center">
+                                <div style="position: relative; display: inline-block;">
+                                    <i class="fas fa-file-alt fa-5x text-center m-5"></i>
+                                    <div style="position: absolute; 
+                                            top: 0; left: 0; 
+                                            right: 0; bottom: 0; 
+                                            background-color: rgba(255, 255, 255, 0.7); 
+                                            z-index: 1;">
+                                    </div>
+                                </div>
+                                <h1 style="color: grey;">Aucune Facture</h1>
+                                <p class="text-muted">À cet endroit, vous pourrez consulter vos factures.</p>
+                            </div>
+                        {% endif %}
+                        </div>
                     </div>
                 </div>
-                <h1 style="color: grey;">Aucune Facture</h1>
-                <p class="text-muted">À cet endroit, vous pourrez consulter vos factures.</p>
-            </div>
-        {% endif %}
-            <div class="d-flex justify-content-center">
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#factureModal">Créer une nouvelle Facture</button>
-            </div>
-        </div>
+
+                <!-- Modal pour créer le facture-->
+                {% include 'partials/user/EspacePersonnel/FactureDevis/_factureModalCreate.html.twig' %}
+
+                <!-- Modal pour afficher les informations de la facture -->
+                {% include 'partials/user/EspacePersonnel/FactureDevis/_factureModalInfos.html.twig' %}
+
+                <!-- Modal pour afficher le pdf de la facture -->
+                {% include 'partials/user/models/factureModel.html.twig' %}
+
+                {# <script>
+                    document.addEventListener('DOMContentLoaded', function() {
+                        {% for facture in factures %}
+                        {% if facture.lignes is not empty %}
+                            const modal = new bootstrap.Modal(document.getElementById('factureDetailsModal'));
+                            modal.show();
+                        {% endif %}
+                        {% endfor %}
+                    });
+                </script> #}
+        </main>
+
+        {% include 'userPage/_footer.html.twig' %}
     </div>
-</div>
-
-<!-- Modal pour créer le facture-->
-{% include 'partials/user/EspacePersonnel/FactureDevis/_factureModalCreate.html.twig' %}
-
-<!-- Modal pour afficher les informations de la facture -->
-{% include 'partials/user/EspacePersonnel/FactureDevis/_factureModalInfos.html.twig' %}
-
-<!-- Modal pour afficher le pdf de la facture -->
-{% include 'partials/user/models/factureModel.html.twig' %}
-
-{# <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        {% for facture in factures %}
-        {% if facture.lignes is not empty %}
-            const modal = new bootstrap.Modal(document.getElementById('factureDetailsModal'));
-            modal.show();
-        {% endif %}
-        {% endfor %}
-    });
-</script> #}
+{% endblock %}

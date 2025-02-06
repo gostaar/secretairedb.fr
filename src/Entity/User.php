@@ -122,16 +122,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $nomEntreprise = null;
 
-    private $passwordResetToken;
-    private $passwordResetExpiresAt;
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $passwordResetToken = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $passwordResetExpiresAt = null;
+
 
     /**
      * @var Collection<int, Identifiants>
      */
     #[ORM\OneToMany(targetEntity: Identifiants::class, mappedBy: 'users', cascade: ["persist"])]
     private Collection $identifiants;
-
-    
 
     public function __construct()
     {

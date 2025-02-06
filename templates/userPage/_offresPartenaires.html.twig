@@ -1,8 +1,24 @@
-<div class="col-md-12">
-    <div class="card shadow-sm">
-        <div class="card-body">
-            en construction
-        </div>
+{% extends 'base.html.twig' %}
+
+{% block title %}Dashboard utilisateur{% endblock %}
+
+{% block body %}
+    <div id="userContent" class="custom-bg d-flex flex-column min-vh-100">
+        {% include 'userPage/_header.html.twig' %}
+        <main id="fragmentContent" class="container d-flex flex-column justify-content-start flex-grow-1 py-4">
+            {% include 'partials/flash.html.twig' %}
+                <div class="col-md-12">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            en construction
+                        </div>
+                    </div>
+                </div>
+            </main>
+
+        {% include 'userPage/_footer.html.twig' %}
     </div>
-</div>
+{% endblock %}
+
+
 

@@ -6,16 +6,16 @@
       </div>
       <div class="modal-body">
         {# <form id="modalFormContainerbis" action="/api/dossiers/" ~ serviceLink method="POST" data-service={{ serviceLink }}> #}
-          {{ form_start(formViews.addDossier) }}
+          {{ form_start(formDossier) }}
           <div class="form-group">
-            {{ form_row(formViews.addDossier.name) }}
+            {{ form_row(formDossier.name) }}
           </div>
           {# {{ form_widget(addDossier.submit, {'attr': {'class': 'btn btn-primary'}}) }} #}
           <div class='d-flex justify-content-center gap-3'>
             <button type="button" class="btn btn-secondary mb-3" data-dismiss="modal">Annuler</button>
-            {{ form_row(formViews.addDossier.submit) }}
+            <button type="submit" class="btn btn-primary mb-3" >Enregistrer</button>
           </div>
-          {{ form_end(formViews.addDossier) }}
+          {{ form_end(formDossier) }}
         
       </div> 
     </div>

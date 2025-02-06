@@ -9,7 +9,6 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 
 class RepertoireType extends AbstractType
@@ -17,13 +16,6 @@ class RepertoireType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            // ->add('id', null, [
-            //     'label' => false,
-            //     'mapped' => false,
-            //     'attr' => [
-            //         'class' => 'd-none'
-            //     ]
-            // ])
             ->add('nom', null, [
                 'label' => false,
                 'attr' => ['class' => 'border-0']
@@ -64,17 +56,9 @@ class RepertoireType extends AbstractType
                 'label' => false,
                 'attr' => ['class' => 'border-0']
             ])
-            // ->add('user', EntityType::class, [
-            //     'class' => User::class,
-            //     'choice_label' => 'id',
-            // ])
-            // ->add('dossier', EntityType::class, [
-            //     'class' => Dossier::class,
-            //     'choice_label' => 'id',
-            // ])
             ->add('contacts', CollectionType::class, [
                 'label' => false,
-                'entry_type' => \App\Form\ContactType::class,
+                'entry_type' => \App\Form\AddContactType::class,
                 'allow_add' => true,
                 'allow_delete' => true,
                 'by_reference' => false,
@@ -92,6 +76,10 @@ class RepertoireType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Repertoire::class,
+        ]);
+        $resolver->setDefined([
+            'userId', 
+            'dossierId'
         ]);
     }
 }

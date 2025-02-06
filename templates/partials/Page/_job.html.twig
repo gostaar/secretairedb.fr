@@ -1,17 +1,16 @@
 <div class="background-jobs d-flex flex-column flex-fill min-vh-100">
-    {% include 'partials/Page/_navBar.html.twig' %}
     <section class="hero">
         <div class="heroContent">
             <h1>Rejoignez notre équipe</h1>
             <p>Découvrez nos offres de jobs dans le domaine administratif et numérique.</p>
         </div>
          <div class="w-100 my-3">
-            <button type="button" class="change-fragment-site btn btn-warning fs-5 border border-secondary" data-fragment={{initialisation.fragmentValue}} data-subFragment="contact" >
+            <a class="btn btn-warning fs-5 border border-secondary" href='{{path('subfragment', {fragment: initialisation.fragmentValue, subfragment: 'contact'})}}'>
                 Contactez-nous
-            </button>
+            </a>
         </div>
         <div class="w-100 my-3">
-            <button type="button" class="change-fragment-site btn btn-primary fs-5" data-fragment={{initialisation.fragmentButtonValue}} data-subFragment="acceuil">{{initialisation.buttonValue}}</button>
+<a class="btn btn-primary fs-5 text-white" style='background-color: #0d6efd !important;' href='{{path('subfragment', {fragment: initialisation.fragmentButtonValue, subfragment: app.request.attributes.get('subfragment')})}}'>{{initialisation.buttonValue}}</a>
         </div>
     </section>
     <section class="intro d-flex flex-column justify-content-evenly bg-white flex-fill">
@@ -47,7 +46,7 @@
         <p class="text-center mb-5">Envoyez votre candidature via le formulaire ci-dessous</p>
 
         <!-- Formulaire de Candidature -->
-       <form action="{{ path('jobs_handler') }}" method="post" class="p-4">
+        <form action="{{ path('jobs_handler') }}" method="post" class="p-4" enctype="multipart/form-data">
             <div class="d-flex flex-wrap mb-3">
                 <div class="flex-fill me-3">
                     <label for="name" class="form-label">Nom :</label>

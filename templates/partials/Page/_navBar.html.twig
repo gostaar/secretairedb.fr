@@ -17,24 +17,24 @@
     data-fragment={{initialisation.fragmentValue}} 
     data-subFragment="acceuil" 
     style="text-decoration: none;">
-        Secrétaire Pro
+        D. Bauwens Secrétaire
     </button>
 
     <!-- Menu Grand Écran (visible uniquement sur les grands écrans) -->
     <div class="d-none justify-content-center  d-md-flex">
         <ul class="list-unstyled d-flex mb-0">
-        {% if menu_items is defined %}
+         {% if menu_items is defined %}
             {% for item in menu_items %}
                 <li class="me-4">
-                    <button class="change-fragment-site btn fs-4 {% if app.request.query.get('subFragment') == item.link %} active {% endif %}" 
-                            data-fragment="{{ item.fragment }}" 
-                            data-subFragment="{{ item.link }}" 
+                    <a class="btn fs-4 {% if app.request.attributes.get('subfragment') == item.link %} active {% endif %}"
+                            href='{{path('subfragment', {fragment: app.request.attributes.get('fragment'), subfragment: item.link})}}'
                             style="text-decoration: none;">
                             {{ item.label }}
-                    </button>
+                    </a>
                 </li>
             {% endfor %}
         {% endif %}
+
 
             <li class="me-4">
                 <a href="{{ path('app_login') }}" class="btn fs-4 {{ app.request.attributes.get('_route') == 'app_login' ? 'text-primary' : 'text-dark' }}" style="text-decoration: none;">
@@ -59,23 +59,18 @@
             
             <div class="collapse navbar-collapse" id="navbarNav">
                 <div class="d-flex justify-content-center pt-4">
-                    <button class="change-fragment-site btn fs-1 fw-bold text-warning nav-link" 
-                    data-fragment={{initialisation.fragmentValue}} 
-                    data-subFragment="acceuil" 
-                    style="text-decoration: none;">
-                        Secrétaire Pro
-                    </button>
+                    <a class="btn fs-1 fw-bold text-warning nav-link" href='{{path('subfragment', {fragment: app.request.attributes.get('fragment'), subfragment: 'acceuil'})}}' style="text-decoration: none;">
+                        Delphine Bauwens
+                    </a>
                 </div>
                 
                 <ul class="mb-3 d-flex flex-column align-items-center" style="padding-top: 1rem !important;">
                 {% if menu_items is defined %}
                     {% for item in menu_items %}
                         <li class="text-center mb-2">
-                            <button class="change-fragment-site nav-link fs-5 text-white" 
-                            data-fragment="{{ item.fragment }}" 
-                            data-subFragment="{{ item.link }}">
+                            <a class="nav-link fs-5 text-white"  href='{{path('subfragment', {fragment: app.request.attributes.get('fragment'), subfragment: item.link})}}'>
                                 {{ item.label }}
-                            </button>
+                            </a>
                         </li>
                     {% endfor %}
                 {% endif %}

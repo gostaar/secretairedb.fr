@@ -1,22 +1,35 @@
+{% extends 'base.html.twig' %}
 
-<div class="flex-grow-1 p-4 d-flex justify-content-center align-items-center fill-height">
-    <div id="btnGoogleSecretaire-container" class="row mb-4 text-center">
-        <div id="btnGoogleSecretaire" class="col-12 col-md-8">
-            <div class="d-flex flex-column flex-md-row justify-content-evenly align-items-center gap-4">
-                <!-- Google Button -->
-                <button id="authorize_button" class="btn btn-lg btn-google text-white">
-                    <h2>J'ai un compte Google</h2>
-                </button>
-                <!-- Main Agenda Button -->
-                <button id="btnMainAgenda" href='{{ path('user', {fragment: 'link-MainAgenda'}) }}' class="btn btn-lg btn-main-agenda text-white">
-                    <h2>Je n'ai pas de compte Google</h2>
-                </button>
-            </div>
-        </div>
-        <div class="text-center mt-3">
-            <a href="https://accounts.google.com/signup" target="_blank" class="link-google-account">
-                Créez un compte Google ici
-            </a>
-        </div>
+{% block title %}Dashboard utilisateur{% endblock %}
+
+{% block body %}
+    <div id="userContent" class="custom-bg d-flex flex-column min-vh-100">
+        {% include 'userPage/_header.html.twig' %}
+        <main id="fragmentContent" class="container d-flex flex-column justify-content-start flex-grow-1 py-4">
+            {% include 'partials/flash.html.twig' %}
+                <div class="flex-grow-1 p-4 d-flex justify-content-center align-items-center fill-height">
+                    <div id="btnGoogleSecretaire-container" class="row mb-4 text-center">
+                        <div id="btnGoogleSecretaire" class="col-12 col-md-8">
+                            <div class="d-flex flex-column flex-md-row justify-content-evenly align-items-center gap-4">
+                                <!-- Google Button -->
+                                <a href="{{path('gmail_auth')}}" class="btn btn-lg d-flex align-items-center btn-google text-white">
+                                    <h2>J'ai un compte Google</h2>
+                                </a>
+                                <!-- Main Agenda Button -->
+                                <a  href='{{ path('event', {'service': 'Agenda'}) }}' class="btn btn-lg d-flex align-items-center btn-main-agenda text-white">
+                                    <h2>Je n'ai pas de compte Google</h2>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="text-center mt-3">
+                            <a href="https://accounts.google.com/signup" target="_blank" class="link-google-account">
+                                Créez un compte Google ici
+                            </a>
+                        </div>
+                    </div>
+                </div>
+        </main>
+
+        {% include 'userPage/_footer.html.twig' %}
     </div>
-</div>
+{% endblock %}
