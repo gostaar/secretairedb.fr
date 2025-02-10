@@ -11,6 +11,13 @@ use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use PhpOffice\PhpWord\PhpWord;
+use Symfony\Component\HttpFoundation\StreamedResponse;
+use PhpOffice\PhpWord\SimpleType\TextAlignment;
+use PhpOffice\PhpWord\Style\Paragraph;
+use PhpOffice\PhpWord\Style\Indentation;
+use PhpOffice\PhpWord\Style\Font;
+use PhpOffice\PhpWord\Style\Table;
 
 class UserController extends AbstractController
 {
@@ -343,7 +350,8 @@ class UserController extends AbstractController
             $formDocument = $this->createForm(\App\Form\AddDocumentsUtilisateurType::class, $document, [
                 'userId' => $this->getUser()->getId(),
                 'documentId' => $documentId ?? null,
-                'dossierId' => $dossierId
+                'dossierId' => $dossierId,
+                'service' => $service,
             ]);
             $formDocument->handleRequest($request);
             if ($formDocument->isSubmitted() && $formDocument->isValid()) {
@@ -410,24 +418,25 @@ class UserController extends AbstractController
             ]);
         } else {
             $formData = $this->main($dossierId, $documentId, null, $service);
+            $document = $this->entityManager->getRepository(\App\Entity\DocumentsUtilisateur::class)->find($documentId);
 
-            $documentEntity = $this->entityManager->getRepository(\App\Entity\DocumentsUtilisateur::class)->find($documentId);
-
-            $document = $documentEntity;
-            $formDocument = $this->createForm(\App\Form\DocumentsUtilisateurType::class, $document, [
+            $formDocumentUtilisateur = $this->createForm(\App\Form\DocumentsUtilisateurType::class, $document, [
                 'userId' => $this->getUser(),
                 'documentId' => $documentId,
                 'dossierId' => $dossierId,
+                'service' => $service,
             ]);
-            $formDocument->handleRequest($request);
-            if ($formDocument->isSubmitted() && $formDocument->isValid()) {
-                $this->entityManager->persist($document);
+                 
+            $formDocumentUtilisateur->handleRequest($request);
+           
+            if ($formDocumentUtilisateur->isSubmitted() && $formDocumentUtilisateur->isValid()) {
+                // dd($formDocumentUtilisateur->getData());
                 $this->entityManager->flush();
                 return $this->redirect("/user/{$service}/{$dossierId}/{$documentId}");
             }
 
             $createImage = new \App\Entity\Image();
-            $formCreateImage = $this->createForm(\App\Form\AddImageType::class, $createImage);
+            $formCreateImage = $this->createForm(\App\Form\AddImageType::class, $createImage, ["service" => $service]);
             $formCreateImage->handleRequest($request);
             if ($formCreateImage->isSubmitted() && $formCreateImage->isValid()) {
                 $this->entityManager->persist($createImage);
@@ -441,7 +450,7 @@ class UserController extends AbstractController
             }
         
             $editImage = $imageId !== null ? $imageId : new \App\Entity\Image();
-            $formEditImage = $this->createForm(\App\Form\ImageType::class, $editImage);
+            $formEditImage = $this->createForm(\App\Form\ImageType::class, $editImage, ["service" => $service]);
             $formEditImage->handleRequest($request);
             if ($formEditImage->isSubmitted() && $formEditImage->isValid()) {
                 $this->entityManager->flush();
@@ -449,14 +458,15 @@ class UserController extends AbstractController
             }
 
             return $this->render('partials/user/_documentEdit.html.twig', [
-                'formDocument' => $formDocument,
+                'formDocument' => $formDocumentUtilisateur,
                 'formCreateImage' => $formCreateImage,
                 'formEditImage' => $formEditImage,
                 'dossiers' => $formData['dossiers'],
                 'services' => $formData['services'],
                 'service' => $service,
                 'documents' => $formData['documents'],
-                'document' => $formData['document']
+                'document' => $formData['document'],
+                'user' => $this->getUser(),
             ]);
         }
     }
@@ -468,4 +478,329 @@ class UserController extends AbstractController
         
         return $this->file($filePath);
     }
+
+    #[Route('/downloadDocument/{id}', name: "document_download")]
+    public function downloadDocument(\App\Entity\DocumentsUtilisateur $document): Response
+    {
+        $phpWord = new PhpWord();
+        $user = $this->getUser();
+
+        switch($document->getTypeDocument()){
+            case "Courrier":  
+                $section = $phpWord->addSection();
+
+                $styleExpediteur = new Paragraph();
+                $styleExpediteur->setSpaceAfter(0);
+                
+                // Information de l'expéditeur
+                $section->addText($user->getNom(), null, $styleExpediteur);
+                $section->addText($user->getAdresse(), null, $styleExpediteur);
+                $section->addText($user->getCodePostal(). " ". $user->getVille(), null, $styleExpediteur);
+                $section->addText(
+                    'Téléphone: ' . ($user->getMobile() !== null ? $user->getMobile() : $user->getTelephone()), 
+                    null, 
+                    $styleExpediteur
+                );
+                if($user->getSiret() !== null){ 
+                    $section->addText('Siret: ' . $user->getSiret(), null, $styleExpediteur);
+                    $section->addText($user->getNomEntreprise(), null, $styleExpediteur);
+                }
+
+                // Information du destinataire + date
+                $destinataire = $document->getDestinataire();
+                $linesd = explode("\r", $destinataire);
+                foreach ($linesd as $line) {
+                    $section->addText($line, null, new Paragraph()->setIndent(4500));
+                }
+                
+                $section->addText('Fait à '. $user->getVille() .', le ' . $document->getDateDocument()->format('d/m/Y'), null, new Paragraph()->setIndent(4500)->setSpaceAfter(720));
+
+                // Corps du courrier
+                $fontStyle = new Font();
+                $fontStyle->setBold(true);
+
+                $paragraphStyle = new Paragraph();
+                $paragraphStyle->setIndent(700);
+
+                $section->addText('Objet: ' . $document->getObjet(), $fontStyle, $paragraphStyle);
+
+                $text = $document->getDetails();
+                $lines = explode("\r", $text);
+                foreach ($lines as $line) {
+                    $indentation = new Indentation();
+                    $indentation->setFirstLine(700);
+
+                    $style = new Paragraph();
+                    $style->setIndentation($indentation);
+                    $style->setAlignment('both'); 
+
+                    $section->addText($line, null, $style);
+                }
+                // Signature
+                $styleSign = new Paragraph();
+                $styleSign->setIndent(4500);
+                $styleSign->setSpaceBefore(720);
+                $section->addText($document->getExpediteur(), null, $styleSign);
+
+                // Ajout des images
+                $images = $document->getImages()->toArray();
+                $kernelDir = $this->getParameter('kernel.project_dir'); 
+                
+                if (!empty($images)) {
+                    $section->addPageBreak(); 
+                }
+                
+                foreach ($images as $image) {
+                    $imagePath = $kernelDir . '/public/uploads/documents/' . $image->getImageName();
+                    $section->addText($image->getSlug() . ": " . $image->getImageDescription());
+
+                    if ($image->getImageName()) { 
+                        $section->addImage($imagePath, [
+                            'width' => 400, 
+                            'height' => 533,
+                            'alignment' => \PhpOffice\PhpWord\SimpleType\Jc::CENTER
+                        ]);
+                    }
+                }
+
+                $writer = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'Word2007');
+                $response = new StreamedResponse(function () use ($writer) {
+                    $writer->save('php://output');
+                });
+
+                $fileName = $document->getName() . '.docx';
+                $response->headers->set('Content-Type', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
+                $response->headers->set('Content-Disposition', 'attachment; filename="' . $fileName . '"');
+                return $response;
+                break;
+            case "Email":
+                $section = $phpWord->addSection();
+                
+                $tableStyle = new Table();
+                $cellStyle = ['bgColor' => '#f8f9fa']; 
+                $fontStyle = new Font();
+                $fontStyle->setBold(true);
+
+                $table = $section->addTable();
+                $row = $table->addRow();
+                $row->addCell(1701, $cellStyle)->addText("Expéditeur: ", $fontStyle);
+                $row->addCell(9072, $cellStyle)->addText($user->getEmail());
+
+                $row = $table->addRow();
+                $row->addCell(1701, $cellStyle)->addText("Destinataire: ", $fontStyle);
+                $row->addCell(9072, $cellStyle)->addText($document->getDestinataire());
+
+                $row = $table->addRow();
+                $row->addCell(1701, $cellStyle)->addText("Date: ", $fontStyle);
+                $row->addCell(9072, $cellStyle)->addText($document->getDateDocument()->format('d/m/Y'));
+
+                $row = $table->addRow();
+                $row->addCell(1701, $cellStyle)->addText("Objet: ", $fontStyle);
+                $row->addCell(9072, $cellStyle)->addText($document->getObjet());
+
+                $section->addText('');
+
+                $text = $document->getDetails();
+                $lines = explode("\r", $text);
+                foreach ($lines as $line) {
+                    $style = new Paragraph();
+                    $style->setAlignment('both');
+
+                    $section->addText($line, null, $style);
+                }
+                
+                $styleExpediteur = new Paragraph();
+                $styleExpediteur->setSpaceAfter(0);
+                
+                $section->addText($user->getNom(), null, $styleExpediteur);
+                $section->addText($user->getAdresse(), null, $styleExpediteur);
+                $section->addText($user->getCodePostal(). " ". $user->getVille(), null, $styleExpediteur);
+                $section->addText(
+                    'Téléphone: ' . ($user->getMobile() !== null ? $user->getMobile() : $user->getTelephone()), 
+                    null, 
+                    $styleExpediteur
+                );
+                if($user->getSiret() !== null){ 
+                    $section->addText('Siret: ' . $user->getSiret(), null, $styleExpediteur);
+                    $section->addText($user->getNomEntreprise(), null, $styleExpediteur);
+                }
+                
+                // Ajout des images
+                $images = $document->getImages()->toArray();
+                $kernelDir = $this->getParameter('kernel.project_dir'); 
+
+                if (!empty($images)) {
+                    $section->addPageBreak(); 
+                
+                    foreach ($images as $index => $image) {
+                        $imagePath = $kernelDir . '/public/uploads/documents/' . $image->getImageName();
+                        $section->addText("Annexe" . ($index+1) . ": " . $image->getSlug());
+
+                        if ($image->getImageName()) { 
+                            $section->addImage($imagePath, [
+                                'width' => 400, 
+                                'height' => 533,
+                                'alignment' => \PhpOffice\PhpWord\SimpleType\Jc::CENTER
+                            ]);
+                        }
+                    }
+                }
+
+
+                $footer = $section->addFooter();
+                $footer->addPreserveText('Page {PAGE} sur {NUMPAGES}', null, array('align'=>'center'));
+
+                $writer = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'Word2007');
+                $response = new StreamedResponse(function () use ($writer) {
+                    $writer->save('php://output');
+                });
+
+                $fileName = $document->getName() . '.docx';
+                $response->headers->set('Content-Type', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
+                $response->headers->set('Content-Disposition', 'attachment; filename="' . $fileName . '"');
+                return $response;
+                break;
+            case "Rapport":
+                $section = $phpWord->addSection();
+
+                $fontStyleTitle = new Font();
+                $fontStyleTitle->setSize(20); 
+                $fontStyleTitle->setBold(true);
+                $fontStyleTitle->setUnderline(\PhpOffice\PhpWord\Style\Font::UNDERLINE_SINGLE);
+
+                $fontStyleTitleP = new Font();
+                $fontStyleTitleP->setSize(20); 
+                $fontStyleTitleP->setUnderline(\PhpOffice\PhpWord\Style\Font::UNDERLINE_SINGLE);
+
+                $fontStyleDate = new Font();
+                $fontStyleDate->setSize(14); 
+                
+                $styleCentered = new Paragraph();
+                $styleCentered->setAlignment('center');
+    
+                $textRunDate = $section->addTextRun($styleCentered);
+                $textRunDate->addText("Date: ", $fontStyleDate);
+                $textRunDate->addText($document->getDateDocument()->format('d/m/Y'), $fontStyleDate);
+
+                $textRunTitle = $section->addTextRun($styleCentered);
+                $textRunTitle->addText('Titre: ', $fontStyleTitle);
+                $textRunTitle->addText($document->getObjet(), $fontStyleTitle);
+               
+                $section->addText('Rapport', $fontStyleTitleP, $styleCentered);
+                
+                $text = $document->getDetails();
+                $lines = explode("\r", $text);
+                foreach ($lines as $line) {
+                    $style = new Paragraph();
+                    $style->setAlignment('both');
+
+                    $section->addText($line, null, $style);
+                }
+
+                // Ajout des images
+                $images = $document->getImages()->toArray();
+                $kernelDir = $this->getParameter('kernel.project_dir'); 
+
+                if (!empty($images)) {
+                    $section->addPageBreak(); 
+                
+                    foreach ($images as $index => $image) {
+                        $imagePath = $kernelDir . '/public/uploads/documents/' . $image->getImageName();
+                        $section->addText("Annexe" . ($index+1) . ": " . $image->getSlug());
+
+                        if ($image->getImageName()) { 
+                            $section->addImage($imagePath, [
+                                'width' => 400, 
+                                'height' => 533,
+                                'alignment' => \PhpOffice\PhpWord\SimpleType\Jc::CENTER
+                            ]);
+                        }
+                    }
+                }
+
+
+                $footer = $section->addFooter();
+                $footer->addPreserveText('Page {PAGE} sur {NUMPAGES}', null, array('align'=>'center'));
+
+                $writer = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'Word2007');
+                $response = new StreamedResponse(function () use ($writer) {
+                    $writer->save('php://output');
+                });
+
+                $fileName = $document->getName() . '.docx';
+                $response->headers->set('Content-Type', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
+                $response->headers->set('Content-Disposition', 'attachment; filename="' . $fileName . '"');
+                return $response;
+                break;
+            case "Appel":
+                break;
+            case "Pièce comptable":
+                $section = $phpWord->addSection();
+
+                $fontStyleTitle = new Font();
+                $fontStyleTitle->setSize(15); 
+                // $fontStyleTitle->setBold(true);
+                $fontStyleTitle->setUnderline(\PhpOffice\PhpWord\Style\Font::UNDERLINE_SINGLE);
+
+                $fontStyleTitleP = new Font();
+                $fontStyleTitleP->setSize(15); 
+                $fontStyleTitleP->setUnderline(\PhpOffice\PhpWord\Style\Font::UNDERLINE_SINGLE);
+
+                $fontStyleDate = new Font();
+                $fontStyleDate->setSize(13); 
+                
+                $styleRight = new Paragraph();
+    
+                $section->addText('Pièces comptables', $fontStyleTitleP, $styleRight);
+                
+                $section->addText("Date de la pièce: " . $document->getDateDocument()->format('d/m/Y'), $fontStyleDate);
+                $section->addText("Nom de la pièce: " . $document->getObjet(), $fontStyleDate);
+                $section->addText("Informations complémentaires: ", $fontStyleDate);
+
+                $text = $document->getDetails();
+                $lines = explode("\r", $text);
+                foreach ($lines as $line) {
+                    $style = new Paragraph();
+                    $style->setAlignment('both');
+
+                    $section->addText($line, null, $style);
+                }
+
+                // Ajout des images
+                $images = $document->getImages()->toArray();
+                $kernelDir = $this->getParameter('kernel.project_dir'); 
+
+                if (!empty($images)) {
+                    $section->addPageBreak(); 
+                
+                    foreach ($images as $index => $image) {
+                        $imagePath = $kernelDir . '/public/uploads/documents/' . $image->getImageName();
+                        $section->addText("Annexe" . ($index+1) . ": " . $image->getSlug());
+
+                        if ($image->getImageName()) { 
+                            $section->addImage($imagePath, [
+                                'width' => 400, 
+                                'height' => 533,
+                                'alignment' => \PhpOffice\PhpWord\SimpleType\Jc::CENTER
+                            ]);
+                        }
+                    }
+                }
+                
+                $footer = $section->addFooter();
+                $footer->addPreserveText('Page {PAGE} sur {NUMPAGES}', null, array('align'=>'center'));
+
+                $writer = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'Word2007');
+                $response = new StreamedResponse(function () use ($writer) {
+                    $writer->save('php://output');
+                });
+
+                $fileName = $document->getName() . '.docx';
+                $response->headers->set('Content-Type', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
+                return $response;
+                break;
+        }
+
+    }
+
 }

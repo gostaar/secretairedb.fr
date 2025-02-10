@@ -13,8 +13,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\Annotation\Route;
-use App\Entity\TypeDocument;
-use App\Form\TypeDocumentType;
 use Symfony\Component\Serializer\SerializerInterface;
 
 class DossierController extends AbstractController

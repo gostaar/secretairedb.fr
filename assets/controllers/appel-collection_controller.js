@@ -31,26 +31,19 @@ export default class extends Controller {
      * @param {HTMLElement} item
      */
     applyStyles = (item) => {
-        item.classList.add('d-flex', 'align-items-center', 'gap-2', 'border-0', 'rounded');
+        item.classList.add('d-flex', 'align-items-center', 'gap-2', 'border-0', 'rounded', 'mb-2');
 
-        // Sélectionne les inputs et applique les classes Bootstrap
-        const inputs = item.querySelectorAll('input, select, textarea');
-        inputs.forEach(input => {
-            input.classList.add('form-control');
-            const parentInput = input.parentElement;
-            if (parentInput) {
-                parentInput.classList.add('col-6', 'px-2');
-            }
-        });
-
-        // Ajoute une classe au premier div trouvé
-        const firstDiv = item.querySelector('div');
-        if (firstDiv) {
-            firstDiv.classList.add('d-flex', 'col-8');
+        // Ajoute la structure de colonnes
+        const fields = item.querySelectorAll('input, select, textarea, div');
+        if (fields.length >= 4) {
+            fields[0].classList.add('row', 'col-10', 'd-flex'); // Slug
+            fields[1].style.width = '20%'; // Slug
+            fields[3].style.width = '20%'; // Image Description
+            fields[5].style.width = '40%'; // Objet
+            fields[7].style.width = '20%'; // Actions
         }
     }
 
-    
     /**
      * Ajoute une nouvelle entrée dans la structure HTML
      * 
@@ -63,29 +56,20 @@ export default class extends Controller {
         const element = document.createRange().createContextualFragment(
             this.element.dataset['prototype'].replace(/__name__/g, newIndex)
         ).firstElementChild;
-    
-        element.classList.add('d-flex');
-        
-        // Sélectionne les inputs et applique les classes
-        const inputs = element.querySelectorAll('input, select, textarea');
-        inputs.forEach(input => {
-            const parentInput = input.parentElement;
-            const container = parentInput.parentElement;
-            parentInput.classList.add('col-6', 'px-2');
-            container.classList.add('col-8');
-    
-            // Mise à jour du name pour éviter les conflits
-            if (input.name) {
-                input.name = input.name.replace(/\[\d+\]/, `[${this.index}]`);
-            }
-        });
-    
-        // Ajoute une classe au premier div trouvé
-        const firstDiv = element.querySelector('div');
-        if (firstDiv) {
-            firstDiv.classList.add('d-flex');
+
+        element.classList.add('d-flex', 'align-items-center', 'gap-2', 'border-0', 'rounded', 'mb-2');
+
+        // Sélectionne les inputs et applique les classes Bootstrap
+        const fields = element.querySelectorAll('input, select, textarea, div');
+
+        if (fields.length >= 4) {
+            fields[0].classList.add('row', 'col-10', 'd-flex');
+            fields[1].style.width = '20%'; // Slug
+            fields[3].style.width = '20%'; // Image Description
+            fields[5].style.width = '40%'; // Objet
+            fields[7].style.width = '20%'; // Actions
         }
-    
+
         this.addDeleteButton(element);
         this.index++;
         item.currentTarget.insertAdjacentElement('beforeBegin', element);
@@ -111,9 +95,10 @@ export default class extends Controller {
     }
     
     /**
-     * Ajoute le bouton pour supprimer une ligne
+     * Ajoute le bouton Modifier
      * 
      * @param {HTMLElement} item
+     * @param {HTMLElement} container
      */
     addEditButton = (item) => {
         const btn = document.createElement('button');

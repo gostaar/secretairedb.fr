@@ -17,18 +17,38 @@ class ImageType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        $service = $options['service'];
+
         $builder
             ->add('id', HiddenType::class, [
                 'mapped' => false, 
             ])
             ->add('slug', null, [
-                'label' => 'Nom',
+                'label' => $service === "Telephonique" ? 'Numéro' : 'Nom',
                 'required' => false,
             ])
             ->add('imageDescription', TextType::class, [
-                'label' => 'Description',
+                'label' => $service === "Telephonique" ? 'Nom' : 'Description',
                 'required' => false,
             ])
+            ->add('objet', null, [
+                "label" => $service === "Telephonique" ? "Objet" : false,
+                'attr' => [
+                    'class' => $service === "Telephonique" ? "d-flex" : "d-none"
+                ]
+            ])
+            ->add('actions', null, [
+                "label" => $service === "Telephonique" ? "À faire" : false,
+                'attr' => [
+                    'class' => $service === "Telephonique" ? "d-flex" : "d-none"
+                ]
+            ])
+            // ->add('date_e', null, [
+            //     "label" => false,
+            //     'attr' => [
+            //         'class' => "d-none"
+            //     ]
+            // ])
             ->add('imageFile', VichImageType::class, [
                 'required' => false,
                 'label' => 'Fichier',
@@ -49,6 +69,10 @@ class ImageType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Image::class,
+            'service' => null
+        ]);
+        $resolver->setDefined([
+            'service',
         ]);
     }
 }

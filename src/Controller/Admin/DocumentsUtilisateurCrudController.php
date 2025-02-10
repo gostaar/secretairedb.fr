@@ -40,43 +40,41 @@ class DocumentsUtilisateurCrudController extends AbstractCrudController
             TextField::new('destinataire')
                 ->onlyOnForms(),
 
-            // Chemin du fichier, avec un champ FileField pour gérer le téléchargement
-            ImageField::new('file_path', 'Fichier')
-                ->setFormTypeOptions([
-                    'required' => false,
-                ])
-                ->onlyOnForms()
-                ->setUploadDir('public/uploads/documents') // Répertoire de téléchargement
-                ->setBasePath('uploads/documents'),
+            // Type de document
+            TextField::new('typeDocument')
+                ->onlyOnForms(),
 
+                
             // Champ booléen pour indiquer si le document est actif
             BooleanField::new('is_active', 'Actif')
-                ->onlyOnForms(),
-
+            ->onlyOnForms(),
+            
             // Détails du document
             TextField::new('details')
-                ->onlyOnForms(),
-
+            ->onlyOnForms(),
+            
             FormField::addFieldSet('Relations avec d\'autres entités')->setIcon('fa fa-link'),
             AssociationField::new('user', 'Utilisateur associé')
                 ->setFormTypeOptions([
                     'by_reference' => true,
                 ])
                 ->autocomplete(),
-
+                
             // Association avec le dossier
             AssociationField::new('dossier', 'Dossier associé')
                 ->setFormTypeOptions([
                     'by_reference' => true,
                 ])
                 ->autocomplete(),
-
-            // Association avec le type de document
-            AssociationField::new('typeDocument', 'Type de document associé')
-                ->setFormTypeOptions([
-                    'by_reference' => true,
-                ])
-                ->autocomplete(),
+                        
+            // Chemin du fichier, avec un champ FileField pour gérer le téléchargement
+          
+                // ->setFormTypeOptions([
+                //     'required' => false,
+                // ])
+                // ->onlyOnForms()
+                // ->setUploadDir('public/uploads/documents') // Répertoire de téléchargement
+                // ->setBasePath('uploads/documents'),
         ];
     }
 }

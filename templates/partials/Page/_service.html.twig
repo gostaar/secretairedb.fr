@@ -65,7 +65,7 @@
             </a>
         </div>
         <div class="w-100 my-3">
-<a class="btn btn-primary fs-5 text-white" style='background-color: #0d6efd !important;' href='{{path('subfragment', {fragment: initialisation.fragmentButtonValue, subfragment: app.request.attributes.get('subfragment')})}}'>{{initialisation.buttonValue}}</a>
+            <a class="btn btn-primary fs-5 text-white" style='background-color: #0d6efd !important;' href='{{path('subfragment', {fragment: initialisation.fragmentButtonValue, subfragment: app.request.attributes.get('subfragment')})}}'>{{initialisation.buttonValue}}</a>
         </div>
     </section>
     <section class="intro d-flex flex-column justify-content-evenly bg-white flex-fill">
@@ -81,21 +81,22 @@
                                 <h3 class="mb-0">{{initialisation.titleAdministratif}}</h3>
                             </div>
                             <div class="card-body">
-                                <ul class="list-group list-unstyled">
-                                {% if Administratif is defined %}
+                                <div class="accordion" id="accordionAdministratif">
+                                    {% if Administratif is defined %}
                                     {% for admin in Administratif %}
-                                        <li class="list-group-flush">
-                                            <button class="btn btn-link d-block w-100 text-left text-decoration-none text-dark d-flex justify-content-between" style="text-align: left;" data-bs-toggle="collapse" data-bs-target="#{{ admin.id }}" aria-expanded="false" aria-controls="{{ admin.id }}">
-                                                {{ admin.title }}
-                                                <i class="fas fa-chevron-down"></i>
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header" id="heading{{admin.id}}">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#{{ admin.id }}" aria-expanded="true" aria-controls="collapseOne">
+                                                {{ admin.title }}   
                                             </button>
-                                            <div id="{{ admin.id }}" class="collapse">
-                                                <p class="m-2 text-muted" style="font-style: italic;">{{ admin.description }}</p>
-                                            </div>
-                                        </li>
+                                        </h2>
+                                        <div id="{{ admin.id }}" class="accordion-collapse collapse" aria-labelledby="heading{{admin.id}}" data-bs-parent="#accordionAdministratif">
+                                            <div class="accordion-body">{{ admin.description }}</div>
+                                        </div>
+                                    </div>
                                     {% endfor %}
-                                {% endif %}
-                                </ul>
+                                    {% endif %}
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -106,21 +107,22 @@
                                 <h3 class="mb-0">{{initialisation.titleNumerique}}</h3>
                             </div>
                             <div class="card-body">
-                                <ul class="list-group list-unstyled">
-                                {% if numeriques is defined %}
+                                <div class="accordion" id="accordionNumerique">
+                                    {% if numeriques is defined %}
                                     {% for numerique in numeriques %}
-                                        <li class="list-group-flush">
-                                            <button class="btn btn-link d-block w-100 text-left text-decoration-none text-dark d-flex justify-content-between" style="text-align: left;" data-bs-toggle="collapse" data-bs-target="#{{ numerique.id }}" aria-expanded="false" aria-controls="{{ numerique.id }}">
-                                                {{ numerique.title }}
-                                                <i class="fas fa-chevron-down"></i>
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header" id="heading{{numerique.id}}">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#{{ numerique.id }}" aria-expanded="true" aria-controls="collapseOne">
+                                                {{ numerique.title }}  
                                             </button>
-                                            <div id="{{ numerique.id }}" class="collapse">
-                                                <p class="m-2 text-muted" style="font-style: italic;">{{ numerique.description }}</p>
-                                            </div>
-                                        </li>
+                                        </h2>
+                                        <div id="{{ numerique.id }}" class="accordion-collapse collapse" aria-labelledby="heading{{numerique.id}}" data-bs-parent="#accordionNumerique">
+                                            <div class="accordion-body">{{ numerique.description }}</div>
+                                        </div>
+                                    </div>
                                     {% endfor %}
-                                {% endif %}
-                                </ul>
+                                    {% endif %}
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -132,21 +134,22 @@
                                 <h3 class="mb-0">Services Commerciaux</h3>
                             </div>
                             <div class="card-body">
-                                <ul class="list-group list-unstyled">
-                                {% if commerciaux is defined %}
+                                <div class="accordion" id="accordionCommercial">
+                                    {% if commerciaux is defined %}
                                     {% for commercial in commerciaux %}
-                                        <li class="list-group-flush">
-                                            <button class="btn btn-link d-block w-100 text-left text-decoration-none text-dark d-flex justify-content-between" style="text-align: left;" data-bs-toggle="collapse" data-bs-target="#{{ commercial.id }}" aria-expanded="false" aria-controls="{{ commercial.id }}">
-                                                {{ commercial.title }}
-                                                <i class="fas fa-chevron-down"></i>
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header" id="heading{{commercial.id}}">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#{{ commercial.id }}" aria-expanded="true" aria-controls="collapseOne">
+                                                {{ commercial.title }}  
                                             </button>
-                                            <div id="{{ commercial.id }}" class="collapse">
-                                                <p class="m-2 text-muted" style="font-style: italic;">{{ commercial.description }}</p>
-                                            </div>
-                                        </li>
+                                        </h2>
+                                        <div id="{{ commercial.id }}" class="accordion-collapse collapse" aria-labelledby="heading{{commercial.id}}" data-bs-parent="#accordionCommercial">
+                                            <div class="accordion-body">{{ commercial.description }}</div>
+                                        </div>
+                                    </div>
                                     {% endfor %}
-                                {% endif %}
-                                </ul>
+                                    {% endif %}
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -154,20 +157,6 @@
                 </div>
             </div>
         </div>
-    <p class="p-3 text-center">Cette liste n'est pas exhastive, pour tout autre demande, n'hésitez pas à nous contacter!</p>
+    <p class="p-3 text-center">Cette liste n'est pas exhaustive, pour tout autre demande, n'hésitez pas à nous contacter!</p>
     </section>
 </section>
-
-<style>
-    /* Ajout d'une couleur de fond lorsque le menu est déroulé */
-    .collapse.show {
-        background-color: #f0f8ff; /* Couleur de fond lorsque le menu est ouvert */
-        transition: background-color 0.3s ease; /* Animation douce */
-    }
-
-    /* Optionnel : changer la couleur du bouton aussi */
-    button[aria-expanded="true"] {
-        background-color: #e0f0ff; /* Légère variation pour le bouton */
-        transition: background-color 0.3s ease;
-    }
-</style>

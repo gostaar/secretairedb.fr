@@ -7,85 +7,19 @@
         {% include 'userPage/_header.html.twig' %}
         <main id="fragmentContent" class="container d-flex flex-column justify-content-start flex-grow-1 py-4">
             {% include 'partials/flash.html.twig' %}
-                {{ form_start(formDocument, {'attr': {'class': 'm-0'}}) }}
-                <div class='col-12'>
-                    <div class="card shadow-sm">
-                        <div class="card-header">
-                            <h4>{{ document.dossier.name }} - {{ document.name }}</h4>
-                        </div>
-                        <div class="card-body">
-                            {{form_row(formDocument.id, {'value' : document.id})}}
-                            <table class="table table-bordered">
-                                <tbody>
-                                    <tr>
-                                        <th class='col-3' style='vertical-align: middle;'>Date</th>
-                                        <td class='col-9 parent'>{{ form_row(formDocument.date_document) }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th class='col-3' style='vertical-align: middle;'>Nom</th>
-                                        <td class='col-3 parent'>{{ form_row(formDocument.name) }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th class='col-3' style='vertical-align: middle;'>Expéditeur</th>
-                                        <td class='col-3 parent'>{{ form_row(formDocument.expediteur) }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th class='col-3' style='vertical-align: middle;'>Destinataire</th>
-                                        <td class='col-3 parent'>{{ form_row(formDocument.destinataire) }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th class='col-3' style='vertical-align: middle;'>Dossier</th>
-                                        <td class='col-3 parent'>{{ form_row(formDocument.dossier) }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th class='col-3' style='vertical-align: middle;'>Type</th>
-                                        <td class='col-3 parent'>{{ form_row(formDocument.typeDocument) }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th class='col-3' style='vertical-align: middle;'>Détails</th>
-                                        <td class='col-3 parent'>{{ form_row(formDocument.details) }}</td>
-                                    </tr>
-                                </tbody>    
-                            </table>
-                        </div>
-                        <div class="card-header mx-0">
-                            <h4>Images</h4>
-                        </div>
-                        <div class='card-body'>
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th class="col-4">Nom</th>
-                                        <th class="col-4">Description</th>
-                                        <th class="col-4">Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {# {% for imageField in formDocument.images %}
-                                        <tr>
-                                            <td class="col-4">
-                                                <div class="d-flex">{{ form_widget(imageField.slug) }}</div>
-                                            </td>
-                                            <td class="col-4">
-                                                <div class="d-flex">{{ form_widget(imageField.imageDescription) }}</div>
-                                            </td>
-                                            <td class="col-4">
-                                                <div class="d-flex">{{ form_rest(imageField) }}</div>
-                                            </td>
-                                        </tr>
-                                    {% endfor %} #}
-                                </tbody>
-                            </table>
-                            {{ form_row(formDocument.images) }}
-                        </div>
-                        {# NE PAS SUPPRIMER POUR MODAL !!! #}
-                        {% set count = -1 %}{% for image in document.images %}{% set count = count + 1 %}<span id="{{ count }}" data-image-id="{{ image.id }}"></span>{% endfor %}
-                        <div class='d-flex justify-content-center'>
-                            {{ form_row(formDocument.submit, {'attr' : {'data-action' : "click->image-collection#handleButtonClick"}}) }} 
-                        </div>
-                    </div>
-                </div>
-                {{ form_end(formDocument) }}
+            
+                {% if document.typeDocument == "Courrier" %}
+                    {% include "partials/user/_documentEditCourrier.html.twig" %}
+                {% elseif document.typeDocument == "Email" %}
+                    {% include "partials/user/_documentEditMail.html.twig" %}
+                {% elseif document.typeDocument == "Rapport" %}
+                    {% include "partials/user/_documentEditRapport.html.twig" %}
+                {% elseif document.typeDocument == "Pièce comptable" %}
+                    {% include "partials/user/_documentEditComptable.html.twig" %}
+                {% elseif document.typeDocument == "Appel" %}
+                    {% include "partials/user/_documentEditAppel.html.twig" %}
+                {% endif %}
+
                 {% set imageId = "" %}
                 {% set slug = "" %}
                 {% set description = "" %}

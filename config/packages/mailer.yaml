@@ -1,3 +1,0 @@
-framework:
-    mailer:
-        dsn: 'smtp://postmaster@secretairedb.fr:e98c462da7e95ac7e2f6732fe246df62-667818f5-7351d686@smtp.eu.mailgun.org:587'

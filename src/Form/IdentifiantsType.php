@@ -19,13 +19,13 @@ class IdentifiantsType extends AbstractType
                 'mapped' => false, 
             ])
             ->add('site', null, [
-                'label' => false
+                'label' => "Site"
             ])
             ->add('identifiant', null, [
-                'label' => false
+                'label' => "Identifiant"
             ])
             ->add('password', null, [
-                'label' => false
+                'label' => 'Mot de passe'
             ])
         ;
     }

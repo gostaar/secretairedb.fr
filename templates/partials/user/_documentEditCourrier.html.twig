@@ -1,0 +1,93 @@
+{{ form_start(formDocument, {'attr': {'class': 'm-0'}}) }}
+
+<div class='col-12'>
+    <div class="card shadow-sm">
+        <div class="card-header d-flex align-items-center justify-content-between">
+            <h5 class="m-0">
+                <a href='{{path('dossiers', {'service': service }) }}'>{{ service }}</a> - 
+                <a href='{{path('dossier', {'service': service, 'dossierId': document.dossier.id})}}'>{{ document.dossier.name }}</a> - 
+                <a href='{{path('document', {'service': service, 'dossierId': document.dossier.id, 'documentId' : document.id})}}'>{{ document.name }}</a> 
+            </h5>
+            <div class="d-flex gap-3">
+                {{ form_row(formDocument.submit, {'attr' : {'data-action' : "click->image-collection#handleButtonClick"}}) }} 
+                <a type="button" href="{{ path('document_download', {'id': app.request.attributes.get('documentId') }) }}" class="btn mb-3 btn-primary d-flex align-items-center">
+                    <span class="d-none d-md-inline">Télécharger</span>
+                    <i class="fas fa-download d-inline d-md-none"></i>
+                </a>
+            </div>
+        </div>
+        <div class="card-body">
+            <table class="table table-bordered">
+                <tbody>
+                    <tr>
+                        <th class='col-3' style='vertical-align: middle;'>Nom</th>
+                        <th class='col-3' style='vertical-align: middle;'>Dossier</th>
+                        <th class='col-3' style='vertical-align: middle;'>Type</th>
+                    </tr>
+                    <tr>
+                        <td class='col-3 parent'>{{ form_row(formDocument.name) }}</td>
+                        <td class='col-3 parent'>{{ form_row(formDocument.dossier) }}</td>
+                        <td class='col-3 parent'>{{ form_row(formDocument.typeDocument) }}</td>
+                    </tr>
+                </tbody>    
+            </table>
+            <div class="d-flex flex-wrap justify-content-between">
+                {{form_row(formDocument.id, {'value' : document.id})}}
+                {# Expéditeur #}
+                {{ form_row(formDocument.expediteur, {'attr': {'value' : user.nom, 'class': 'd-none'}}) }}
+                <div style="min-width:50%;" class="mb-3">
+                    <div>{{ user.nom }}</div>
+                    <div>{{ user.adresse }}</div>
+                    <div>{{ user.codePostal }} {{ user.ville }}</div>
+                    <div>Téléphone: {% if user.telephone is not empty %}{{ user.telephone }}{% else %}{{ user.portabel }}{% endif %}</div>
+                    {% if user.siret is not empty %}<div>siret: {{ user.siret }}</div>
+                    <div>{{ user.nomEntreprise }}</div>{% endif %}
+                </div>
+                <div style="min-width:50%;" class="mb-3">
+                {# Destinataire #}
+
+                    <div style="100%">{{ form_row(formDocument.destinataire, {'attr': {'style' : 'min-height: 150px;'}}) }}</div>
+
+                    <div style="100%">
+                        Fait à {{ user.ville }}, le {{ form_widget(formDocument.date_document, {'attr': {'class': 'd-inline-block w-auto'}}) }}
+                    </div>
+
+                </div>
+            </div>
+            {# Contenu #}
+            <div>
+                <div class="d-flex align-items-center mb-3">
+                    <strong class="me-2">Objet:</strong>
+                    {{ form_widget(formDocument.objet, {'attr': {'class': 'form-control w-auto'}}) }}
+                </div>
+
+                <div class='col-12'>{{ form_row(formDocument.details, {'attr' : {'placeholder': "Madame, Monsieur, \n..." }} ) }}</div>
+            </div>
+
+            {# Signature #}
+            <div class="d-flex justify-content-end">
+                <div class="col-6">{{ user.nom }}</div>
+            </div>
+
+        </div>
+        <div class="card-header mx-0">
+            <h4>Pièces jointes</h4>
+        </div>
+        <div class='card-body'>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th class="col-4">Nom</th>
+                        <th class="col-4">Description</th>
+                        <th class="col-4">Actions</th>
+                    </tr>
+                </thead>
+            </table>
+            {{ form_row(formDocument.images) }}
+        </div>
+        {# NE PAS SUPPRIMER POUR MODAL !!! #}
+        {% set count = -1 %}{% for image in document.images %}{% set count = count + 1 %}<span id="{{ count }}" data-image-id="{{ image.id }}"></span>{% endfor %}
+        
+    </div>
+</div>
+{{ form_end(formDocument) }}

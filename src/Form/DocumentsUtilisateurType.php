@@ -4,7 +4,6 @@ namespace App\Form;
 
 use App\Entity\DocumentsUtilisateur;
 use App\Entity\Dossier;
-use App\Entity\TypeDocument;
 use App\Entity\User;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -21,6 +20,7 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 class DocumentsUtilisateurType extends AbstractType
 {
@@ -34,6 +34,7 @@ class DocumentsUtilisateurType extends AbstractType
     {
         $userId = $options['userId'];
         $user = $this->entityManager->find(User::class, $userId);
+        $service  = $options['service'];
 
         $documentId = $options['documentId'];
         $document = $documentId && is_numeric($documentId) ? $this->entityManager->find(\App\Entity\DocumentsUtilisateur::class, $documentId) : null;
@@ -50,7 +51,8 @@ class DocumentsUtilisateurType extends AbstractType
             'services' => $serviceId,
             'user' => $userId,
         ]);
-        // dd($documentId, $document, $dossier);
+
+        $typeDocuments = $this->getTypeDocumentsByService($service);
 
         $builder
             ->add('id', null, [
@@ -72,11 +74,23 @@ class DocumentsUtilisateurType extends AbstractType
             ])
             ->add('expediteur', null, [
                 'label' => false,
-                'attr' => ['class' => 'border-0']
+                'attr' => [
+                    'class' => 'border-0',
+                    
+                ]
             ])
-            ->add('destinataire', null, [
+            ->add('destinataire', TextareaType::class, [
                 'label' => false,
-                'attr' => ['class' => 'border-0']
+                'attr' => [
+                    'placeholder' => "Adresse du destinataire"
+                ],
+                "required" => false,
+            ])
+            ->add('objet', null, [
+                'label' => false,
+                'attr' => [
+                    'placeholder' => "Objet"
+                ]
             ])
             // ->add('isActive', CheckboxType::class, [
             //     'label' => 'Actif',
@@ -85,11 +99,10 @@ class DocumentsUtilisateurType extends AbstractType
             //     'mapped' => true,
             // ])
             ->add('details', TextareaType::class, [
-                'attr' => [
-                    'rows' => 5, // Nombre de lignes
-                ],
                 'label' => false,
-                'attr' => ['class' => 'border-0']
+                'attr' => [
+                    'style' => 'min-height: 300px;'
+                ]
             ])
             ->add('dossier', EntityType::class, [
                 'class' => Dossier::class,
@@ -97,25 +110,22 @@ class DocumentsUtilisateurType extends AbstractType
                 'label' => false,
                 'data' => $dossier,
             ])
-            ->add('typeDocument', EntityType::class, [
-                'class' => TypeDocument::class,
-                'choice_label' => 'name',
-                'choice_value' => 'id',
-                'required' => false,
+            ->add('typeDocument', ChoiceType::class, [
                 'label' => false,
-                'mapped' => true,
+                'choices' => array_combine($typeDocuments, $typeDocuments),
             ])
             ->add('images', CollectionType::class, [
                 'label' => false,
                 'entry_type' => AddImageType::class,
-                'allow_add' => true, // Permet d'ajouter de nouveaux éléments
-                'allow_delete' => true, // Permet de supprimer des éléments
-                'by_reference' => false, // Permet de travailler avec des objets sans les référencer directement
+                'allow_add' => true,
+                'allow_delete' => true,
+                'by_reference' => false,
                 'entry_options' => [
                     'label' => false,
+                    'service' => $service->getName()
                 ],
                 'attr' => [
-                    'data-controller' => 'image-collection',
+                    'data-controller' => $service->getName() === "Telephonique" ? 'appel-collection' : 'image-collection',
                 ],
             ])
             // ->add(
@@ -124,21 +134,34 @@ class DocumentsUtilisateurType extends AbstractType
             //         ->add('imageDescription', null, ['label' => false])
             // )
             ->add('submit', SubmitType::class, [
-                'label' => 'Enregistrer',
+                'label' => '<i class="fas fa-save d-inline d-md-none"></i><span class="d-none d-md-inline"> Enregistrer</span>',
+                'label_html' => true,
             ])
         ;
+    }
+
+    private function getTypeDocumentsByService(?string $service): array
+    {
+        $types = [
+            'Administratif' => ['Courrier', 'Email', 'Rapport', 'Pièce comptable'],
+            'Commercial' => ['Rapport'],
+            'Numerique' => ['Rapport'],
+            'Telephonique' => ['Appel'],
+        ];
+
+        return $types[$service] ?? ['Autre'];
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => DocumentsUtilisateur::class,
+            'data_class' => DocumentsUtilisateur::class
         ]);
-        
         $resolver->setDefined([
             'userId',
             'documentId',
             'dossierId',
+            'service',
         ]);
 
     }

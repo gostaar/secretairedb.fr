@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20250205173206 extends AbstractMigration
+final class Version20250210111311 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -29,10 +29,9 @@ final class Version20250205173206 extends AbstractMigration
         $this->addSql('CREATE TABLE devis_ligne (id SERIAL NOT NULL, devis_id INT NOT NULL, designation VARCHAR(255) NOT NULL, quantite INT DEFAULT NULL, prix_unitaire NUMERIC(10, 2) NOT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE INDEX IDX_41D3C6A741DEFADA ON devis_ligne (devis_id)');
         $this->addSql('CREATE TABLE devis_version (id SERIAL NOT NULL, montant NUMERIC(10, 2) DEFAULT NULL, commentaire VARCHAR(255) DEFAULT NULL, is_active BOOLEAN NOT NULL, status VARCHAR(255) NOT NULL, date_modification TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, version VARCHAR(255) DEFAULT NULL, PRIMARY KEY(id))');
-        $this->addSql('CREATE TABLE documents_utilisateur (id SERIAL NOT NULL, user_id INT DEFAULT NULL, dossier_id INT DEFAULT NULL, type_document_id INT DEFAULT NULL, date_document DATE NOT NULL, name VARCHAR(255) DEFAULT NULL, expediteur VARCHAR(255) DEFAULT NULL, destinataire VARCHAR(255) DEFAULT NULL, is_active BOOLEAN NOT NULL, details VARCHAR(255) DEFAULT NULL, PRIMARY KEY(id))');
+        $this->addSql('CREATE TABLE documents_utilisateur (id SERIAL NOT NULL, user_id INT DEFAULT NULL, dossier_id INT DEFAULT NULL, date_document DATE NOT NULL, name VARCHAR(255) DEFAULT NULL, expediteur VARCHAR(255) DEFAULT NULL, destinataire VARCHAR(255) DEFAULT NULL, is_active BOOLEAN NOT NULL, details TEXT DEFAULT NULL, type_document VARCHAR(255) NOT NULL, objet VARCHAR(255) DEFAULT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE INDEX IDX_C7800232A76ED395 ON documents_utilisateur (user_id)');
         $this->addSql('CREATE INDEX IDX_C7800232611C0C56 ON documents_utilisateur (dossier_id)');
-        $this->addSql('CREATE INDEX IDX_C78002328826AFA6 ON documents_utilisateur (type_document_id)');
         $this->addSql('CREATE TABLE dossier (id SERIAL NOT NULL, user_id INT DEFAULT NULL, services_id INT DEFAULT NULL, name VARCHAR(255) NOT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE INDEX IDX_3D48E037A76ED395 ON dossier (user_id)');
         $this->addSql('CREATE INDEX IDX_3D48E037AEF5A6C1 ON dossier (services_id)');
@@ -49,7 +48,7 @@ final class Version20250205173206 extends AbstractMigration
         $this->addSql('COMMENT ON COLUMN google_token.created_at IS \'(DC2Type:datetime_immutable)\'');
         $this->addSql('CREATE TABLE identifiants (id SERIAL NOT NULL, users_id INT DEFAULT NULL, site VARCHAR(255) NOT NULL, identifiant VARCHAR(255) NOT NULL, password VARCHAR(255) NOT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE INDEX IDX_B27B655167B3B43D ON identifiants (users_id)');
-        $this->addSql('CREATE TABLE image (id SERIAL NOT NULL, document_id INT NOT NULL, slug VARCHAR(255) DEFAULT NULL, image_name VARCHAR(255) DEFAULT NULL, image_size INT DEFAULT NULL, image_description VARCHAR(255) DEFAULT NULL, PRIMARY KEY(id))');
+        $this->addSql('CREATE TABLE image (id SERIAL NOT NULL, document_id INT NOT NULL, slug VARCHAR(255) DEFAULT NULL, image_name VARCHAR(255) DEFAULT NULL, image_size INT DEFAULT NULL, image_description VARCHAR(255) DEFAULT NULL, objet TEXT DEFAULT NULL, actions VARCHAR(255) DEFAULT NULL, date_e TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE INDEX IDX_C53D045FC33F7837 ON image (document_id)');
         $this->addSql('CREATE TABLE paiement (id SERIAL NOT NULL, facture_id INT DEFAULT NULL, montant_paye NUMERIC(10, 2) NOT NULL, date_paiement TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE INDEX IDX_B1DC7A1E7F2DEE08 ON paiement (facture_id)');
@@ -60,8 +59,6 @@ final class Version20250205173206 extends AbstractMigration
         $this->addSql('CREATE TABLE services_user (services_id INT NOT NULL, user_id INT NOT NULL, PRIMARY KEY(services_id, user_id))');
         $this->addSql('CREATE INDEX IDX_9AA8EF8AEF5A6C1 ON services_user (services_id)');
         $this->addSql('CREATE INDEX IDX_9AA8EF8A76ED395 ON services_user (user_id)');
-        $this->addSql('CREATE TABLE type_document (id SERIAL NOT NULL, user_id INT DEFAULT NULL, name VARCHAR(255) NOT NULL, PRIMARY KEY(id))');
-        $this->addSql('CREATE INDEX IDX_1596AD8AA76ED395 ON type_document (user_id)');
         $this->addSql('CREATE TABLE "user" (id SERIAL NOT NULL, email VARCHAR(180) NOT NULL, roles JSON NOT NULL, password VARCHAR(255) NOT NULL, last_activity TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, nom VARCHAR(255) NOT NULL, adresse VARCHAR(255) DEFAULT NULL, code_postal VARCHAR(255) DEFAULT NULL, ville VARCHAR(255) DEFAULT NULL, pays VARCHAR(255) DEFAULT NULL, telephone VARCHAR(255) DEFAULT NULL, mobile VARCHAR(255) DEFAULT NULL, siret VARCHAR(255) DEFAULT NULL, nom_entreprise VARCHAR(255) DEFAULT NULL, password_reset_token VARCHAR(255) DEFAULT NULL, password_reset_expires_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE UNIQUE INDEX UNIQ_IDENTIFIER_EMAIL ON "user" (email)');
         $this->addSql('COMMENT ON COLUMN "user".password_reset_expires_at IS \'(DC2Type:datetime_immutable)\'');
@@ -71,7 +68,6 @@ final class Version20250205173206 extends AbstractMigration
         $this->addSql('ALTER TABLE devis_ligne ADD CONSTRAINT FK_41D3C6A741DEFADA FOREIGN KEY (devis_id) REFERENCES devis (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
         $this->addSql('ALTER TABLE documents_utilisateur ADD CONSTRAINT FK_C7800232A76ED395 FOREIGN KEY (user_id) REFERENCES "user" (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
         $this->addSql('ALTER TABLE documents_utilisateur ADD CONSTRAINT FK_C7800232611C0C56 FOREIGN KEY (dossier_id) REFERENCES dossier (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
-        $this->addSql('ALTER TABLE documents_utilisateur ADD CONSTRAINT FK_C78002328826AFA6 FOREIGN KEY (type_document_id) REFERENCES type_document (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
         $this->addSql('ALTER TABLE dossier ADD CONSTRAINT FK_3D48E037A76ED395 FOREIGN KEY (user_id) REFERENCES "user" (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
         $this->addSql('ALTER TABLE dossier ADD CONSTRAINT FK_3D48E037AEF5A6C1 FOREIGN KEY (services_id) REFERENCES services (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
         $this->addSql('ALTER TABLE events ADD CONSTRAINT FK_5387574AA76ED395 FOREIGN KEY (user_id) REFERENCES "user" (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
@@ -86,7 +82,6 @@ final class Version20250205173206 extends AbstractMigration
         $this->addSql('ALTER TABLE repertoire ADD CONSTRAINT FK_3C367876611C0C56 FOREIGN KEY (dossier_id) REFERENCES dossier (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
         $this->addSql('ALTER TABLE services_user ADD CONSTRAINT FK_9AA8EF8AEF5A6C1 FOREIGN KEY (services_id) REFERENCES services (id) ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE');
         $this->addSql('ALTER TABLE services_user ADD CONSTRAINT FK_9AA8EF8A76ED395 FOREIGN KEY (user_id) REFERENCES "user" (id) ON DELETE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE');
-        $this->addSql('ALTER TABLE type_document ADD CONSTRAINT FK_1596AD8AA76ED395 FOREIGN KEY (user_id) REFERENCES "user" (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
     }
 
     public function down(Schema $schema): void
@@ -99,7 +94,6 @@ final class Version20250205173206 extends AbstractMigration
         $this->addSql('ALTER TABLE devis_ligne DROP CONSTRAINT FK_41D3C6A741DEFADA');
         $this->addSql('ALTER TABLE documents_utilisateur DROP CONSTRAINT FK_C7800232A76ED395');
         $this->addSql('ALTER TABLE documents_utilisateur DROP CONSTRAINT FK_C7800232611C0C56');
-        $this->addSql('ALTER TABLE documents_utilisateur DROP CONSTRAINT FK_C78002328826AFA6');
         $this->addSql('ALTER TABLE dossier DROP CONSTRAINT FK_3D48E037A76ED395');
         $this->addSql('ALTER TABLE dossier DROP CONSTRAINT FK_3D48E037AEF5A6C1');
         $this->addSql('ALTER TABLE events DROP CONSTRAINT FK_5387574AA76ED395');
@@ -114,7 +108,6 @@ final class Version20250205173206 extends AbstractMigration
         $this->addSql('ALTER TABLE repertoire DROP CONSTRAINT FK_3C367876611C0C56');
         $this->addSql('ALTER TABLE services_user DROP CONSTRAINT FK_9AA8EF8AEF5A6C1');
         $this->addSql('ALTER TABLE services_user DROP CONSTRAINT FK_9AA8EF8A76ED395');
-        $this->addSql('ALTER TABLE type_document DROP CONSTRAINT FK_1596AD8AA76ED395');
         $this->addSql('DROP TABLE contact');
         $this->addSql('DROP TABLE devis');
         $this->addSql('DROP TABLE devis_ligne');
@@ -131,7 +124,6 @@ final class Version20250205173206 extends AbstractMigration
         $this->addSql('DROP TABLE repertoire');
         $this->addSql('DROP TABLE services');
         $this->addSql('DROP TABLE services_user');
-        $this->addSql('DROP TABLE type_document');
         $this->addSql('DROP TABLE "user"');
     }
 }

@@ -1,57 +1,22 @@
-<header class="shadow-md p-3" style='background-color: rgb(39,64,1);'>
-       <div class="pt-3 d-flex justify-content-between">
-            
-            
-            <a class="d-inline text-decoration-none" href="{{ path('app_logout') }}">
-                <h4 class="text-white">Secretaire Pro</h4>
-            </a>
-        
-            <nav class=" d-none d-md-block">
-                <ul class="nav d-flex justify-content-between flex-nowrap">
+<header class="shadow-md p-3" style="background-color: rgb(39,64,1);">
+    <a class="text-center navbar-brand text-white" href="{{ path('app_logout') }}">
+        <h4 class="mt-4">Vers le site</h4>
+    </a>
+    <nav class="navbar navbar-expand-lg m-0 justify-content-center flex-column bg-transparent-tertiary">
+
+            <button class="navbar-toggler bg-body-tertiary" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse gap-3 flex-column" id="navbarNav">
+                <ul class="navbar-nav align-items-center mt-3 me-auto mb-2 mb-lg-0">
+                    <!-- Menu principal -->
                     {% include 'userPage/_headerMenu.html.twig' %}
-                </ul>     
-            </nav>      
+                </ul>
+                {# <form class="d-flex" role="search">
+                    <input class="form-control me-2" type="search" placeholder="Recherche" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit" >Recherche</button>
+                </form> #}
+            </div>
 
-            <!-- Menu Burger (Petits Écrans) -->
-            <nav class="sidebar d-md-none navbar-expand-md fixed-top" id="navBurger">
-                <div class="container-fluid">
-                    <button class="menu-toggle" id="menu-toggle"
-                        type="button"
-                        data-bs-toggle="collapse"
-                        data-bs-target="#navbarNav"
-                        aria-controls="navbarNav"
-                        aria-expanded="false"
-                        aria-label="Toggle navigation"
-                    >&#9776;</button> 
-                    <div class="collapse navbar-collapse" id="navbarNav">
-                        <div class="text-center pb-4 pt-4">
-                            <h2><a href="{{ path('app_logout') }}" class="text-warning" >Secrétaire Pro</a></h2>
-                        </div>
-                        <div class="user-avatar d-flex mb-4 justify-content-center align-items-center gap-3">
-                            <a href="{{ path('profile') }}" class="d-flex justify-content-center align-items-center">
-                                <img src="{{ asset('build/images/avatar.png') }}" alt="Avatar" class="icon-size"/>
-                            </a>
-                            <div class="d-flex flex-column">
-                                <a href="{{ path('profile') }}" class="list-unstyled text-white">{{ app.user.email }}</a>
-                                <div class="list-unstyled">
-                                    <a href="{{ path('app_logout') }}" class="bt w-100 deconnexion">Déconnexion</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="nav nav-pills flex-column mb-sm-auto pt-2 pb-5 ps-3 align-items-center" id="menu">
-                            {% include 'userPage/_headerMenu.html.twig' %}
-                        </div>
-                    </div>
-                </div>
-            </nav>
-
-            <ul class="list-unstyled m-3 my-auto">
-                <li>
-                    <a class="d-none d-md-inline text-decoration-none" href="{{ path('app_logout') }}">
-                        <i class="fas fa-power-off text-danger fs-4"></i>
-                    </a>
-                </li>
-            </ul> 
-        </div>
-
+    </nav>
 </header>

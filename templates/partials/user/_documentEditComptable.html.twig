@@ -1,0 +1,76 @@
+{{ form_start(formDocument, {'attr': {'class': 'm-0'}}) }}
+
+<div class='col-12'>
+    <div class="card shadow-sm">
+        <div class="card-header d-flex align-items-center justify-content-between">
+            <h5 cmass="m-0">
+                <a href='{{path('dossiers', {'service': service }) }}'>{{ service }}</a> - 
+                <a href='{{path('dossier', {'service': service, 'dossierId': document.dossier.id})}}'>{{ document.dossier.name }}</a> - 
+                <a href='{{path('document', {'service': service, 'dossierId': document.dossier.id, 'documentId' : document.id})}}'>{{ document.name }}</a> 
+            </h5>
+            <div class="d-flex gap-3">
+                {{ form_row(formDocument.submit, {'attr' : {'data-action' : "click->image-collection#handleButtonClick"}}) }} 
+                <a type="button" href="{{ path('document_download', {'id': app.request.attributes.get('documentId') }) }}" class="btn mb-3 btn-primary d-flex align-items-center">
+                    <span class="d-none d-md-inline">Télécharger</span>
+                    <i class="fas fa-download d-inline d-md-none"></i>
+                </a>
+            </div>
+        </div>
+        <div class="card-body">
+            <table class="mb-2 table table-bordered">
+                <tbody>
+                    <tr>
+                        <th class='col-3' style='vertical-align: middle;'>Nom</th>
+                        <th class='col-3' style='vertical-align: middle;'>Dossier</th>
+                        <th class='col-3' style='vertical-align: middle;'>Type</th>
+                    </tr>
+                    <tr>
+                        <td class='col-3 parent'>{{ form_row(formDocument.name) }}</td>
+                        <td class='col-3 parent'>{{ form_row(formDocument.dossier) }}</td>
+                        <td class='col-3 parent'>{{ form_row(formDocument.typeDocument) }}</td>
+                    </tr>
+                </tbody>    
+            </table>
+            {{form_row(formDocument.id, {'value' : document.id})}}
+            {# Destinataire #}
+            {{ form_row(formDocument.expediteur, {'attr': {'value' : user.nom, 'class': 'd-none'}}) }}
+            <div class="d-flex mb-3">
+                <div class="col-12 col-md-6">
+                    Établi le {{ form_widget(formDocument.date_document, {'attr': {'class': 'd-inline-block w-auto'}}) }}
+                </div>
+            </div>
+
+            {# Expéditeur #}
+            <div class="d-flex">    
+                <div class="col-12 col-md-6">
+                    {{ form_row(formDocument.destinataire, {'attr': {'style' : 'min-height: 150px;', "placeholder" : "Coordonnées de l'expéditeur"}}) }}
+                </div>
+            </div>
+        
+            {# Contenu #}
+            <div>
+                <div>{{ form_row(formDocument.objet, {'attr': {'class' : 'fw-bold', "placeholder" : "Facture n°, Devis n°, etc."}}) }}</div>
+                <div class='col-12'>{{ form_row(formDocument.details, {'attr' : {'placeholder': "Notes concernant ce document comptable ..." , 'style' : 'min-height: 150px !important;'}} ) }}</div>
+            </div>
+        </div>
+        <div class="card-header mx-0">
+            <h4>Pièce Comptable</h4>
+        </div>
+        <div class='card-body'>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th class="col-4">Document</th>
+                        <th class="col-4">Description</th>
+                        <th class="col-4">Actions</th>
+                    </tr>
+                </thead>
+            </table>
+            {{ form_row(formDocument.images) }}
+        </div>
+        {# NE PAS SUPPRIMER POUR MODAL !!! #}
+        {% set count = -1 %}{% for image in document.images %}{% set count = count + 1 %}<span id="{{ count }}" data-image-id="{{ image.id }}"></span>{% endfor %}
+        
+    </div>
+</div>
+{{ form_end(formDocument) }}

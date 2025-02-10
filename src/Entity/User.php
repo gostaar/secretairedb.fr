@@ -80,12 +80,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private Collection $services;
 
     /**
-     * @var Collection<int, TypeDocument>
-     */
-    #[ORM\OneToMany(targetEntity: TypeDocument::class, mappedBy: 'user')]
-    private Collection $typeDocuments;
-
-    /**
      * @var Collection<int, Contact>
      */
     #[ORM\OneToMany(targetEntity: Contact::class, mappedBy: 'user')]
@@ -144,7 +138,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->factures = new ArrayCollection();
         $this->repertoires = new ArrayCollection();
         $this->services = new ArrayCollection();
-        $this->typeDocuments = new ArrayCollection();
         $this->contacts = new ArrayCollection();
         $this->identifiants = new ArrayCollection();
         
@@ -162,7 +155,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             $this->documents,
             $this->events,
             $this->contacts,
-            $this->typeDocuments,
             $this->identifiants,
         ];
     
@@ -245,7 +237,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             "documents" => $this->documents ,
             "events" => $this->events ,
             "contacts" => $this->contacts ,
-            "typeDocuments" => $this->typeDocuments ,
             "identifiants" => $this->identifiants,
         ];
     }
@@ -275,7 +266,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $user->documents = $data['documents'] ?? []; 
         $user->events = $data['events'] ?? []; 
         $user->contacts = $data['contacts'] ?? []; 
-        $user->typeDocuments = $data['typeDocuments'] ?? []; 
         $user->identifiants = $data['identifiants'] ?? []; 
 
         return $user;
@@ -562,36 +552,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if ($this->services->removeElement($service)) {
             $service->removeUser($this);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, TypeDocument>
-     */
-    public function getTypeDocuments(): Collection
-    {
-        return $this->typeDocuments;
-    }
-
-    public function addTypeDocument(TypeDocument $typeDocument): static
-    {
-        if (!$this->typeDocuments->contains($typeDocument)) {
-            $this->typeDocuments->add($typeDocument);
-            $typeDocument->setUser($this);
-        }
-
-        return $this;
-    }
-
-    public function removeTypeDocument(TypeDocument $typeDocument): static
-    {
-        if ($this->typeDocuments->removeElement($typeDocument)) {
-            // set the owning side to null (unless already changed)
-            if ($typeDocument->getUser() === $this) {
-                $typeDocument->setUser(null);
-            }
         }
 
         return $this;

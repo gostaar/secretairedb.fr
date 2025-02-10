@@ -12,10 +12,10 @@ use App\Entity\DevisVersion;
 use App\Entity\DocumentsUtilisateur;
 use App\Entity\Dossier;
 use App\Entity\Events;
+use App\Entity\Image;
 use App\Entity\Paiement;
 use App\Entity\Repertoire;
 use App\Entity\Services;
-use App\Entity\TypeDocument;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
@@ -85,8 +85,8 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToCrud('Répertoire', 'fa fa-folder', Repertoire::class);
         yield MenuItem::linkToCrud('Documents', 'fa fa-file-alt', DocumentsUtilisateur::class);
         
-        yield MenuItem::section('Type de Document et Contact');
-        yield MenuItem::linkToCrud('Types de documents', 'fa fa-file-alt', TypeDocument::class);
+        yield MenuItem::section('Contact et Images');
         yield MenuItem::linkToCrud('Contacts', 'fa fa-users', Contact::class);
+        yield MenuItem::linkToCrud('Images', 'fa fa-file-contract', Image::class);
     }
 }    

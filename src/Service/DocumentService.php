@@ -4,7 +4,6 @@ namespace App\Service;
 use App\Entity\DocumentsUtilisateur;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
-use App\Entity\TypeDocument;
 use App\Entity\Dossier;
 use App\Entity\Services;
 
@@ -58,7 +57,7 @@ class DocumentService
     public function updateDocument(
         int $id, 
         User $user, 
-        ?TypeDocument $type_document, 
+        ?string $type_document, 
         ?DateTimeInterface $date_document, 
         ?Dossier $dossier, 
         ?string $details, 

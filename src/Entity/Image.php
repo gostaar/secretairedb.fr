@@ -5,6 +5,7 @@ namespace App\Entity;
 use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\ImageRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -59,6 +60,15 @@ class Image
     #[ORM\Column(length: 255, nullable: true)]
     #[Groups(['image:write', 'image:read'])]
     private ?string $imageDescription = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $objet = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $actions = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $date_e = null;
 
     public function __toString(){
         return $this->slug;
@@ -152,6 +162,42 @@ class Image
         }
 
         $this->imageSize = $imageSize;
+
+        return $this;
+    }
+
+    public function getObjet(): ?string
+    {
+        return $this->objet;
+    }
+
+    public function setObjet(?string $objet): static
+    {
+        $this->objet = $objet;
+
+        return $this;
+    }
+
+    public function getActions(): ?string
+    {
+        return $this->actions;
+    }
+
+    public function setActions(string $actions): static
+    {
+        $this->actions = $actions;
+
+        return $this;
+    }
+
+    public function getDateE(): ?\DateTimeInterface
+    {
+        return $this->date_e;
+    }
+
+    public function setDateE(?\DateTimeInterface $date_e): static
+    {
+        $this->date_e = $date_e;
 
         return $this;
     }

@@ -52,7 +52,7 @@ class DocumentsUtilisateur
     #[ORM\Column]
     private ?bool $is_active = false;
 
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(type: 'text', nullable: true)]
     private ?string $details = null;
 
     #[ORM\ManyToOne(inversedBy: 'documents')]
@@ -62,14 +62,17 @@ class DocumentsUtilisateur
     #[ORM\ManyToOne(inversedBy: 'documents')]
     private ?Dossier $dossier = null;
 
-    #[ORM\ManyToOne(inversedBy: 'documents')]
-    private ?TypeDocument $typeDocument = null;
+    #[ORM\Column(length: 255)]
+    private ?string $typeDocument = null;
 
     /**
      * @var Collection<int, Image>
      */
     #[ORM\OneToMany(targetEntity: Image::class, mappedBy: 'document', orphanRemoval: true, cascade:["persist"])]
     private Collection $images;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $objet = null;
 
     public function __construct()
     {
@@ -207,12 +210,12 @@ class DocumentsUtilisateur
         return $this;
     }
 
-    public function getTypeDocument(): ?TypeDocument
+    public function getTypeDocument(): ?string
     {
         return $this->typeDocument;
     }
 
-    public function setTypeDocument(?TypeDocument $typeDocument): static
+    public function setTypeDocument(?string $typeDocument): static
     {
         $this->typeDocument = $typeDocument;
 
@@ -246,6 +249,18 @@ class DocumentsUtilisateur
                 $image->setDocument(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getObjet(): ?string
+    {
+        return $this->objet;
+    }
+
+    public function setObjet(string $objet): static
+    {
+        $this->objet = $objet;
 
         return $this;
     }
